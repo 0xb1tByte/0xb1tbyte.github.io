@@ -1,19 +1,19 @@
 # Site settings
-title: Lancenix - Designer/Developer hybrid
-description: "A blog about lorem ipsum ..."
+title: b1tbyte 
+description: "learning never exhausts the mind"
 baseurl: "" # for test: remove string '/space-jekyll-template' to ''
-url: "https://lancenix.github.io" # for test: remove string 'http://victorvoid.github.io' to '' but in production: 'https://yourusername.github.io'
+url: "https://0xb1tbyte.github.io" # for test: remove string 'http://victorvoid.github.io' to '' but in production: 'https://yourusername.github.io'
 
 # User settings
-username: lance
-user_title: lancenix
+username: b1tbyte
+user_title: b1tbyte
 # email: lorem.lorem@ipsum.com
 # twitter_username: loremipsum
-github_username:  lancenix
+github_username:  0xb1tbyte
 # gplus_username:  loremipsum
-linkedin_public_url: mariajeffina # Example: For public profile 'www.linkedin.com/in/john-smith', 'john-smith' is your linkedin_public_url
+linkedin_public_url:  # Example: For public profile 'www.linkedin.com/in/john-smith', 'john-smith' is your linkedin_public_url
 # disqus_username: loremipsum
-profile_picture: https://64.media.tumblr.com/90fa0d8d3a7a3a2386ed1ecdbeefebd8/tumblr_okb79lo7A21qk55bko2_500.jpg
+profile_picture: https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/pic.jpg
 
 # Build settings
 markdown: kramdown
@@ -33,41 +33,19 @@ links:
     - title: home
       url: /
       key_trigger: 1
-    - title: about me
-      url: /about
-      key_trigger: 2
     - title: my posts
       url: /posts
-      key_trigger: 3
-    - title: series
-      url: /series
-      key_trigger: 4
+      key_trigger: 2
     - title: tags
       url: /tags
-      key_trigger: 5
+      key_trigger: 3
   section_2:
     - title: github
-      url: http://www.github.com/lancenix
+      url: https://github.com/0xb1tByte/
       new_tab: true
       key_trigger: g
-    - title: search
-      url: ""
-      key_trigger: s #WARNING: search only works with "s"
 
-# projects in header index
-projects:
-  - name: \nlp\ contextual chatbot → ongoing
-    url: https://github.com/lancenix/contextual-chatbot
-  - name: \game\ holoreact → ongoing
-    url: https://github.com/lancenix/Holoreact
-  - name: \computer vision\ pictify → ongoing
-    url: https://gitlab.com/maiesey/pictify
-  - name: \ios\ spikap → finished
-    url: https://github.com/lancenix/spikap
-  - name: \game\ pararoom → finished
-    url: https://github.com/lancenix/Pararoom
-  - name: \game\ senterin → finished
-    url: https://github.com/lancenix/Delivery-Guy-Godot
+
 
 # exclude my node related stuff
 exclude: ['package.json', 'src', 'node_modules']
