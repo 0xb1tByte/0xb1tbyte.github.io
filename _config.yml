@@ -41,7 +41,7 @@ links:
       key_trigger: 3
   section_2:
     - title: github
-      url: https://github.com/0xb1tByte/
+      url: 
       new_tab: true
       key_trigger: g
 
