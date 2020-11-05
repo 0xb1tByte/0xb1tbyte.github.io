@@ -1,36 +1,71 @@
-# visit https://github.com/mojombo/jekyll/wiki/Configuration for more settings
+# Permalinks
+permalink:        pretty
 
-paginate: 10 # pagination based on number of posts
-paginate_path: "page:num"
-exclude: ["README.md"] # files to exclude
-highlighter: rouge
-markdown: kramdown
-disqus: b1tByte
-google_analytics: b1tByte
-title: b1tByte
+# Setup
+title:            Ben Hymers
+tagline:          "Ben Hymers' website"
+description:      'Technical Director and co-founder of Two Point Studios, a video game development studio'
+url:              http://blog.benhymers.com
+baseurl:
 
-defaults:
-  -
-    scope:
-      path: "" # empty string for all files
-    values:
-      title: b1tByte
-
-description: Stylish Jekyll Theme
 author:
-  name: b1tByte
-  github: 0xb1tByte
-  twitter: b1tByte
-  bio: Learning never exhausts the mind.
-  
-rss_path: feed.xml
-categories_path: categories.html
-#tags_path: tags.html
+  name:           'Ben Hymers'
+  url:            http://www.benhymers.com
 
-# set it as url of an image
-# sidebar_background_image: https://www.dropbox.com/s/g9h23zrycedxtk5/sky.png?raw=1
+paginate:         5
 
-BASE_PATH:
+# Custom vars
+version:          1.0.0
 
-plugins:
+github:
+  repo:           https://github.com/hymerman/hymerman.github.io
+
+# Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
+# Used for Sitemap.xml and your RSS feed
+url: http://blog.benhymers.com
+
+# Includes an icon in the footer for each username you enter
+footer-links:
+  dribbble:
+  email:
+  facebook: ben.hymers
+  flickr:
+  github: hymerman
+  instagram:
+  linkedin: benhymers
+  pinterest:
+  rss: # Set to anything to generate RSS icon. Don't want it though since it just adds unnecessary clutter.
+  twitter: BenHymers
+  stackoverflow: users/40834/ben-hymers
+
+# Your disqus shortname, entering this will enable commenting on posts
+disqus: benhymers
+
+# Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
+google_analytics: UA-1548272-4
+
+
+# Jekyll 3 now only supports Kramdown for Markdown
+kramdown:
+  # Use GitHub flavored markdown, including triple backtick fenced code blocks
+  input: GFM
+  # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    # Use existing pygments syntax highlighting css
+    css_class: 'highlight'
+
+# Use the following plug-ins
+gems:
+  - jemoji # Emoji please!
+  - jekyll-feed
   - jekyll-paginate
+  - jekyll-redirect-from
+  - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
+
+# Exclude these files from your production _site
+exclude:
+    - Gemfile
+    - Gemfile.lock
+    - LICENSE.md
+    - README.md
