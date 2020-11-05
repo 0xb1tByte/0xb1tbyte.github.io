@@ -1,0 +1,61 @@
+---
+layout: minimal
+title: "About"
+permalink: /about/index.html
+description: "Some description about Lance..."
+---
+
+<img itemprop="image" class="img-rounded about_perfil" src="https://64.media.tumblr.com/90fa0d8d3a7a3a2386ed1ecdbeefebd8/tumblr_okb79lo7A21qk55bko2_500.jpg" alt="My profile">
+
+<h2>My works</h2>
+<p>This platform exists as a way for me to share ideas or concepts that interest me, this can also act as a way to document my learning progress. 
+	I spent a lot of my time working on side projects, I feel like there's a lot to be shared along the way. Here's an overview of things I used to do or I'm currently tinkering on:</p>
+
+<div>
+	<h3>Electronics</h3>
+	<ul>
+		<li>LED Visualizer based on music volume and pitch</li>
+		<li>Arduino and embedded systems stuff</li>
+		<li>Trying my best to not blow things up, I'm still a newbie on these things.</li>
+	</ul>
+
+	<h3>Software Development</h3>
+	<ul>
+		<li>iOS development</li>
+		<li>Application of machine learning</li>
+		<li>C++/C# automation stuff (mostly graphics/image processing related)</li>
+		<li>Computer graphics programming</li>
+	</ul>
+
+	<h3>Game Development</h3>
+	<ul>
+		<li>AR Game development</li>
+		<li>Game AI programming</li>
+		<li>Game tools programming</li>
+		<li>3D/Rendering Programming: anything related to OpenGL, WebGL, Vulkan, etc.</li>
+	</ul>
+
+	<h3>Design</h3>
+	<ul>
+		<li>3D Modelling</li>
+		<li>Game concept art and game art directing</li>
+		<li>Mobile and web UI/UX Design</li>
+		<li>I used to work on a bit of product and marketing design back then (lmao)</li>
+	</ul>
+	<h3>Video Production</h3>
+	<p><strong>Coming soon.</strong> I'm planning to set up a Twitch account with my fellow close friends just because streaming while working on our STEM projects together seems fun.
+	I'll link it here when it's up ;)</p>
+	
+</div>
+
+
+
+<h2>Recent projects</h2>
+<p>I did projects in random area, although it's mostly game development. I like teaching myself and trying new things out. I'm currently planning on doing projects about electronics/hardware and anything related to machine learning.</p>
+<div class="aboutme">
+	<ul class="recent">
+		{% for project in site.projects %}
+	    	<li><a href="{{ project.url}}"><h3 class="project-name" itemprop="name">{{ project.name }}</h3></a></li>
+	    {% endfor %}
+	</ul>
+</div>

@@ -1,45 +1,73 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-
 # Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
-title: Jayeeeeee Note
-#email: your-email@domain.com
-description: > # this means to ignore newlines until "baseurl:"
+title: Lancenix - Designer/Developer hybrid
+description: "A blog about lorem ipsum ..."
+baseurl: "" # for test: remove string '/space-jekyll-template' to ''
+url: "https://lancenix.github.io" # for test: remove string 'http://victorvoid.github.io' to '' but in production: 'https://yourusername.github.io'
 
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://jayeeeeee.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
-#twitter_username: jekyllrb
-#github_username:  jayeeeeee
+# User settings
+username: lance
+user_title: lancenix
+# email: lorem.lorem@ipsum.com
+# twitter_username: loremipsum
+github_username:  lancenix
+# gplus_username:  loremipsum
+linkedin_public_url: mariajeffina # Example: For public profile 'www.linkedin.com/in/john-smith', 'john-smith' is your linkedin_public_url
+# disqus_username: loremipsum
+profile_picture: https://64.media.tumblr.com/90fa0d8d3a7a3a2386ed1ecdbeefebd8/tumblr_okb79lo7A21qk55bko2_500.jpg
 
-# Github
-github:
-  url: https://github.com/jayeeeeee
-
-# Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
-exclude:
-  - Gemfile
-  - Gemfile.lock
-
-# Permalink
-# https://jekyllrb.com/docs/permalinks/
+# Build settings
+markdown: kramdown
+highlighter: rouge
 permalink: /:title/
 
-#SASS
-sass:
-  style: compressed
+# html minify
+compress_html:
+  clippings: all
+  comments: all
+  endings: []
+  profile: false
 
-# Google services
-google_analytics: UA-90711514-1
+# Links to include in menu navigation
+links:
+  section_1:
+    - title: home
+      url: /
+      key_trigger: 1
+    - title: about me
+      url: /about
+      key_trigger: 2
+    - title: my posts
+      url: /posts
+      key_trigger: 3
+    - title: series
+      url: /series
+      key_trigger: 4
+    - title: tags
+      url: /tags
+      key_trigger: 5
+  section_2:
+    - title: github
+      url: http://www.github.com/lancenix
+      new_tab: true
+      key_trigger: g
+    - title: search
+      url: ""
+      key_trigger: s #WARNING: search only works with "s"
+
+# projects in header index
+projects:
+  - name: \nlp\ contextual chatbot → ongoing
+    url: https://github.com/lancenix/contextual-chatbot
+  - name: \game\ holoreact → ongoing
+    url: https://github.com/lancenix/Holoreact
+  - name: \computer vision\ pictify → ongoing
+    url: https://gitlab.com/maiesey/pictify
+  - name: \ios\ spikap → finished
+    url: https://github.com/lancenix/spikap
+  - name: \game\ pararoom → finished
+    url: https://github.com/lancenix/Pararoom
+  - name: \game\ senterin → finished
+    url: https://github.com/lancenix/Delivery-Guy-Godot
+
+# exclude my node related stuff
+exclude: ['package.json', 'src', 'node_modules']

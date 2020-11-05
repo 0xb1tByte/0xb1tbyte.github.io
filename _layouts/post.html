@@ -1,33 +1,26 @@
----
-layout: default
----
-<div class="container-fluid">
-    <div id="post-container" class="container">
-        <div class="row">
-            <div id="post-content" class="col-lg-10 block-container post-block" data-spy="scroll"
-                data-target="#markdown-toc" data-offset="15">
-
-                <div id="post-header">
-                    <div>
-                        {% if page.title %}
-                        <h1 class="post-title">[ {{ page.title }} / {{ page.date | date: "%Y.%m.%d" }} ]</h1>
-                        {% endif %}
-                    </div>
-                    <div id="post-header-category-tag">
-                        {% assign categories = page.categories[0] | split: " " %}
-                        <span>@{{ categories | join: "-" | upcase }}</span>
-
-                        {% for tag in page.tags %}
-                        <spna>#{{tag}}</spna>
-                        {% endfor %}
-                    </div>
+<!DOCTYPE html>
+<html lang="pt-br">
+    {% include head.html %}
+    <body>
+        {% include svg-icons.html %}
+        {% include header-post.html %}
+        {% include tree-posts.html %}
+        <section class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            {% if page.date %}
+                <div class="time">
+                    <time itemprop="datePublished" datetime="{{ page.date }}">{{ page.date | date_to_string }}</time>
                 </div>
-                {{ content }}
-            </div>
+            {% endif %}
+            <h1 class="post-title" itemprop="name">{{ page.title }}</h1>
 
-            <div id="markdown-toc-container" class="col-lg-2 block-container d-none d-lg-block d-print-block">
-                {% include toc.html html=content id="markdown-toc" class="list-group" anchor_class="list-group-item.list-group-item-action.toc-list-item" %}
-            </div>
-        </div>
-    </div>
-</div>
+            <article role="article" id="scroll" class="post-content" itemprop="articleBody">
+                {{ content }}
+            </article>
+
+            {% include share.html %}
+            {% include comments.html %}
+            {% include footer.html %}
+            {% include scripts.html %}
+        </section>
+    </body>
+</html>
