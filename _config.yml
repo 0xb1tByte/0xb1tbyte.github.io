@@ -1,71 +1,18 @@
-# Permalinks
-permalink:        pretty
+# Site
+title: Cyber
+description: Hello World
+url: "" # the base hostname & protocol for your site, e.g. https://[username].github.io/
 
-# Setup
-title:            Ben Hymers
-tagline:          "Ben Hymers' website"
-description:      'Technical Director and co-founder of Two Point Studios, a video game development studio'
-url:              http://blog.benhymers.com
-baseurl:
-
-author:
-  name:           'Ben Hymers'
-  url:            http://www.benhymers.com
-
-paginate:         5
-
-# Custom vars
-version:          1.0.0
-
+# Github
 github:
-  repo:           https://github.com/hymerman/hymerman.github.io
+  url: "" # e.g. https://github.com/[username]
 
-# Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
-# Used for Sitemap.xml and your RSS feed
-url: http://blog.benhymers.com
+# Permalink
+# https://jekyllrb.com/docs/permalinks/
+permalink: /:title/
 
-# Includes an icon in the footer for each username you enter
-footer-links:
-  dribbble:
-  email:
-  facebook: ben.hymers
-  flickr:
-  github: hymerman
-  instagram:
-  linkedin: benhymers
-  pinterest:
-  rss: # Set to anything to generate RSS icon. Don't want it though since it just adds unnecessary clutter.
-  twitter: BenHymers
-  stackoverflow: users/40834/ben-hymers
+# Google services
+google_analytics: "" # e.g. UA-000000-2 
 
-# Your disqus shortname, entering this will enable commenting on posts
-disqus: benhymers
-
-# Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
-google_analytics: UA-1548272-4
-
-
-# Jekyll 3 now only supports Kramdown for Markdown
-kramdown:
-  # Use GitHub flavored markdown, including triple backtick fenced code blocks
-  input: GFM
-  # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
-  syntax_highlighter: rouge
-  syntax_highlighter_opts:
-    # Use existing pygments syntax highlighting css
-    css_class: 'highlight'
-
-# Use the following plug-ins
-gems:
-  - jemoji # Emoji please!
-  - jekyll-feed
-  - jekyll-paginate
-  - jekyll-redirect-from
-  - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
-
-# Exclude these files from your production _site
-exclude:
-    - Gemfile
-    - Gemfile.lock
-    - LICENSE.md
-    - README.md
+sass:
+  style: compressed

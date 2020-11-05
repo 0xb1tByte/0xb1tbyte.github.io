@@ -1,0 +1,23 @@
+#site-footer-container {
+  margin-top: 25px;
+  background-color: $theme-color-white;
+}
+
+#site-footer {
+  padding: 15px 5px 15px 5px;
+  border-top: 1px solid $theme-color-black;
+}
+
+#site-footer a {
+  color: $theme-color-black;
+  text-decoration: none;
+}
+
+#site-footer .nav-item a:hover {
+  background-color: $theme-color-gray;
+}
+
+#github-link-icon {
+  height: 25px;
+  width: 25px;
+}

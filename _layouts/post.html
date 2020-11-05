@@ -1,27 +1,33 @@
 ---
 layout: default
 ---
+<div class="container-fluid">
+    <div id="post-container" class="container">
+        <div class="row">
+            <div id="post-content" class="col-lg-10 block-container post-block" data-spy="scroll"
+                data-target="#markdown-toc" data-offset="15">
 
-<div class="post">
-  <h1 class="post-title">{{ page.title }}</h1>
-  <span class="post-date">{{ page.date | date_to_string }}</span>
-  {{ content }}
+                <div id="post-header">
+                    <div>
+                        {% if page.title %}
+                        <h1 class="post-title">[ {{ page.title }} / {{ page.date | date: "%Y.%m.%d" }} ]</h1>
+                        {% endif %}
+                    </div>
+                    <div id="post-header-category-tag">
+                        {% assign categories = page.categories[0] | split: " " %}
+                        <span>@{{ categories | join: "-" | upcase }}</span>
+
+                        {% for tag in page.tags %}
+                        <spna>#{{tag}}</spna>
+                        {% endfor %}
+                    </div>
+                </div>
+                {{ content }}
+            </div>
+
+            <div id="markdown-toc-container" class="col-lg-2 block-container d-none d-lg-block d-print-block">
+                {% include toc.html html=content id="markdown-toc" class="list-group" anchor_class="list-group-item.list-group-item-action.toc-list-item" %}
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="related">
-  <h2>Related Posts</h2>
-  <ul class="related-posts">
-    {% for post in site.related_posts limit:3 %}
-      <li>
-        <h3>
-          <a href="{{ post.url }}">
-            {{ post.title }}
-            <small>{{ post.date | date_to_string }}</small>
-          </a>
-        </h3>
-      </li>
-    {% endfor %}
-  </ul>
-</div>
-
-{% include disqus.html disqus_identifier=page.disqus_identifier %}

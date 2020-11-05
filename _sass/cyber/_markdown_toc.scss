@@ -1,0 +1,33 @@
+#markdown-toc {
+  font-size: 12px;
+}
+
+#markdown-toc ul {
+  padding-inline-start: 20px;
+}
+
+#markdown-toc li {
+  list-style-type: none;
+}
+
+#markdown-toc ol {
+  display: none;
+}
+
+#markdown-toc .toc-list-item {
+  background-color: initial;
+  border: none;
+  border-radius: 0px;
+  color: $theme-color-black;
+  padding: 3px 0px 3px 0px;
+}
+
+#markdown-toc .active {
+  border: none;
+  border-radius: 0px;
+  border-top: 1px solid $theme-color-black;
+  border-bottom: 1px solid $theme-color-black;
+  color: $theme-color;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

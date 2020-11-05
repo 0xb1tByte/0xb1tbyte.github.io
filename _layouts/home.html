@@ -1,0 +1,27 @@
+---
+layout: default
+---
+<div class="container">
+    <div id="post-list-container" class="row block-container">
+        {% if site.posts.size > 0 %}
+        {% for post in site.posts %}
+
+        <div class="col-lg-4 post-list-item">
+            <a href="{{ post.url | relative_url }}">
+                <div class="block block-hover">
+                    <div class="post-list-item-header ">
+                        <span class="post-list-item-category">{{ post.categories[0] | default: "-" | upcase }}</span>
+                        <span class="post-list-item-datetime">{{ post.date | date: "%Y.%m.%d" }}</span>
+                    </div>
+
+                    <div class="post-list-item-title">
+                        <h3>{{ post.title | escape }}</h3>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>

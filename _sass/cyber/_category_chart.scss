@@ -1,0 +1,27 @@
+.modal-backdrop {
+  background-color: transparent;
+}
+.modal-body {
+  padding-top: 5px;
+}
+
+.category-chart-modal-content {
+  border-radius: 0px;
+  background-color: $theme-color-white;
+  border: 1px solid $theme-color-black;
+}
+
+#category-total-container {
+  margin: 15px 0px 0px 0px;
+  text-align: center;
+}
+
+#category-total {
+  color: $font-color-dark;
+  padding: 0px 15px 0px 15px;
+}
+
+.category-chart-block {
+  padding: 15px;
+  border-top: 1px solid $theme-color-black;
+}

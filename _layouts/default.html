@@ -1,16 +1,16 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
 
-  {% include head.html %}
+<head>
+    {%- include head.html -%}
+</head>
 
-  <body class="theme-base-08">
+<body>
+    {%- include header.html -%}
+    {{ content }}
+    {%- include footer.html -%}
 
-    {% include sidebar.html %}
+    {%- include foot.html -%}
+</body>
 
-    <div class="content container">
-      {{ content }}
-    </div>
-
-    {% include analytics.html %}
-  </body>
 </html>

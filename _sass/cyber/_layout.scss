@@ -1,0 +1,70 @@
+// Block
+.block-container {
+  height: 70vh;
+  height: calc(100vh - 198px);
+  overflow-x: hidden;
+}
+
+.block {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid $theme-color-black;
+  border-left: 5px solid $theme-color-black;
+  color: $theme-color-black;
+  padding: 25px;
+  height: 100%;
+}
+
+.block.block-hover:hover {
+  border-left: 5px solid $theme-color;
+  background-color: $theme-color-black;
+  color: $font-color-light;
+}
+
+// Post list
+.post-list-item {
+  margin-bottom: 15px;
+}
+
+.post-list-item-category {
+  color: $font-color;
+  background-color: $theme-color-gray;
+  padding: 0px 5px 0px 5px;
+}
+
+.block.block-hover:hover .post-list-item-category {
+  color: $font-color-dark;
+  background-color: transparent;
+}
+
+.post-list-item-title {
+  margin-top: 15px;
+}
+
+.post-list-item a:hover {
+  text-decoration: none;
+}
+
+.block.block-hover:hover .post-list-item-title {
+  color: $font-color-dark;
+  background-color: $theme-color;
+}
+
+.post-list-item-header {
+  position: relative;
+}
+
+.post-list-item-datetime {
+  position: absolute;
+  right: 0px;
+  text-align: right;
+}
+
+// 404
+#error-page-content {
+  text-align: center;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}

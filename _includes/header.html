@@ -1,0 +1,36 @@
+<div id="site-header-container" class="container-fluid">
+    <nav id="site-header" class="navbar navbar-expand navbar-light">
+        <div class="media">
+            <a href="#">
+                <img id="site-icon" class="mr-3" src="/assets/logo.png" alt="X" data-toggle="modal"
+                    data-target="#CategoryChart">
+            </a>
+            <div class="media-body">
+                <div id="site-title" class="mt-0">
+                    <a href="{{ site.url | relative_url }}">{{ site.title }}</a>
+                </div>
+                <span id="site-description">{{ site.description }} </span>
+            </div>
+        </div>
+
+        <!-- TODO: Search -->
+    </nav>
+</div>
+
+<!-- Modal -->
+<div class="modal fade fadecategory-chart-container" id="CategoryChart" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content category-chart-modal-content">
+            <div id="category-total-container">
+                <span id="category-total">POST _ {{ site.posts.size }}</span>
+            </div>
+            <div class="modal-body">
+                <div class="category-chart-block">
+                    <canvas id="category-chart" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include category_chart.html %}

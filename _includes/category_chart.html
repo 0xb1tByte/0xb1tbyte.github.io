@@ -1,0 +1,65 @@
+<!-- category labels -->
+{% capture categories_labels %}
+{% for category in site.categories %}
+{% assign subcategories = category[0] | split: " " %}
+'{{ subcategories | join: "-" | upcase }}'{% unless forloop.last %},{% endunless %}
+{% endfor %}
+{% endcapture %}
+
+<!-- category counts -->
+{% capture categories_counts %}
+{% for category in site.categories %}
+'{{ category[1].size }}'{% unless forloop.last %},{% endunless %}
+{% endfor %}
+{% endcapture %}
+
+<script>
+    var ctx = document.getElementById('category-chart');
+    var categoryChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: [{{ categories_labels }}],
+        datasets: [{
+            label: 'Posts',
+            data: [{{ categories_counts }}],
+        backgroundColor: "rgba(00, 206, 209, 0.5)",
+        borderColor: 'dimgray',
+        borderWidth: 1
+    }]
+        },
+    options: {
+        legend: {
+            display: false
+        },
+        scale: {
+            ticks: {
+                beginAtZero: true,
+                    precision: 0,
+                        backdropColor: 'rgba(255, 255, 255, 0)',
+                            fontColor: '#2b2b2b'
+            },
+            gridLines: {
+                color: 'lightgray'
+            },
+            angleLines: {
+                color: 'lightgray'
+            },
+            pointLabels: {
+                fontColor: '#2b2b2b'
+            }
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    if (label) {
+                        label += ': ';
+                    }
+                    label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    return label;
+                }
+            }
+        }
+    }
+    });
+</script>

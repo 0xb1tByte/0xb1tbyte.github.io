@@ -1,0 +1,28 @@
+body {
+  background-color: $theme-color-white;
+  color: $font-color;
+  font-family: $font-family;
+  overflow: hidden;
+}
+
+body a,
+a:hover {
+  color: $theme-color;
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+  height: 7px;
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+  border-right: 1px solid $theme-color-black;
+}
+
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover {
+  background: $theme-color-black;
+  border: 1px solid $font-color;
+}

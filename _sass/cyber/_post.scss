@@ -1,0 +1,44 @@
+#post-container {
+  background: rgba(245, 245, 245, 0.95);
+  color: $theme-color-black;
+}
+
+#post-content {
+  position: relative;
+}
+
+#post-header {
+  margin-bottom: 15px;
+}
+
+#post-header-category-tag {
+  text-align: right;
+  font-size: 12px;
+}
+
+.post-title {
+  font-weight: bold;
+}
+
+.post-block {
+  line-height: 25px;
+  position: relative;
+}
+
+.post-block h1 {
+  background-color: $theme-color;
+  border: 1px solid $theme-color-black;
+  color: $theme-color-black;
+}
+
+.post-block h2 {
+  margin-top: 35px;
+}
+
+.post-block h2::after {
+  content: "";
+  width: 100%;
+  position: absolute;
+  display: block;
+  border-bottom: 1px solid $theme-color-black;
+}

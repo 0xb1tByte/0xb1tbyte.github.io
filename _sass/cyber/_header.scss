@@ -1,0 +1,30 @@
+#site-header-container {
+  background-color: $theme-color-white;
+  margin-bottom: 25px;
+  padding-top: 5px;
+}
+
+#site-header {
+  border-bottom: 1px solid $theme-color-black;
+  padding: 10px 5px 10px 5px;
+}
+
+#site-title {
+  color: $font-color-dark;
+}
+
+#site-title a {
+  color: $font-color-dark;
+  text-decoration: none;
+}
+
+#site-icon {
+  border: 1px solid $theme-color-black;
+  height: 50px;
+  width: 50px;
+}
+
+#site-description {
+  color: $font-color;
+  font-size: 13px;
+}

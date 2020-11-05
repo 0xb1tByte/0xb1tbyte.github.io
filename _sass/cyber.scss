@@ -1,0 +1,14 @@
+// Theme
+$theme-color: darkturquoise;
+$theme-color-black: #2b2b2b;
+$theme-color-gray: lightgray;
+$theme-color-white: whitesmoke;
+
+// Font
+$font-color: dimgray;
+$font-color-dark: $theme-color-black;
+$font-color-light: gainsboro;
+$font-family: "Noto Sans TC", sans-serif;
+
+@import "cyber/base", "cyber/footer", "cyber/header", "cyber/layout", "cyber/category_chart", "cyber/post",
+  "cyber/markdown_toc", "syntax_highlight/monokai", "syntax_highlight/syntax_highlight_extend";
