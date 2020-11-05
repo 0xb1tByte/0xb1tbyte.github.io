@@ -39,11 +39,7 @@ links:
     - title: tags
       url: /tags
       key_trigger: 3
-  section_2:
-    - title: github
-      url: 
-      new_tab: true
-      key_trigger: g
+
 
 
 
