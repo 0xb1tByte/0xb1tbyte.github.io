@@ -1,12 +1,12 @@
 # Site settings
-title: b1tbyte 
+title: b1tByte 
 description: "learning never exhausts the mind"
 baseurl: "" # for test: remove string '/space-jekyll-template' to ''
 url: "https://0xb1tbyte.github.io" # for test: remove string 'http://victorvoid.github.io' to '' but in production: 'https://yourusername.github.io'
 
 # User settings
 username: b1tbyte
-user_title: b1tbyte
+user_title: b1tByte
 # email: lorem.lorem@ipsum.com
 # twitter_username: loremipsum
 github_username:  0xb1tbyte
