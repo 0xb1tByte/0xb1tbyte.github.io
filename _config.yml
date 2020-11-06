@@ -1,71 +1,47 @@
-# Permalinks
-permalink:        pretty
+# Site settings
+title: b1tByte 
+description: "learning never exhausts the mind"
+baseurl: "" # for test: remove string '/space-jekyll-template' to ''
+url: "https://0xb1tbyte.github.io" # for test: remove string 'http://victorvoid.github.io' to '' but in production: 'https://yourusername.github.io'
 
-# Setup
-title:            Ben Hymers
-tagline:          "Ben Hymers' website"
-description:      'Technical Director and co-founder of Two Point Studios, a video game development studio'
-url:              http://blog.benhymers.com
-baseurl:
+# User settings
+username: b1tByte
+user_title: b1tByte
+# email: lorem.lorem@ipsum.com
+# twitter_username: loremipsum
+github_username:  0xb1tbyte
+# gplus_username:  loremipsum
+linkedin_public_url:  # Example: For public profile 'www.linkedin.com/in/john-smith', 'john-smith' is your linkedin_public_url
+# disqus_username: loremipsum
+profile_picture: https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/pic.jpg
 
-author:
-  name:           'Ben Hymers'
-  url:            http://www.benhymers.com
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: /:title/
 
-paginate:         5
+# html minify
+compress_html:
+  clippings: all
+  comments: all
+  endings: []
+  profile: false
 
-# Custom vars
-version:          1.0.0
-
-github:
-  repo:           https://github.com/hymerman/hymerman.github.io
-
-# Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
-# Used for Sitemap.xml and your RSS feed
-url: http://blog.benhymers.com
-
-# Includes an icon in the footer for each username you enter
-footer-links:
-  dribbble:
-  email:
-  facebook: ben.hymers
-  flickr:
-  github: hymerman
-  instagram:
-  linkedin: benhymers
-  pinterest:
-  rss: # Set to anything to generate RSS icon. Don't want it though since it just adds unnecessary clutter.
-  twitter: BenHymers
-  stackoverflow: users/40834/ben-hymers
-
-# Your disqus shortname, entering this will enable commenting on posts
-disqus: benhymers
-
-# Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
-google_analytics: UA-1548272-4
+# Links to include in menu navigation
+links:
+  section_1:
+    - title: home
+      url: /
+      key_trigger: 1
+    - title: my posts
+      url: /posts
+      key_trigger: 2
+    - title: tags
+      url: /tags
+      key_trigger: 3
 
 
-# Jekyll 3 now only supports Kramdown for Markdown
-kramdown:
-  # Use GitHub flavored markdown, including triple backtick fenced code blocks
-  input: GFM
-  # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
-  syntax_highlighter: rouge
-  syntax_highlighter_opts:
-    # Use existing pygments syntax highlighting css
-    css_class: 'highlight'
 
-# Use the following plug-ins
-gems:
-  - jemoji # Emoji please!
-  - jekyll-feed
-  - jekyll-paginate
-  - jekyll-redirect-from
-  - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
 
-# Exclude these files from your production _site
-exclude:
-    - Gemfile
-    - Gemfile.lock
-    - LICENSE.md
-    - README.md
+# exclude my node related stuff
+exclude: ['package.json', 'src', 'node_modules']
