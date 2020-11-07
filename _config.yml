@@ -7,8 +7,8 @@ description: learning never exhausts the mind
 
 # if it's an external image, update below for true
 # better with square images
-external-image: false
-picture: assets/images/profile.jpg
+external-image: true
+picture: https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/pic.jpg
 
 # If you want to include your resume, set to true
 # and specify source (external or local).
