@@ -1,9 +1,9 @@
 # main text of home
-name: John Doe
-bio: A man who travels the world eating cake
+name: b1tByte
+bio: learning never exhausts the mind
 
 # twitter summary info
-description: A blog about technology and stuff related
+description: learning never exhausts the mind
 
 # if it's an external image, update below for true
 # better with square images
@@ -12,7 +12,7 @@ picture: assets/images/profile.jpg
 
 # If you want to include your resume, set to true
 # and specify source (external or local).
-resume: true
+resume: false
 resume-external: true
 resume-url: https://google.com/?q=my+resume
 
@@ -39,38 +39,38 @@ repository: "rasgs/petrol-jekyll-theme"
 # if you don't have any of social below, comment the line.
 # You can add your own links, using font-awesome icons
 links:
-    - label: "Email"
-      icon: "far fa-fw fa-envelope"
-      url: "mailto:your.name@email.com"
+   # - label: "Email"
+   #   icon: "far fa-fw fa-envelope"
+    #  url: "mailto:your.name@email.com"
     # - label: "Website"
     #   icon: "fas fa-fw fa-link"
     #   url: "https://your-website.com"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter"
-      url: "https://twitter.com/"
+    #- label: "Twitter"
+    #  icon: "fab fa-fw fa-twitter"
+    #  url: "https://twitter.com/"
     # - label: "Facebook"
     #   icon: "fab fa-fw fa-facebook-square"
     #   url: "https://facebook.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/rasgs/petrol-jekyll-theme"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+      url: "https://github.com/0xb1tByte"
+   # - label: "Instagram"
+   #   icon: "fab fa-fw fa-instagram"
+   #   url: "https://instagram.com/"
 
-authors:
-  johndoe:
-    name: John Doe
-    bio: A man who travels the world eating cake
-    external-image: false
-    picture: assets/images/profile.jpg
-    twitter: johndoe
-  jamesfoster:
-    name: James Foster
-    bio: A Man who develops software with coffee
-    external-image: false
-    picture: assets/images/james.jpg
-    twitter: jamesfoster
+#authors:
+ # johndoe:
+  #  name: John Doe
+  #  bio: A man who travels the world eating cake
+  #  external-image: false
+  #  picture: assets/images/profile.jpg
+  #  twitter: johndoe
+ # jamesfoster:
+ #   name: James Foster
+ #   bio: A Man who develops software with coffee
+ #   external-image: false
+ #   picture: assets/images/james.jpg
+ #   twitter: jamesfoster
 
 # do you want a larger site? change the option below
 # options: [normal, large] | default: normal
@@ -78,7 +78,7 @@ authors:
 width: normal
 
 # This is the hex code which determines the color theme of the site
-theme-color: "#2E93A4"
+theme-color: "#900833"
 
 # if you do/don't need pagination, toggle 'enabled' between true/false below
 pagination:
@@ -89,10 +89,10 @@ pagination:
   permalink: "/:num/" # pagination link that will be appended
 
 # if you don't need projects, comment the *projects* configs below
-projects: true
+#projects: true
 
 # if you don't need "about" or "blog", comment them out below
-about: true
+#about: true
 blog: true
 
 # do you want to show the "read time" of the posts?
