@@ -1,0 +1,10 @@
+<div class="social-links">
+
+    {% if site.links %}
+      {% for link in site.links %}
+        {% if link.label %}
+          <a class="link" data-title="{{ link.url }}" href="{{ link.url }}" rel="nofollow noopener noreferrer"> <i class="icon {{ link.icon | default: 'fas fa-link' }}"></i></a>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+</div>

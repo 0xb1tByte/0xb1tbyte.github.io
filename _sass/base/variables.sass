@@ -1,0 +1,49 @@
+
+$fontSans: "Helvetica Neue", Helvetica, Arial, sans-serif
+$fontMonospace: "Consolas", Liberation Mono, Menlo, Courier, monospace
+
+$mobile: "only screen and (max-width: 400px)"
+$tablet: "only screen and (min-width: 400px) and (max-width: 1050px)"
+$above: "only screen and (min-width: 780px)"
+$below: "only screen and (max-width: 780px)"
+
+// theme main color (petrol blue)
+$delta: #2E93A4 !default
+
+// subtitle color
+$gamma: #999
+
+\:root
+  // headlines
+  --page-title: #222
+  // main text
+  --page-main: #666
+  // accents
+  --epsilon: #f0f0f0
+
+/* Light mode */
+@media (prefers-color-scheme: light)
+  \:root
+      --page-title: #222
+      --page-main: #666
+      --epsilon: #f0f0f0
+  body
+      background-color: white
+
+/* Dark mode */
+@media (prefers-color-scheme: dark)
+  \:root
+      --page-title: #ddd
+      --page-main: #bbb
+      --epsilon: #333
+
+  body
+      background-color: #151515
+
+  img
+    opacity: .75
+    transition: opacity .5s ease-in-out
+
+
+  img:hover
+    opacity: 1
