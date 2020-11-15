@@ -1,36 +1,28 @@
-<div class="sidebar">
-  <div class="container sidebar-sticky">
-    <div class="sidebar-about">
-      <h1>
-        <a href="{{ site.baseurl }}/">
-          {{ site.title }}
-        </a>
-      </h1>
-      <p class="lead">{{ site.description }}</p>
-    </div>
+<!-- sidebar.html -->
+<header class="sidebar-header" role="banner">
+	<a href="{{ site.BASE_PATH }}/">
+		<img src="https://raw.githubusercontent.com/0xb1tByte/0xb1tByte.github.io/master/assets/media/pic.jpg{{site.author.email_md5}}?s=150" class="img-circle" />
+	</a>
+	<h3 class="title">
+        <a href="{{ site.BASE_PATH }}/">{{ site.title }}</a>
+    </h3>
+</header>
 
-    <nav class="sidebar-nav">
-      <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}/">Home</a>
-
-      {% comment %}
-        The code below dynamically generates a sidebar nav of pages with
-        `layout: page` in the front-matter. See readme for usage.
-      {% endcomment %}
-
-      {% assign pages_list = site.pages %}
-      {% for node in pages_list %}
-        {% if node.title != null %}
-          {% if node.layout == "page" %}
-            <a class="sidebar-nav-item{% if page.url == node.url %} active{% endif %}" href="{{ node.url }}">{{ node.title }}</a>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-
-      <div>
-        {% include svg-icons.html %}
-      </div>
-    </nav>
-
-    <p>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</p>
-  </div>
+{% if site.author.bio %}
+<div id="bio" class="text-center">
+	{{ site.author.bio }}
 </div>
+{% endif %}
+
+<div id="contact-list" class="text-center">
+	<ul class="list-unstyled list-inline">
+		{% if site.author.github %}
+		<li>
+			<a class="btn btn-default btn-sm" href="https://github.com/{{ site.author.github }}">
+				<i class="fa fa-github-alt fa-lg"></i>
+			</a>
+		</li>
+		{% endif %}
+	</ul>
+</div>
+<!-- sidebar.html end -->
