@@ -2,15 +2,15 @@
 permalink:        pretty
 
 # Setup
-title:            Ben Hymers
-tagline:          "Ben Hymers' website"
-description:      'Technical Director and co-founder of Two Point Studios, a video game development studio'
-url:              http://blog.benhymers.com
+title:            b1tByte
+tagline:          "b1tByte"
+description:      'learning never exhausts the mind'
+url:              0xb1tbyte.github.io/
 baseurl:
 
 author:
-  name:           'Ben Hymers'
-  url:            http://www.benhymers.com
+  name:           'b1tByte'
+  url:            0xb1tbyte.github.io/
 
 paginate:         5
 
@@ -18,28 +18,28 @@ paginate:         5
 version:          1.0.0
 
 github:
-  repo:           https://github.com/hymerman/hymerman.github.io
+  repo:           https://github.com/0xb1tByte
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url: http://blog.benhymers.com
+url: 0xb1tbyte.github.io/
 
 # Includes an icon in the footer for each username you enter
 footer-links:
-  dribbble:
-  email:
-  facebook: ben.hymers
-  flickr:
-  github: hymerman
-  instagram:
-  linkedin: benhymers
-  pinterest:
+  #dribbble:
+  #email:
+  #facebook: ben.hymers
+  #flickr:
+  github: 0xb1tByte
+  #instagram:
+  #linkedin: benhymers
+  #pinterest:
   rss: # Set to anything to generate RSS icon. Don't want it though since it just adds unnecessary clutter.
-  twitter: BenHymers
-  stackoverflow: users/40834/ben-hymers
+  #twitter: BenHymers
+ # stackoverflow: users/40834/ben-hymers
 
 # Your disqus shortname, entering this will enable commenting on posts
-disqus: benhymers
+#disqus: benhymers
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
 google_analytics: UA-1548272-4
