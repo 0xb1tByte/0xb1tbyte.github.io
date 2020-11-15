@@ -1,118 +1,118 @@
-# Petrol Minimalist Jekyll Template
+# Hyde
 
-Live demo at https://rasmusgs.com/petrol-jekyll-theme
+Hyde is a brazen two-column [Jekyll](http://jekyllrb.com) theme that pairs a prominent sidebar with uncomplicated content. It's based on [Poole](http://getpoole.com), the Jekyll butler.
 
-This is a simple and minimalist template for Jekyll for those who likes to eat cake :cake:.
+![Hyde screenshot](https://f.cloud.github.com/assets/98681/1831228/42af6c6a-7384-11e3-98fb-e0b923ee0468.png)
 
-Theme now supports **dark mode**! See screenshot below, or try it in a browser supporting dark mode, e.g. Chrome or Safari. Dark colors are of course customizable.
 
-Theme forked from [kopplin](https://github.com/sergiokopplin/indigo), with social links inspired by [murraco](https://github.com/murraco/jekyll-theme-minimal-resume).
+## Contents
 
-***
+- [Usage](#usage)
+- [Options](#options)
+  - [Sidebar menu](#sidebar-menu)
+  - [Sticky sidebar content](#sticky-sidebar-content)
+  - [Themes](#themes)
+  - [Reverse layout](#reverse-layout)
+- [Development](#development)
+- [Author](#author)
+- [License](#license)
 
-<p align="center">
-    <b><a href="README.md#what-is-inside">What is inside</a></b>
-    |
-    <b><a href="README.md#setup">Setup</a></b>
-    |
-    <b><a href="README.md#settings">Settings</a></b>
-    |
-    <b><a href="README.md#how-to">How to</a></b>
-</p>
 
-<p align="center">
-    <img src="https://raw.githubusercontent.com/rasgs/petrol-jekyll-theme/gh-pages/assets/screen-shot.png" />
-    <img src="https://raw.githubusercontent.com/rasgs/petrol-jekyll-theme/gh-pages/assets/screen-shot-dark.png" />
-</p>
+## Usage
 
-## What is inside
+Hyde is a theme built on top of [Poole](https://github.com/poole/poole), which provides a fully furnished Jekyll setup—just download and start the Jekyll server. See [the Poole usage guidelines](https://github.com/poole/poole#usage) for how to install and use Jekyll.
 
-- [Jekyll](https://jekyllrb.com/), [Sass](https://sass-lang.com/) ~[RSCSS](https://rscss.io/)~ and [Font-Awesome](https://fontawesome.com/);
-- Tests with [Travis](https://travis-ci.org/);
-- Google Speed: [98/100](https://developers.google.com/speed/pagespeed/insights/?url=https%3A%2F%2Frasmusgs.com%2Fpetrol-jekyll-theme%2F);
-- No JS. :sunglasses:
 
-## Setup
+## Options
 
-0. :star: to the project. :metal:
-1. Fork the project [Petrol](https://github.com/rasgs/petrol-jekyll-theme)
-2. Edit `_config.yml` with your data (check <a href="README.md#settings">settings</a> section)
-3. Write some posts :bowtie:
+Hyde includes some customizable options, typically applied via classes on the `<body>` element.
 
-If you want to test locally on your machine, do the following steps also:
 
-1. Install [Jekyll](https://jekyllrb.com), [NodeJS](https://nodejs.org/) and [Bundler](https://bundler.io/).
-2. Clone the forked repo on your machine
-3. Enter the cloned folder via terminal and run `bundle install`
-4. Then run `bundle exec jekyll serve --config _config.yml,_config-dev.yml`
-5. Open it in your browser: `http://localhost:4000`
-6. Do you want to use the [jekyll-admin](https://jekyll.github.io/jekyll-admin/) plugin to edit your posts? Go to the admin panel: `http://localhost:4000/admin`. The admin panel will not work on GitHub Pages, [only locally](https://github.com/jekyll/jekyll-admin/issues/341#issuecomment-292739469).
+### Sidebar menu
 
-## Settings
-
-You must fill some informations on `_config.yml` to customize your site.
+Create a list of nav links in the sidebar by assigning each Jekyll page the correct layout in the page's [front-matter](http://jekyllrb.com/docs/frontmatter/).
 
 ```
-name: John Doe
-bio: 'A Man who travels the world eating noodles'
-picture: 'assets/images/profile.jpg'
-...
-
-and lot of other options, like width, projects, pages, read-time, tags, related posts, animations, multiple-authors, etc.
-```
-
-Colors can be customized in `_sass -> base -> variables.sass`:
-
-```
-// theme main color (petrol blue)
-$delta: #2E93A4 !default
-
-// subtitle color
-$gamma: #999
-
-\:root
-  // headlines
-  --page-title: #222
-  // main text
-  --page-main: #666
-  // accents
-  --epsilon: #f0f0f0
-
-/* Light mode */
-@media (prefers-color-scheme: light)
-  \:root
-      --page-title: #222
-      --page-main: #666
-      --epsilon: #f0f0f0
-  body
-      background-color: white
-
-/* Dark mode */
-@media (prefers-color-scheme: dark)
-  \:root
-      --page-title: #ddd
-      --page-main: #bbb
-      --epsilon: #333
-
-  body
-      background-color: #151515
-
-  img
-    opacity: .75
-    transition: opacity .5s ease-in-out
-
-
-  img:hover
-    opacity: 1
-
-```
-
-
-## How To?
-
-Check the [FAQ](./FAQ.md) if you have any doubt or problem.
-
 ---
+layout: page
+title: About
+---
+```
+
+**Why require a specific layout?** Jekyll will return *all* pages, including the `atom.xml`, and with an alphabetical sort order. To ensure the first link is *Home*, we exclude the `index.html` page from this list by specifying the `page` layout.
+
+
+### Sticky sidebar content
+
+By default Hyde ships with a sidebar that affixes it's content to the bottom of the sidebar. You can optionally disable this by removing the `.sidebar-sticky` class from the sidebar's `.container`. Sidebar content will then normally flow from top to bottom.
+
+```html
+<!-- Default sidebar -->
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    ...
+  </div>
+</div>
+
+<!-- Modified sidebar -->
+<div class="sidebar">
+  <div class="container">
+    ...
+  </div>
+</div>
+```
+
+
+### Themes
+
+Hyde ships with eight optional themes based on the [base16 color scheme](https://github.com/chriskempson/base16). Apply a theme to change the color scheme (mostly applies to sidebar and links).
+
+![Hyde in red](https://f.cloud.github.com/assets/98681/1831229/42b0b354-7384-11e3-8462-31b8df193fe5.png)
+
+There are eight themes available at this time.
+
+![Hyde theme classes](https://f.cloud.github.com/assets/98681/1817044/e5b0ec06-6f68-11e3-83d7-acd1942797a1.png)
+
+To use a theme, add anyone of the available theme classes to the `<body>` element in the `default.html` layout, like so:
+
+```html
+<body class="theme-base-08">
+  ...
+</body>
+```
+
+To create your own theme, look to the Themes section of [included CSS file](https://github.com/poole/hyde/blob/master/public/css/hyde.css). Copy any existing theme (they're only a few lines of CSS), rename it, and change the provided colors.
+
+### Reverse layout
+
+![Hyde with reverse layout](https://f.cloud.github.com/assets/98681/1831230/42b0d3ac-7384-11e3-8d54-2065afd03f9e.png)
+
+Hyde's page orientation can be reversed with a single class.
+
+```html
+<body class="layout-reverse">
+  ...
+</body>
+```
+
+
+## Development
+
+Hyde has two branches, but only one is used for active development.
+
+- `master` for development.  **All pull requests should be submitted against `master`.**
+- `gh-pages` for our hosted site, which includes our analytics tracking code. **Please avoid using this branch.**
+
+
+## Author
+
+**Mark Otto**
+- <https://github.com/mdo>
+- <https://twitter.com/mdo>
+
+
 ## License
 
-[MIT](https://github.com/rasgs/petrol-jekyll-theme/blob/gh-pages/LICENSE) License © Rasmus Gundorff Sæderup
+Open sourced under the [MIT license](LICENSE.md).
+
+<3
