@@ -20,7 +20,7 @@ description:
 
 # List of links in the navigation bar
 navbar-links:
-  About Me: "aboutme"
+  #About Me: "aboutme"
   #Official Blog: "https://blog.riccardoancarani.it/"
   #Medium: "https://medium.com/@riccardo.ancarani94"
 
@@ -69,7 +69,7 @@ social-network-links:
   github: 0xb1tByte
  # twitter: dottor_morte
  #  reddit: yourname
-  linkedin: alaa-althubyani
+ # linkedin: 
 #  xing: yourname
 #  stackoverflow: "3943160/daattali"
 #  snapchat: deanat78
