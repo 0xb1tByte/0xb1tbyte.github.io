@@ -1,10 +1,10 @@
 # --- General options --- #
 
 # Name of website
-title: Red Team Adventures
+title: b1tByte
 
 # Short description of your site
-description: A second blog for random thoughts. Sometimes for infosec as well.
+description: 
 
 # --- Local development options ---
 # If your website is hosted locally rather than on GitHub, then you need to uncomment the next two parameters to set the url and baseurl
@@ -21,8 +21,8 @@ description: A second blog for random thoughts. Sometimes for infosec as well.
 # List of links in the navigation bar
 navbar-links:
   About Me: "aboutme"
-  Official Blog: "https://blog.riccardoancarani.it/"
-  Medium: "https://medium.com/@riccardo.ancarani94"
+  #Official Blog: "https://blog.riccardoancarani.it/"
+  #Medium: "https://medium.com/@riccardo.ancarani94"
 
 # Image to show in the navigation bar - image must be a square (width = height)
 # Remove this parameter if you don't want an image in the navbar
@@ -39,9 +39,9 @@ navbar-links:
 navbar-col: "#F5F5F5"
 navbar-text-col: "#404040"
 navbar-children-col: "#F5F5F5"
-page-col: "#FFFFFF"
+page-col: "#000000"
 link-col: "#008AFF"
-hover-col: "#0085A1"
+hover-col: "#800000"
 footer-col: "#F5F5F5"
 footer-text-col: "#777777"
 footer-link-col: "#404040"
@@ -58,7 +58,7 @@ footer-link-col: "#404040"
 # Change all these values or delete the ones you don't want.
 # Important: you must keep the "name" parameter, everything else you can remove
 author:
-  name: Riccardo Ancarani
+  name: Alaa (b1tByte)
 
 # Select your active Social Network Links.
 # Uncomment the links you want to show in the footer and add your information to each link.
@@ -66,10 +66,10 @@ author:
 # If you want to add a new link that isn't here, you'll need to also edit the file _data/SocialNetworks.yml
 social-network-links:
   rss: true
-  github: riccardoancarani
-  twitter: dottor_morte
-#  reddit: yourname
-  linkedin: riccardo-ancarani
+  github: 0xb1tByte
+ # twitter: dottor_morte
+ #  reddit: yourname
+  linkedin: alaa-althubyani
 #  xing: yourname
 #  stackoverflow: "3943160/daattali"
 #  snapchat: deanat78
@@ -83,8 +83,8 @@ social-network-links:
 
 # Select which share links to show in posts
 share-links-active:
-  twitter: true
-  facebook: true
+  twitter: false
+  facebook: false
   linkedin: true
 
 # How to display the link to the website in the footer
