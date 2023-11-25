@@ -1,8 +1,8 @@
 # Site settings
-title: Klise Theme # site title
+title: b1tByte # site title
 description: # site description
 lang: en-US # default lang
-timezone: Asia/Jakarta # set your timezone
+timezone: Riyadh/Saudi Arabia # set your timezone
 image: assets/img/ogp.png # This image used for Open Graph more info https://ogp.me/
 repo: https://github.com/piharpi/jekyll-klise # site repo [optional]
 mode: dark # default theme "dark" | "light"
