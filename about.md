@@ -43,8 +43,10 @@ check the [#English-Article](https://0xb1tbyte.github.io/tags/#English-Article) 
 
 **مجالات إهتمامي وبحثي الحالية** :
   
-- Processes and Access Controls in Operating Systems (Linux & Windows) 
-- Malware Development
+
+Processes and Access Controls in Operating Systems (Linux & Windows) 
+
+Malware Development
 
 **<mark> المقالات العربية </mark>** : 
 
