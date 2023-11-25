@@ -7,7 +7,8 @@ comments: false
 ---
 
 
-```Anyone who stops learning is old, whether at twenty or eighty. Anyone who keeps learning stays young. The greatest thing in life is to keep your mind young```
+> Anyone who stops learning is old, whether at twenty or eighty.
+> Anyone who keeps learning stays young. The greatest thing in life is to keep your mind young
 
 
 Hi! I'm Alaa. I'm sharing in this blog my studying notes in the form of articles (mostly in Arabic) and my write-ups from time to time.
