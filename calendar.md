@@ -1,4 +1,3 @@
-
 > هذه الصفحة موجهة للطلاب والخريجين. يمكنكم هنا الاطلاع على تقويمي وحجز موعد ( ٣٠ دقيقة ) للحصول على استشارة أو طرح سؤال في مجال اختصاصي.
 
 > This page is intended for students and graduates who seek assistance or consultation. You can access my calendar and reserve a 30-minute slot with me. I will be delighted to share my knowledge or answer your questions in my area of expertise
