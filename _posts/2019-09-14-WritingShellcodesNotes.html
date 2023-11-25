@@ -1,0 +1,568 @@
+---
+layout: post
+title: Writing Shellcodes Notes
+tags: 
+- System Security
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#954F72;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:36.0pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:36.0pt;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>خلال دراستي لكورس الـ</span><span dir=LTR></span><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=LTR></span> </span><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><a
+href="https://www.elearnsecurity.com/certification/ecppt/"><span lang=EN-US
+style='color:black'>eCPPT</span></a></span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'> </span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>المقدم من</span><span dir=LTR></span><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=LTR></span> </span><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><a href="https://www.elearnsecurity.com/"><span
+lang=EN-US style='color:black'>eLearnsecurity</span></a></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>   </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>قمت بتلخيص بعض
+النقاط الخاصة بكتابة الشِّل كُود بحسب المذكور في منهج الكورس</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'><br>
+</span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;color:white;
+background:red'>ملاحظة مهمة</span></b><span dir=LTR></span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:white;background:red'><span
+dir=LTR></span>:</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:red'><br>
+</span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>النقاط
+التي قمت بتلخيصها قد لا تكون كاملة حتى الآن ، أو قد تحتمل بعض الأخطاء؛ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><br>
+</span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>لذلك
+قبل الشروع في كتابة الشِّل كُود أو تنفيذه على بيئة حقيقية يُفضّل الرّجوع لمصدر
+موثوق بشكل كامل.</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><u><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;background:yellow'>ملاحظات</span></u></b><span
+dir=LTR></span><b><u><span lang=AR-EG dir=LTR style='font-size:14.0pt;
+line-height:150%;background:yellow'><span dir=LTR></span> </span></u></b><span
+dir=RTL></span><b><u><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+background:yellow'><span dir=RTL></span> عامة حول كتابة </span></u></b><b><u><span
+dir=LTR style='font-size:14.0pt;line-height:150%;background:yellow'>Shellcode</span></u></b><span
+dir=RTL></span><b><u><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+background:yellow'><span dir=RTL></span>:</span></u></b><b><u><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'> </span></u></b></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;font-family:Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>الــ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Shellcode </span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> يجب
+أن يكون مُمثّل بالــ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Machine code </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;font-family:Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>يوجد عدة طرق لكتابة الــ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Shellcode </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ومن ثم تحويله الى الــ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Machine code</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> فيما يلي بعض الطرق (
+اليدوية ، بدون الإستعانة بأدوات تحاكي العملية ) </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>:</span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:72.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;font-family:"Courier New";color:#C00000'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:#C00000'>بإستخدام لغة الأسمبلي </span></b><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:#C00000'>Assembly </span></b></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:108.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'>1)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span dir=RTL></span><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> كتابة
+الــ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Shellcode</span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> بلغة الــ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Assembly </span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:108.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>2)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>عمل </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Compile </span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> للــ
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Assembly
+code </span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> ، المخرج &gt; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>file.obj</span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:108.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>3)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>عمل </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Disassemble </span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> للــ
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>file.obj
+</span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> ( الهدف من الخطوة </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span> (2)</span><span lang=AR-EG style='font-size:
+14.0pt;line-height:150%;color:black'>و (3) هو الحصول على الــ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Machine code </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> المقابل للــ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Assembly code </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>)</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;color:black'>مثال (هذا المثال فقط
+لتوضيح جزئية الــ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Machine code </span><span dir=RTL></span><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>  ،
+بغض النظر عما  يقوم به كود الأسمبلي المقابل له) : </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><img width=682 height=335
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tByte.github.io/master/assets/media/post2/1.png" align=right hspace=12></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:108.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%'>4)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'>إضافة الــ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Prefix </span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> التالي
+: </span><span dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:red'><span dir=LTR></span>\x</span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> </span></b><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'>قبل</span><span
+dir=LTR></span><span lang=AR-EG dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span> </span><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;color:black'>قيم الــ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>HEX</span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> في الــ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Shellcode </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:72.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;font-family:"Courier New";color:#C00000'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:#C00000'>بإستخدام أحد اللغات البرمجية عالية المستوى (</span></b><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'>high-level
+language</span></b><span dir=RTL></span><b><span lang=AR-EG style='font-size:
+14.0pt;line-height:150%;color:#C00000'><span dir=RTL></span>)</span></b></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:108.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'>1)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span dir=RTL></span><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> كتابة
+الــ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Shellcode</span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> بأحدى اللغات عالية المستوى ( لغة </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>C </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> مثلًا </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>(
+</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:108.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>2)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>عمل </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Compile </span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> للــ
+</span><span dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span> file.c</span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>،
+المخرج &gt; </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>file.exe</span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:108.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>3)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>عمل </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Decompile </span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> للــ
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>file.exe
+</span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> ( الهدف من الخطوة </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span> (2)</span><span lang=AR-EG style='font-size:
+14.0pt;line-height:150%;color:black'>و (3) هو الحصول على الــ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Machine code </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>)</span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;font-family:Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>في حالة إستخدام إحدى لغات البرمجة عالية المستوى
+لكتابة الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Shellcode </span><span dir=RTL></span><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> يجب
+الإنتباه بأن الــ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Compiler </span><span dir=RTL></span><span lang=AR-EG
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> قد
+يقوم بإدراج بعض تعليمات الــ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Assembly </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:8.0pt;margin-left:0cm;text-align:justify;text-indent:-18.0pt;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;font-family:Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'>التعليمات أو الإضافات التي يقوم بإدراجها الــ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Compiler </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> تختلف بإختلاف لغة البرمجة + الــ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Compiler </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> نفسه </span></p>
+
+<table class=MsoNormalTable border=0 cellpadding=0>
+ <tr>
+  <td style='padding:0cm 0cm 0cm 0cm'>
+  <table class=MsoNormalTable border=0 cellpadding=0>
+   <tr>
+    <td style='padding:0cm 0cm 0cm 0cm'>
+    <p class=MsoNormal align=right style='text-align:right;line-height:150%'><span
+    style='font-size:14.0pt;line-height:150%'><img border=0 width=1 height=1
+    id="Picture 1" src="2019-09-14-WritingShellcodesNotes.fld/image002.png"></span></p>
+    </td>
+   </tr>
+  </table>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><u><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:yellow'>ملاحظات خاصة بكتابة </span></u></b><b><u><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:yellow'>Shellcode</span></u></b><span
+dir=RTL></span><b><u><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:yellow'><span dir=RTL></span> على نظام&nbsp; </span></u></b><b><u><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:yellow'>Windows</span></u></b><span
+dir=RTL></span><b><u><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:yellow'><span dir=RTL></span> :</span></u></b><b><u><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'> </span></u></b></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:36.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>البرامج (</span><span dir=LTR></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>.exe
+</span><span dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span>)  </span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>الخاصة بنظام التشغيل </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Windows</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> تحتوي على مكتبات ( أو ملفات .</span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>dll</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ) مضمنة معها </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:36.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>ملفات الـ </span><span dir=LTR></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span> dll.</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> في الأساس ماهي إلا ملف برمجي قد يُكتب بلغة </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>C </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> أو لغات أخرى</span><span dir=LTR></span><span
+lang=AR-EG dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=LTR></span> </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:36.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'>الوظيفة الأساسية لملفات ال</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>ـ</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>dll. </span><span
+dir=RTL></span><span lang=AR-EG style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> دعم عمل</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'> للبرنامج الأساسي (</span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span>.exe </span><span dir=RTL></span><span
+lang=AR-EG style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>)
+</span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>والغرض
+منها يختلف بحسب طبيعة البرنامج والوظيفة التي يؤديها، على سبيل المثال برنامج (</span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>FTP</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ) مدمج معه ملف .</span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>dll</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+معين يُتيح للبرنامج الوصول الى بعض موارد النظام </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:36.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>ملفات الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>dll</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>. قد
+يتم مشاركتها (أي إمكانية الوصول لها) بين أكثر من برنامج ( أي أكثر من برنامج
+يستطيع إستخدام نفس ملف الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>dll</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>. في
+نفس الوقت) </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:36.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>في مرحلة كتابة الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Shellcode</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+قد نقوم بكتابة </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Shellcode</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+الهدف منه هو &quot;فتح جلسة في الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Command prompt</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+في النظام&quot;، يوجد بعض الأمور التي يجب التأكد منها في حالة أردنا كتابة مثل
+هذا الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Shellcode</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> وهي
+: </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:72.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>التأكد من وجود ملف .</span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>dll</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+يحتوي على دالة ( </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>function</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> )
+تقوم بهذا الغرض، حيث أننا سنقوم بإستخدام هذه الدالة الموجودة في ملف الـ .</span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>dll</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ونداءها ( في داخل الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Shellcode</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> الخاص بنا ) عن طريق جلب عنوان الذاكرة الخاص
+بها، وهذا العنوان نجده من خلال البحث في ملف الـ .</span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>dll</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+( نقوم بعملية </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>disassemble</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> له
+)</span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:72.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>في حالة عدم وجود أي من أساليب الحماية مثل </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>ASLR</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+فالعناوين الخاصة بالدوال في ملفات الـ .</span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>dll</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+تكون ثابته (على سبيل المثال لو قمنا بعمل </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>disassemble</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+لملف الـ .</span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>dll</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span> في جهاز آخر سنحصل
+على نفس العنوان ) </span></p>
+
+<p class=MsoNormalCxSpMiddle dir=RTL style='margin-right:72.0pt;text-align:
+justify;text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>لكن في حالة وجود أحد أساليب الحماية من &quot;إستغلال ثغرات فيضان
+ذاكرة التخزين المؤقت&quot; فالعناوين الخاصة بالدوال تختلف ( مع كل عملية تشغيل
+للجهاز يتم إعطاء عناوين جديدة )&nbsp; </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-bottom:8.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-GB style='font-size:
+14.0pt;line-height:150%'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

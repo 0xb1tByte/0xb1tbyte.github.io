@@ -1,0 +1,1451 @@
+---
+layout: post
+title: Insecure Deserialization
+tags: 
+- Web-Pentesting
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+h3
+	{mso-style-link:"Heading 3 Char";
+	margin-right:0cm;
+	margin-left:0cm;
+	font-size:13.5pt;
+	font-family:"Times New Roman",serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-link:"Heading 3";
+	font-family:"Times New Roman",serif;
+	font-weight:bold;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-GB link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+lang=EN-US style='font-size:18.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Insecure Deserialization</span></b></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>أمور يجب عليك معرفتها قبل
+قراءة هذه المقالة: </span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>معرفة بسيطة بلغة
+جافا (المثال في هذه المقالة مُستند على هذه اللغة )</span></p>
+
+<div style='border:none;border-bottom:solid windowtext 1.0pt;padding:0cm 0cm 1.0pt 0cm'>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed;border:none;padding:0cm'><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>السلام عليكم ورحمة الله
+وبركاته ،</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هذه المقالة تناقش ثغرة </span><a
+href="https://owasp.org/www-project-top-ten/2017/A8_2017-Insecure_Deserialization"><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>Insecure
+Deserialization</span></b></a><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قبل الخوض في تفاصيل هذه
+الثغرة، نحن بحاجة لفهم مفهومين مُهمّين في لغات البرمجة:</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object Serialization</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object Deserialization</span></b><span dir=RTL></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:16.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'>Object Serialization</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:16.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هي عملية تحويل الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> إلى </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، ومن ثم هذه الـ </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بالإمكان حفظها في ملف ( أي حفظ الحالة الخاصة
+بهذا الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Object</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>)، أو في قاعدة بيانات، أو تمريرها عبر الشبكة
+إلى تطبيق آخر بإستخدام أحد بروتوكولات الشبكة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:16.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'>Object Deserialization</span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:16.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هي العملية العكسية للعملية
+السابقة، أي لدينا بيانات مُمثلة على شكل </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يتم قراءتها من ملف، أو قاعدة بيانات، أو قد
+يتم استقبالها عبر الشبكة عن طريق أحد البروتوكولات مثل بروتوكول الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>HTTP </span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>ومن ثم يتم
+تحويل هذه الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Bytes</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> إلى صورتها
+الأولى الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Object</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الصورة التالية تلخص
+العمليتين: </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image001.png"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=332 height=146
+id="Picture 1" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image001.png"
+alt="Diagram&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=EN-US
+style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هذا بالنسبة للجانب النظري، نأتي الآن للجانب التطبيقي ونأخذ المثال
+التالي على هذين المفهومين في لغة جافا</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Object Serialization in Java </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في لغة جافا إذا أردنا تطبيق
+هذا المفهوم وتحويل الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Objects </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> إلى </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لتُعالج في طرف آخر، فيجب علينا عمل </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>implements </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> للـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>interface </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> التالي : </span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><a
+href="https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>Serializable</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>كما يظهر في الكود التالي، تم
+تعريف كلاس </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Item </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والذي يقوم بعمل </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>implement </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> للـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serializable</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ( <b><u>السطر </u></b></span><span dir=LTR></span><b><u><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>5</span></u></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> )</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image002.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=218 height=164
+id="Picture 2" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image002.png"
+alt="Text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن بإمكاننا تعريف أي </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> من كلاس </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Item</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ومن ثم تحويل هذا الـ</span><span dir=LTR></span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>   Object </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> إلى </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes stream </span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في الكود التالي قمنا بتعريف
+كلاس </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Serialize</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، وفي دالة الـ </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>main</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> قمنا بتعريف </span><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Object</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> من كلاس </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Item &nbsp;</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ( <b><u>السطر </u></b></span><span dir=LTR></span><b><u><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>10</span></u></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ) </span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=EN-US
+style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image003.png"><b><span
+lang=AR-SA dir=LTR style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000;text-decoration:none'><img border=0 width=287 height=214
+id="Picture 3" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image003.png"
+alt="Text&#10;&#10;Description automatically generated"></span></b></a></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><u><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>السطر </span></u></b><span
+dir=LTR></span><b><u><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>12</span></u></b><span
+dir=RTL></span><b><u><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> :</span></u></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> قمنا بتعريف </span><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Object</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> من </span><a
+href="https://docs.oracle.com/javase/7/docs/api/java/io/FileOutputStream.html"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>FileOutputStream</span></a><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span>  لكتابة محتوى الـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>s1</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ( في صورة </span><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Bytes</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ) في ملف
+يسمى </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>data.ser</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><u><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>السطر </span></u></b><span
+dir=LTR></span><b><u><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>14</span></u></b><span
+dir=RTL></span><b><u><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> : </span></u></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>في هذا السطر قمنا بنداء الدالة </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>writeObject</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وتم تمرير الـ </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>s1</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> لها، هذه الدالة ستقوم بتحويل الحالة الخاصة بالـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> إلى </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ( </span><b><u><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>هنا تحدث عملية الـ </span></u></b><b><u><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Serialization</span></u></b><span dir=RTL></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>) </span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:16.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>The Java serialized object</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد عمل </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Compile </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> للكود السابق سيكون المخرج لدينا ملف </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>data.ser</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والذي يحتوي على الـ </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> من كلاس </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Item </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لكن <b><u>في صورة </u></b></span><b><u><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span></u></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><u><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+ style='text-decoration:none'>&nbsp;</span></span></u></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image004.png"><b><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><img border=0 width=451 height=13 id="Picture 5"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image004.png"></span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image005.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=24
+id="Picture 7" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image005.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لو قمنا بإستخدام أداة </span><a
+href="https://man7.org/linux/man-pages/man1/file.1.html"><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>file</span></a><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> للإطلاع على
+نوع ملف </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>data.ser</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> سنجد أن
+الأداة تطبع لنا الناتج الآتي :</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image006.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=28
+id="Picture 8" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image006.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ولو قمنا بقراءة محتوى ملف </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>data.ser</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> في صورة </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Hex</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> باستخدام أداة </span><a
+href="https://man7.org/linux/man-pages/man1/hexdump.1.html"><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>hexdump</span></a><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'><span
+dir=RTL></span> <span lang=AR-SA style='color:black'>سنجد أن محتوى الملف يبدأ
+بهذه القيمة : </span></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>aced</span></b></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image007.png"><b><span
+lang=AR-SA dir=LTR style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000;text-decoration:none'><img border=0 width=381 height=61
+id="Picture 9" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image007.png"
+alt="A close up of a keyboard&#10;&#10;Description automatically generated"></span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ولو أردنا الإطلاع على
+المقابل لهذه القيمة في التمثيل </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Base64 </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> سيظهر لنا المُخرج الآتي :</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image008.png"><b><span
+lang=EN-US dir=LTR style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000;text-decoration:none'><img border=0 width=451 height=35
+id="Picture 10" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image008.png"></span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>ماذا نستفيد من هذه
+المعلومات؟ </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>يكفي أن نعرف إلى الآن أن الـ
+</span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Java Serialized Object</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> يحمل الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Signature</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> الآتي :</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>في التمثيل </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Hex </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> : </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>aced</span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>في التمثيل </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Base64 </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> :</span><span dir=LTR></span><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>rO0AB</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في المقابل، ماذا لو أردنا
+الإطلاع على محتوى هذا الـ </span><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Object</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> لكن </span><b><u><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>بصورة مقروءة ومفهومة لنا أكثر</span></u></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>؟</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لحُسن الحظ قام </span><a
+href="https://github.com/NickstaDB"><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif'>أحد الباحثين</span></a><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> بتطوير أداة تُمكّننا من قراءة الـ </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Java Serialized Object</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بشكل أكثر وضوحًا بدلًا من قراءته بالـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Hex</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> أو الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Base64</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، وهذه
+الأداة هي : </span><a href="https://github.com/NickstaDB/SerializationDumper"><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>SerializationDumper</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الصورة الآتية توضح إستخدام
+هذه الأداة والمُخرج من قراءة محتوى ملف الـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>data.ser</span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image009.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=251 height=259
+id="Picture 11" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image009.png"
+alt="Text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد الخوض في مفهوم الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serialization </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وتحليل الناتج النهائي من هذه العملية ( </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serialized Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ) لننتقل الآن للعملية العكسية المقابلة لها ،
+الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Deserialization</span><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Object Deserialization in Java</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في الكود التالي قمنا بتعريف
+كلاس </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Deserialize </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والذي سنطبق فيه مفهوم الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Deserialization</span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image010.png"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=329 height=161
+id="Picture 4" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image010.png"
+alt="Text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><u><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>السطر </span></u></b><span
+dir=LTR></span><b><u><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>10
+</span></u></b><span dir=RTL></span><b><u><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> :</span></u></b><span dir=LTR></span><b><span lang=AR-SA
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> </span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>قمنا بقراءة محتوى ملف </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>data.ser</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> عن طريق الـ </span><a
+href="https://docs.oracle.com/javase/7/docs/api/java/io/FileInputStream.html"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>FileInputStream</span></a><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> و </span><a
+href="https://docs.oracle.com/javase/7/docs/api/java/io/ObjectInputStream.html"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>ObjectInputStream</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><u><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>السطر </span></u></b><span
+dir=LTR></span><b><u><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>11
+</span></u></b><span dir=RTL></span><b><u><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> :</span></u></b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> قمنا بتعريف </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> من كلاس </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Item</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ومن ثم سيتم حفظ القيمة العائدة من دالة </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>readObject</span></b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> في هذا الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>object</span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><u><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>وبعبارة أخرى:</span></u></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> دالة </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>readObject</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ستقوم
+بقراءة محتوى ملف </span><span dir=LTR></span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> data.ser </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ( والذي هو عبارة عن </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ) ومن ثم هذه الـ </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> سيتم إرجاعها إلى صورتها الأولى </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ( </span><b><u><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>هنا تحدث عملية الـ </span></u></b><b><u><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Deserialization</span></u></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن نحن نملك المعرفة
+اللازمة لفهم ثغرة الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Insecure
+Deserialization</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ولماذا تحدث؟</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ننتقل لمناقشة تفاصيل هذه
+الثغرة في الجزء التالي من المقالة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:16.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'>Insecure Deserialization</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بشكل مُختصر جدًا :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> يحدث هذا النوع من الثغرات عندما يكون بإمكان المخترق التحكّم
+والتلاعب بالبيانات التي يتم عمل لها </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Deserialize</span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>لنفصّل أكثر .. </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>نقصد بالبيانات هنا الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> الذي تم حفظ حالته وتحويلها إلى صورة </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>فعلى سبيل المثال لو كان
+لدينا تطبيقين : </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>التطبيق الأول :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> يقوم بتنفيذ عملية الـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serialization</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> على الـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ومن ثم يقوم بإرسال المُخرَج النهائي عبر
+الشبكة إلى التطبيق الثاني</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>التطبيق الثاني :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> يستقبل هذه البيانات ومن ثم يجري عليها عملية الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Deserialization</span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'>المشكلة : </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>إذا لم يقم التطبيق الثاني بالتأكد من سلامة البيانات التي يعالجها
+لتنفيذ عملية الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Deserialization</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> وكان بإمكان
+المخترق إعتراض هذه البيانات والتلاعب بها فهنا تحدث ثغرة الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Insecure Deserialization</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> !</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الآن لننتقل للجزء الأخير من هذه المقالة، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>التدريب على هذه الثغرة
+وتحليل </span><a href="https://github.com/hvqzao/java-deserialize-webapp"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>هذا
+التطبيق</span></a><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'> البسيط الذي يحاكي هذه المشكلة.</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:16.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>java-deserialize-webapp</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بدايةً نقوم بعمل </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Run</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> للتطبيق كالآتي : </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image011.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=27
+id="Picture 12" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image011.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ومن ثم نستطيع تصفح التطبيق
+عبر المنفذ التالي : </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span dir=LTR></span><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>127.0.0.1:8000</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image012.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=260 height=155
+id="Picture 13" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image012.png"
+alt="Graphical user interface, text, application&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>التطبيق سيقوم بإستقبال
+البيانات التي نمررها له ومن ثم سيقوم بعمل </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Deserialization</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لها بدون التأكد من سلامتها،</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بإمكاننا إستغلال هذه المشكلة
+بطرق عدّة، لكن في هذه المقالة سنقوم ببناء إستغلال بسيط جدًا يؤكد لنا أن التطبيق
+مُصاب بالفعل</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>DNS Resolution Exploit </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>فكرة الإستغلال :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>نقوم بتمرير </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serialized Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> إلى التطبيق المصاب، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وهذا الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serialized Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> خلال عملية الـ </span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Deserialization</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> سيتيح لنا تنفيذ الأوامر التي نريدها،</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في هذا الاستغلال سنجعل
+التطبيق المصاب يقوم بعمل </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>DNS query</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> لدومين خاص
+بنا </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قبل بناء الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>payload </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> التي سنقوم بإرسالها للتطبيق المصاب، سنقوم
+باستخدام </span><a href="https://github.com/iphelix/dnschef"><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>DNS
+Proxy</span></a><span dir=RTL></span><span lang=EN-US style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>الغرض من هذه
+الخطوة :</span></b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'> </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>إعتراض الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>DNS request </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الصادر من
+التطبيق المصاب، حتى نتأكد بأن الـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>payload </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> التي قمنا بإرسالها تم عمل </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Run</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> لها بشكل سليم</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image013.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=356 height=118
+id="Picture 17" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image013.png"
+alt="Text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن سنقوم ببناء الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>payload </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> أو الـ </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serialized Object </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بإستخدام </span><a
+href="https://github.com/frohoff/ysoserial"><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>هذه الأداة</span></a><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp; كالآتي : </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image014.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=368 height=75
+id="Picture 14" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image014.png"
+alt="Text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد بناء الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Serialized Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بإمكاننا الإستعانة بأداة الـ </span><a
+href="https://github.com/NickstaDB/SerializationDumper"><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>SerializationDumper</span></a><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>
+</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif'><span dir=RTL></span> <span lang=AR-SA
+style='color:black'>التي قمنا بالإطلاع عليها سابقًا لتحليل هذا الـ </span></span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وفهم محتواه ( هذه الخطوة للتحليل فقط، ولاحظ
+بأني قمت بتمرير </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>raw data </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> للأداة ولم
+أقم بتمرير </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Base64</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image015.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=391 height=32
+id="Picture 15" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image015.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image016.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=380 height=117
+id="Picture 16" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image016.png"
+alt="Text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن نقوم بإرسال الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>payload</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> إلى التطبيق </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image017.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=270 height=135
+id="Picture 18" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image017.png"
+alt="Graphical user interface, text, application&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد إرسال الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>payload</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> نلاحظ أن التطبيق يخبرنا بأن عملية الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Deserialization</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> نجحت</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image018.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=306 height=113
+id="Picture 19" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image018.png"
+alt="Graphical user interface, text, application&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ولو عدنا إلى الـ </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>DNS Proxy </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> سنجد أن التطبيق المصاب بالفعل قام بعمل </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>DNS query</span><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image019.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=360 height=53
+id="Picture 20" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/InsecureDeserialization.fld/image019.png"
+alt="Text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ختامًا، أود الإشارة بأن هذه
+المقالة تمّت كتابتها خلال دراسة هذه الثغرة والبحث حولها، فكل ما تم ذكره هنا قد
+يحتمل الخطأ، لكن بالإمكان العودة إلى المراجع التي إستندت عليها هذه المقالة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وإن أصبت فمن توفيق الله
+وحده، وإن أخطأت فمن نفسي والشيطان </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>مواضيع مُقترحة لفهم هذه
+الثغرة بتعمق أكثر:</span></b></p>
+
+<h3 style='margin-left:36.0pt;text-indent:-18.0pt;line-height:150%'><span
+style='font-family:Symbol;color:black;font-weight:normal'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><span style='font-family:"Calibri",sans-serif;color:black;
+font-weight:normal'>Property-Oriented Programming</span></h3>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>المراجع:</span></b></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'>كتب:</span></b></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt;line-height:150%'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span lang=EN-US style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Introduction to
+Java Programming Comprehensive 8E Y. Daniel Liang - chapter 19</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'>مقالات:</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><a
+href="https://vickieli.dev/insecure%20deserialization/java-deserialization/"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://vickieli.dev/insecure%20deserialization/java-deserialization/</span></a></p>
+
+<p class=MsoListParagraphCxSpLast style='text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><a
+href="https://nickbloor.co.uk/2017/08/13/attacking-java-deserialization/"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://nickbloor.co.uk/2017/08/13/attacking-java-deserialization/</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#0070C0'>دورات : </span></b></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt;line-height:150%'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span lang=EN-US style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>eWPTXv2,
+Attacking Serialization - eLearnSecurity</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>معمل: </span></b></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><a href="https://github.com/hvqzao/java-deserialize-webapp"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://github.com/hvqzao/java-deserialize-webapp</span></a><span
+dir=RTL></span><span dir=RTL style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>يوتيوب: </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://www.youtube.com/watch?v=nkTBwbnfesQ"><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif'>https://www.youtube.com/watch?v=nkTBwbnfesQ</span></a><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoListParagraphCxSpLast style='text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://www.youtube.com/watch?v=5grJYo9IqY0&amp;feature=youtu.be"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://www.youtube.com/watch?v=5grJYo9IqY0&amp;feature=youtu.be</span></a><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

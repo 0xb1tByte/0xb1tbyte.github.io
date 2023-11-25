@@ -1,0 +1,633 @@
+---
+layout: post
+title: Injection attacks on System() Function
+tags: 
+- Injection Attacks
+- Secure Code
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'>Injection Attacks on System()</span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>استكمالًا </span><a
+href="https://0xb1tbyte.github.io/2019/11/05/TheFundamentalCause.html"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>للمقالة
+السابقة</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هذه المقالة تُلقي نظرة على
+بعض ثغرات الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Injection Attacks </span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> في لغة </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>C</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'> </span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> <span lang=AR-SA>، ومتى يتم خَلط </span></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين</span></b><span lang=AR-SA> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>مع </span><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#385623'>الكود البرمجي</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، و ما هو الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>Parser</span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:#0070C0'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>في كل حالة؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بسم الله نبدأ،</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بدايةً، لنفصّل قليلًا في
+ماهية برامج الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>C</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>البرنامج المكتوب بلغة </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>C</span></b><span dir=RTL></span><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+<span lang=AR-SA>بعدما يتم الإنتهاء من كتابته يتم عمل </span></span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Compile </span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> للـ </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Source Code</span></b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ومن ثم يتم
+تحويله الى </span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Binary Code</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ، قبل هذه العملية وتحديدًا في مرحلة الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Compilation Time</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لا يوجد لدينا أي </span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات من المستخدمين </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ليتم خلطها<b> </b></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:#385623'>مع
+الكود</span></b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>.<b> </b></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>للنظُر للصورة الآتية التي
+تُلخّص المراحل التي يمر بها البرنامج قبل أن يُصبح ملفًا تنفيذيًا<b> </b>(تستطيع
+الاطلاع على<b> </b>بعض التفاصيل المتعلّقة بهذه العملية وتلخيصها من </span><a
+href="https://github.com/0xb1tByte/eCPPTv2-Journey/tree/master/PTPCheatSheet"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>هنا</span></a><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>)</span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><img border=0 width=151 height=320 id="Picture 1"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/CProgram.png"></span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعدما يتم عمل </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Compile</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> للكود لنقول بأن </span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'>الكود </span></b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>سيصبح <b>قطعةً
+واحدة</b> وسيتم تخزينه في مكانٍ ما في الذّاكرة، وهذا المكان مُنفصل عن المكان
+الذي ستُخزّن فيه </span><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>البيانات القادمة من المستخدمين</span></b><span
+dir=LTR></span><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>  </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>( إذا أردت الاستزادة
+حول هذا الموضوع اطلع على <a
+href="https://manybutfinite.com/post/anatomy-of-a-program-in-memory/">هذه المقالة</a>
+)</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>تجدر الإشارة أيضًا بأنه في
+كل مرّة يريد بها المبرمج إضافة &quot;</span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'>كود</span></b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&quot; لبرنامجه فيجب
+عليه تكرار العملية السّابقة حتى يحصل على الملف التنفيذي، أي بعبارة أخرى يجب أن
+يمر </span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#385623'>الكود </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>على مرحلة الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Compilation Time</span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>والتي ذكرنا بها سابقًا أنه لن يعبُر من خلالها أي </span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>بيانات قادمه من المستخدمين</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، ذكرنا أيضًا أن كِلا الجزئين (</span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'>الكود</span></b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> و </span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>بيانات المستخدمين</span></b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>) يتم
+حفظهما في <b><u>مكانين منفصلين</u></b> ، فكيف إذًا يحدث الخَلط وكيف تحدث ثغرات
+الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Injection Attacks</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> في لغة </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>C</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ! </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0cm;margin-right:18.0pt;
+margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:#C00000'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:#C00000'>Attacks on System()</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قبل أن نخوض في التفاصيل، يجب
+علينا معرفة الوظيفة التي تؤديها هذه الدالة حتى نستطيع فهم أين تحدث المُشكلة
+ولماذا تحدث أساسًا؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a href="https://linux.die.net/man/3/system"><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>System()</span></b></a><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> :</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>هذه الدّالة تُتيح لنا تنفيذ <b>تعليمات</b> مع تحديد الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Parameters</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> الخاصّة بهذه التعليمات ( في حالة كانت
+التعليمة تحتاج إلى تمرير قيم للـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Parameters</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>)
+.<b> </b></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>ماذا نقصد بالتعليمات هنا؟ </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>نقصد الأوامر الخاصّة بالـ
+</span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>shell</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> مثل </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>ls , mkdir , pwd </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> وغيرها
+(بالإمكان استخدام نفس الدالة على أنظمة ويندوز، لكن تركيزنا هنا على نظام لينكس)<b>.</b></span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-left:0cm;text-align:
+right;line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>لو لاحظنا، بعض من هذه
+الأوامر تحتاج أن تستقبل </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Parameters</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> حتى
+يتم تنفيذ الأمر ، والـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Syntax</span></b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'> </span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span
+lang=AR-SA>الخاص بالدالة كالآتي : </span></span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>system(char
+*command);</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-left:0cm;text-align:
+right;line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span
+lang=AR-SA>نلاحظ أن دالة الـ </span></span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>System</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+تستقبل </span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Parameter</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+واحد، وهذا يعني أنه عندما يقوم المبرمج باستخدام هذه الدالة، فإنه يجب عليه تمرير
+الأمر المراد تنفيذه + الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Parameters</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> الخاصة
+بالأمر وسيتم تمريرهم للدالة كـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Parameter </span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> واحد
+</span></b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>( بعبارة أخرى سيتم عمل </span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>Concatenate</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+للأمر والـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Parameters </span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>الخاصة به). </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-left:0cm;text-align:
+right;line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>لنأخذ مثال على استخدام
+الدالة حتى تتّضح وظيفتها أكثر: </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-left:0cm;text-align:
+right;line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span style='font-size:14.0pt;
+line-height:150%;color:blue'>int </span><span style='font-size:14.0pt;
+line-height:150%'>main(<span style='color:blue'>int </span>argc, <span
+style='color:blue'>char</span>** argv) </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span dir=LTR></span><span
+style='font-size:14.0pt;line-height:150%'><span dir=LTR></span>{<br>
+<span style='color:blue'>char </span>cmd[CMD_MAX] = <span style='color:red'>&quot;/usr/bin/cat
+&quot;</span>; strcat(cmd, argv[1]);<br>
+system(cmd); </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span dir=LTR></span><span
+style='font-size:14.0pt;line-height:150%'><span dir=LTR></span>} </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في المثال أعلاه قام المبرمج
+بتحديد الأمر الذي سيتم تمريره للدالة وهو نداء البرنامج </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>/usr/bin/cat  </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والذي سيقوم بعملية القراءة للملف، أي ملف؟
+هنا عملية تحديد الملف متروكة للمستخدم (أي أن الـ </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Parameter</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> الخاصة بهذا الأمر يتم تحديدها من قبل المستخدم)
+</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعدما يتم قراءة الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Parameter</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> الخاصة بهذا الأمر سيتم عمل </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Concatenate</span></b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> للأمر والـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Parameter</span></b><span dir=RTL></span><span style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> <span lang=AR-SA>الخاصة به عن طريق تمرير القيم للدالة </span></span><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'><a
+href="https://www.tutorialspoint.com/c_standard_library/c_function_strcat.htm"><span
+dir=LTR>strcat</span></a><span dir=RTL></span><span dir=RTL></span> <span
+lang=AR-SA style='color:black'>(<b>هنا يحدث الخَلط</b>)، والقيمة النهائية سيتم
+إرسالها للدالة </span></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>System </span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، الآن لنتحدث قليلًا عن ما تقوم بفعله هذه الدالة تحديدًا ، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هل تقوم هي بنفسها بتنفيذ
+التعليمة ( نقصد تنفيذ برنامج الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>cat  </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> مع قيم الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Parameter</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> الخاصة به) ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الإجابة: لا </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الدالة لا تقوم بنفسها بتنفيذ
+الأمر لكنها تقوم بنداء <b>برنامج آخر</b> <u>يمكنه تنفيذ أوامر النظام</u>، أعتقد
+أنه أتضح لك الآن لماذا تحدث المُشكلة؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لنفصّل مرّة أخرى .. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لو عُدنا </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'><a
+href="https://linux.die.net/man/3/system">للمرجع السابق الخاص بالدالة</a> <span
+style='color:black'>، سنجد هذه العبارة: </span></span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>system</span></b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>() executes a command specified in <i>command</i> by calling <b>/bin/sh
+-c</b> <i>command</i></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>والذي يعني بأن الدالة ستقوم
+بنداء البرنامج </span><span dir=LTR></span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=LTR></span>/bin/sh</span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>والذي بدوره سيقوم بتنفيذ التعليمة التي مُرّرت له عن طريق الدالة </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>System</span></b><span dir=RTL></span><b><span style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن بما أن الذي سيُنفّذ
+التعليمة هو  </span><span dir=LTR></span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=LTR></span>/bin/sh</span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>فهذا يعني أن الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>Parser</span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الذي سيفسّر هذه التعليمة هو</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'> </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'>Parser</span></b><span dir=RTL></span><b><span style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'><span
+dir=RTL></span> </span></b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>آخر وليس الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'>Parser</span></b><span dir=RTL></span><b><span style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'><span
+dir=RTL></span> </span></b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الخاص بلغة </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>C</span></b><span dir=RTL></span><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وفي حالة استخدام هذه الدالة
+مع أنظمة لينكس فالـ<b> </b></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>Parser </span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:#0070C0'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هنا هو الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>Shell Parser</span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:#0070C0'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لنُلخّص الآن كُل ما سبق: </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-left:0cm;text-align:
+right;line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>دالة </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>System</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> هي دالة تتيح لنا تنفيذ تعليمات خاصة بالنظام،
+الدالة تستقبل </span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Parameter</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+واحد، أي يتوجب على المبرمج تمرير قيمة واحدة تحمل التعليمة والـ</span><span
+dir=LTR></span><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span> </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Parameters</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> الخاصة بها ( هنا يحدث الخَلط) ، أيضًا الدالة
+لا تقوم بنفسها بتنفيذ التعليمات إنما تقوم بنداء </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>shell program</span></b><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> <span lang=AR-SA>والذي سيقوم بتنفيذ التعليمة والذي يعني أيضًا
+أن الـ</span></span><span dir=LTR></span><span lang=AR-SA dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span> </span><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span></b><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:#0070C0'>Parser</span></b><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> <span lang=AR-SA>هنا هو </span></span><b><span lang=EN-GB
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#0070C0'>Shell Parser</span></b><span
+dir=RTL></span><b><span lang=EN-GB style='font-size:14.0pt;line-height:150%;
+color:#0070C0'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>، عندما يترك المُبرمج
+عملية تحديد الـ </span><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Parameter</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+الخاصة بالتعليمة للمستخدم تبدأ تحدث المشكلة!</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-left:0cm;text-align:
+right;line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#0070C0'>المرجع: </span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>كتاب: </span><a
+href="https://www.amazon.com/gp/product/1733003932/ref=dbs_a_def_rwt_hsch_vapi_taft_p1_i0"><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>Computer
+Security - A hands-on Approach</span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>فصل: </span><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>SQL Injection Attack</span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الموضوع: </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>The Fundamental
+Cause</span></b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>صفحة: </span><span dir=LTR></span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>194-195</span></b><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-left:0cm;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

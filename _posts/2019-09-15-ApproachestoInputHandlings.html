@@ -1,0 +1,458 @@
+---
+layout: post
+title: Approaches to Input Handling
+tags: 
+- Blue Team
+- Web-Pentesting
+- Secure Code
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p
+	{margin-right:0cm;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US>
+
+<div class=WordSection1>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;color:black;background:yellow'>أساليب معالجة المُدخلات
+في تطبيقات الويب</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>هذه المقالة تُناقش المنهجيات المختلفة التي يتبعها المبرمجين
+لحماية تطبيقات الويب من الـ </span><b><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>User Input</span></b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>&nbsp;&quot;مدخلات المستخدمين&quot;.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>أساليب معالجة المُدخلات في تطبيقات الويب بالإمكان تقسيمها
+كالتالي: </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'>1</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'><span dir=RTL></span>-</span></b><span
+dir=LTR></span><b><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'><span dir=LTR></span> </span></b><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'>حجب المُدخلات المُعرّفة
+مُسبقًا بأنها ضارّة</span></b><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:#C00000'>، أو ما يُعرف بـ  </span></b><span dir=LTR></span><b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'><span
+dir=LTR></span>“Reject Known Bad” </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>في هذا النوع يُعرّف المبرمج قائمة بالمدخلات
+الشائعة الاستخدام في عملية الاختراق. </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>هذا النوع يعتبر سيئ جدًا في الحماية لأن عملية
+تجاوزه ستكون بكل بساطة إدخال مُدخل خارج نطاق هذه القائمة.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>التطبيقات التي تتبع هذه المنهجية قد تكون معرّضة
+أيضًا لهجوم </span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>NULL Byte Attack</span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>NULL Byte Attack</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'> هو نوع من
+أنواع تجاوز أسلوب الحماية هذا ، والذي يرمز له أحيانًا بالاسم </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Black-Listed
+filters</span></b><span dir=RTL></span><b><span style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>، في هذا النوع
+من الهجوم يقوم المخترق بإدراج </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Null Byte </span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>قبل المُدخل
+المحجوب ، مما يؤدي إلى تعطيل عمل الـ </span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>filter </span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>، وبالتالي
+سيتجاوز المخترق هذا النوع من الحمايات.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#020202'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:#C00000'><span dir=LTR></span>2</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:#C00000'><span dir=RTL></span>- </span></b><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'>السماح فقط بالمُدخلات
+المُعرّفة مُسبقًا بأنها سليمة</span></b><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000'>، أو ما يُعرف بـ  </span></b><span
+dir=LTR></span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'><span dir=LTR></span>“Accept Known Good” </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>في هذا النوع يُعرّف المُبرمج قائمة بالمُدخلات
+التي يتم قبولها، وما دونها لن يتم معالجته.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>القائمة التي يعرفها المبرمج قد تكون:</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+72.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:"Courier New";
+color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Set of Literal Strings</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>:</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'> يعرف المبرمج هنا قائمة
+تسمح باستخدام الحروف فقط.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+72.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:"Courier New";
+color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Patterns</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>:</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'> يعرف المبرمج هنا قائمة
+تتبع &quot;شكل&quot; معين.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+72.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:"Courier New";
+color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Set of Criteria</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>: </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>يعرف المبرمج هنا </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>عدة معايير يجب
+أن تنطبق على المُدخل حتى تتم معالجته.</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>هذا النوع من الحماية يعتبر جيد وأفضل من السابق،
+لكن <u>لا يجب الاعتماد عليه فقط</u> في عملية الحماية، لابد أن يؤخذ بعين
+الاعتبار أساليب الحماية الأخرى أيضًا.</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span style='font-size:14.0pt;
+line-height:150%;color:#020202'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'>3</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'><span dir=RTL></span>-</span></b><span
+dir=LTR></span><b><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'><span dir=LTR></span> </span></b><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'>تصحيح المُدخل، أو ما</span></b><span
+dir=LTR></span><b><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'><span dir=LTR></span> </span></b><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'>يعرف بـ </span></b><span
+dir=LTR></span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'><span dir=LTR></span>“Data Sanitization” </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>في هذا النوع المُبرمج لا يقوم بحجب المُدخل
+الضّار، ولكن يقوم بعملية &quot;تصحيح&quot; هذا المدخل، على سبيل المثال عن طريق
+حذف أحد الأحرف التي قد تؤدي الى إحداث الضرر بتطبيق الويب. </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>هذا المنهج قد يعتبر جيد جدًا في الحماية.</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>على الرغم من كون هذا المنهج جيد إلى حدٍ ما، لكنه يملك بعض القصور
+في بعض الحالات مثل: عندما يريد المبرمج تصحيح العديد من &quot;أنواع البيانات
+الضارّة&quot; الخاصة بمُدخل واحد، في هذه الحالة الأفضل استخدام منهج</span><span
+dir=LTR></span><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span><span
+dir=LTR></span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span>“Boundary Validation”</span></b><span
+dir=RTL></span><b><span lang=EN-GB style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#020202'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:#C00000'><span dir=LTR></span>4</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:#C00000'><span dir=RTL></span>-</span></b><span dir=LTR></span><b><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'><span
+dir=LTR></span> </span></b><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:#C00000'>معالجة البيانات السليمة، أو ما يُعرف بـ </span></b><span
+dir=LTR></span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'><span dir=LTR></span>“Safe Data Handling” </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>الثغرات المتعلقة بتطبيقات الويب يتم تجنبها ليس فقط من خلال
+&quot;التحقق من مدخلات المستخدم&quot; ولكن أيضًا عن طريق التأكد بأن هذه
+المدخلات يتم &quot;معالجتها&quot; بصورة آمنه، هذا المنهج يركز على
+&quot;معالجة&quot; البيانات الآمنة فقط، والبيانات الآمنة هي فقط ما يقوم المبرمج
+بتعريفها وليست المُدخلة من قبل المستخدم.</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>أحد الأمثلة على هذا المنهج: عندما يقوم المبرمج بتعريف الـ </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>SQL Queries</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> التي يتم إرسالها لأحد الدوال </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>methods/functions
+</span></b><span dir=RTL></span><b><span style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>لتعالجها، بدلًا من ارسال
+المدخل الخاص بالمستخدم كـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>parameter</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> لهذه
+الدوال.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'>5</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'><span dir=RTL></span>-</span></b><span
+dir=LTR></span><b><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000'><span dir=LTR></span> </span></b><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'>التحقق من دلالة
+البيانات المُدخلة أو ما يُعرف بـ </span></b><span dir=LTR></span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'><span dir=LTR></span>“</span></b><b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'>Semantic
+Checks” </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>هذا المنهج يُعالج الثغرات التي تحدث ليس بسبب كون
+المُدخل ضار، ولكن بسبب أن المُدخل سليم ولكنّه أدّى إلى الوصول لبيانات متعلقة
+بمستخدم آخر.  </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>مثلًا: قد يقوم المخترق بإدخال مُدخل متعلق بمستخدم ما &quot;مثلًا
+رقم الحساب البنكي الخاص بالمستخدم هذا&quot; وبعد ادخال هذا المُدخل يستطيع
+المخترق الوصول إلى بيانات هذا المستخدم أو صلاحياته ؛ قد تحدث مثل هذه الحالة بسبب
+كون المخترق قام بإدخال مُدخل مرتبط في الأساس بهذا المستخدم، الثغرة هنا ليست في
+أن المدخل غير سليم، ولكن تطبيق الويب لم يقم بالتأكد من أن المُدخل مرتبط بشكل
+صحيح مع الذي قام بعملية الإدخال، لذلك هذا المنهج يقوم بالتأكد من أن &quot;دلالات
+البيانات المُدخلة&quot; صحيحة وسليمة ( أي كُل مُدخل يتم معالجته هو بالفعل متعلق
+بالمستخدم الذي قام بإدخاله وليس لمستخدم آخر). </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#0070C0'>المرجع: </span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>كتاب: </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>The Web
+Application Hacker’s Handbook</span></b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'> </span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>فصل: </span><b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Core
+Defense Mechanisms</span></b><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>الموضوع: </span><b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Approaches
+to Input Handling</span></b><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>صفحة: </span><span
+dir=LTR></span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span>23</span></b><span dir=RTL></span><span
+lang=EN-GB style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span style='font-size:14.0pt;
+line-height:150%'>&nbsp;</span></p>
+
+<p style='line-height:150%'><span lang=AR-SA dir=RTL style='font-size:14.0pt;
+line-height:150%'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

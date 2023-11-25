@@ -1,0 +1,824 @@
+---
+layout: post
+published: true
+title: SUID Programs Part 1
+date: '2022-12-31'
+tags:
+  - Red-Teaming
+  - Write-up
+  - Linux
+  - Privilege-Escalation
+  - Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"Segoe UI Emoji";
+	panose-1:2 11 5 2 4 2 4 2 2 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><a name="_Hlk123231830"></a><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'>السلام عليكم ورحمة الله وبركاته</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>هذه المقالة تلخيص بسيط لقراءتي حول موضوع الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Set-UID Program</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>، </span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>لمن أراد الاستزادة المصادر في آخر المقالة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>كل ما سيتم ذكره مُتعلق بأنظمة </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Linux</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> فقط وسأتطرق باذن الله للنقاط التالية : </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><span dir=LTR></span><span lang=AR-SA
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span> </span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:#C00000'>الحاجة الى
+الـ</span></b><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:#C00000'>Privileged Programs </span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000'>كيف تعمل الـ </span></b><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'>Set-UID Program</span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:#C00000'>Attack Surfaces of Set-UID Programs</span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:#C00000'>Attacks Through Environment Variables </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000'>الحاجة الى الـ </span></b><b><span dir=LTR
+style='font-size:16.0pt;line-height:150%;color:#C00000'>Privileged Programs</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Privileged Programs </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> كما
+تدل عليه الترجمة الحرفية للكلمة هي <b>برامج تعمل بصلاحية عالية في النظام</b></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>في أنظمة لينكس يوجد منهجيتين أو لنقل نوعين من الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Privileged
+Programs</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الأول </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Privileged Daemon</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+و كما نعلم الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Daemon </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> ماهي
+إلا برنامج يعمل في الخلفية لكن في الحالة هذه الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Daemon</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> تم تشغيلها كـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>root</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>النوع الثاني هو الـ </span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>Set-UID Program</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+، سنتطرق لها بتفصيل في الأجزاء القادمة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لمثل ماذا نحتاج هذه الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Privileged Programs</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لاسيما للمستخدم العادي الذي لا يملك صلاحية عالية في النظام
+أساسًا؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لتوضيح الغرض من تمكين المستخدم من تشغيل برامج بصلاحية عالية
+لنأخذ هذا المثال :</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>في أنظمة لينكس تُحفظ كلمات المرور الخاصة بمستخدمي النظام في </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span>/etc/shadow</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+كما نعلم</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>وفي كل مرة يقوم المستخدم بتغيير كلمة مروره تأتي الحاجة الى
+تحديث هذا الملف، نَظرَه قريبه على صلاحيات هذا الملف تُظهِر لنا أن الملف لا يمكن
+تعديله إلا من قبل الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>root</span><span dir=RTL></span><span style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img width=566 height=75 id="Picture 1"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/suid-1_files/image001.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>إذا كان الملف لايمكن التعديل عليه إلا من قبل الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>root</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> فكيف سيتمكّن بقية المستخدمين من تعديل كلمات
+مرورهم ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>إعطاء صلاحية التعديل على هذا الملف للجميع ليس خيار بالطبع،
+فهذا يفتح باب لمشكلة أخرى وهي إمكانية أن يقوم أي مستخدم بتعديل كلمة المرور لأي
+مستخدم آخر .. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>من أجل هذا الغرض ظهر نوع معين من البرامج ذات الصلاحية العالية
+يسمى بالـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Set-UID Programs</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>وبشكل مُختصر جدًا: <b>هذه البرامج تُعطي المستخدم
+صلاحية لا يملكها في الأساس</b></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'> لتنفيذ مُهمة تتطلّب صلاحية أخرى (في الأغلب تكون
+صلاحية الـ </span></b><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>root</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+وإعطاء هذه الصلاحية محصور في هذا البرنامج فقط) </span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000'>كيف تعمل الـ </span></b><b><span dir=LTR style='font-size:
+16.0pt;line-height:150%;color:#C00000'>Set-UID Program</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Set-UID Programs </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> تحمل
+في خصائصها قيمة مميزه تسمى الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Set-UID bit</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img width=484 height=181 id="Picture 2"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/suid-1_files/image002.jpg"></span></p>
+
+<p class=MsoListParagraphCxSpFirst align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:10.0pt;line-height:150%;color:black'>كتاب: </span><span
+dir=LTR style='font-size:10.0pt;line-height:150%;color:black'>Practical Unix
+Security, p: 74</span></p>
+
+<p class=MsoListParagraphCxSpLast align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:10.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>عند تشغيل أي برنامج سينظر نظام التشغيل لينكس الى هذه القيمة،
+فإن كانت مُفعّله فسيتم التعامل مع هذا البرنامج بشكل مُختلف عن بقية البرامج </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>ماذا نقصد بشكل مُختلف ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>بدايةً يجب أن نعرف أن العمليات (</span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Processes</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ) في نظام لينكس تحمل خصائص أيضًا، من ضمن هذه
+الخصائص ثلاثة خصائص تهمنا وهي : </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Real User ID</span></b><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>: هذا المتغير
+يمثل الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>ID</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span> الخاص بالمستخدم الذي
+بدأ العملية</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Effective User ID</span></b><span dir=RTL></span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> : يمثل الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>ID</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+الخاص بالمستخدم الذي سيتم تنفيذ العملية وفقًا لصلاحياته</span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'>، </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>بعبارة أخرى
+يمثل الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>access control</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Saved User ID</span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'>: هذا
+المتغير يُستخدم لتعطيل أو تفعيل الصلاحيات</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الأن ما الذي يحدث حينما يتم تشغيل برنامج يحمل الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Set-UID bit</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>في خصائصه ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Real User ID</span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'>ستكون
+قيمته قيمة الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>ID</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span> الخاص بالمستخدم الذي
+قام بتشغيل البرنامج </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>بينما قيمة الـ </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Effective User ID</span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'>س</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>تكون</span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'> قيمة الـ
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>ID</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> الخاص بالمستخدم الذي يملك البرنامج </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span>(owner)</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+.. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>بلغة أخرى: <b>سيعمل هذا البرنامج وفقًا لصلاحيات المستخدم الذي
+يملكه وليس المستخدم الذي قام بتشغيله</b></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img width=530 height=102 id="Picture 3"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/suid-1_files/image003.jpg"></span></b></p>
+
+<p class=MsoListParagraph align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:10.0pt;line-height:150%;color:black'>كتاب: </span><span
+dir=LTR style='font-size:10.0pt;line-height:150%;color:black'>Practical Unix
+Security, p: 75</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>بهذه المنهجية يُتيح لينكس للمستخدم العادي تشغيل برامج بصلاحية
+عالية، وتكون هذه الصلاحية محدودة في عملية </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>(Process)</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> معينه فقط</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لنعود الآن لمثالنا السابق، تعديل كلمة المرور ، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>كيف يسمح النظام للمستخدمين بتعديل كلمات مرورهم في </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span>/etc/shadow</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+مع التأكد بأن كل مستخدم يستطيع تغيير كلمة مروره فقط ؟</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لحل هذه الاشكالية وُجد برنامج الـ </span><a
+href="https://man7.org/linux/man-pages/man1/passwd.1.html"><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>passwd</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> </span></a><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لو قمنا بالاطلاع على خصائص هذه الاداة/البرنامج سنجد أنه يحمل
+الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Set-UID
+bit</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>وفي حال تشغيله سيعمل بصلاحية الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>root</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img border=0 width=609 height=74 id="Picture 4"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/suid-1_files/image004.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>ستقوم الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>passwd</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+بتغيير كلمة مرور المستخدم وتحديث القيم في ملف </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>/etc/shadow</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> عوضًا عن إعطاء الصلاحية المباشرة للمستخدم
+بتعديل الـ </span><span dir=LTR></span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=LTR></span>/etc/shadow</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>قد لا يزال يتبادر السؤال في ذهنك مثلي: إذا كانت أداة الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>passwd</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> تعمل بصلاحية الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>root</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+فكيف لا يستطيع المستخدم العادي تغيير كلمة مرور الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>root</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+أو بقية المستخدمين ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الاجابة على هذا السؤال توضّح نقطة مهمة جدًا وهي التي تحدث
+حولها العديد من المشاكل الأمنية المتعلقة بالـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Set-UID Programs</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>برنامج الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>passwd</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+سيعمل ضمن صلاحيات الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>root</span><span dir=RTL></span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> كما
+عرفنا</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>وجميع ماكُتب من أكواد في هذا البرنامج سيعمل ضمن
+هذه الصلاحية</span></b><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>، فإن تمّت كتابة البرنامج بطريقة ضعيفه مثل عدم
+التحقق من كلمة مرور المستخدم الحالية (المستخدم الذي قام بتشغيل الأداة) سيكون
+بإمكان أي مستخدم تغيير كلمة المرور للـ </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>root</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+أو بقية المستخدمين .. وغيرها من المشاكل </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لكن مطورين الأداة أخذوا في الحسبان أن هذا البرنامج سيتم
+تشغيله من قبل مستخدمين أقل صلاحية لكن لأجل مهمة تتطلب صلاحية أعلى، لذلك يوجد
+العديد من الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>checks</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> ضمن
+الكود .. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>بالامكان الرجوع لصفحة الأداة وفهم آلية عملها .. لكن بشكل
+مختصر ، لن يستطيع أي مستخدم استغلال الـ </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>passwd</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+لرفع صلاحياته لأن البرنامج بُني بطريقة تتيح للمستخدم تحديث كلمة مروره هو فقط
+وليس غيره -إلا إن وجد الباحثين مشكلة في البرنامج نفسه-</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0in;margin-right:.5in;
+margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>أعتقد </span><a
+href="https://github.com/shadow-maint/shadow/blob/2a5b8810bb1791ef044b9421969131bd385b8a70/src/passwd.c"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'>هذا الكود</span></a><span
+style='font-size:14.0pt;line-height:150%;color:black'> <span lang=AR-SA>الخاص
+بالأداة للمهتمين </span></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Segoe UI Emoji",sans-serif;color:black'>&#128513;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:16.0pt;line-height:
+150%;color:#C00000'>Attack Surfaces of Set-UID Programs</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>عرفنا سابقًا أن الـ </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>Set-UID Programs</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+تُتيح للمستخدم العادي صلاحيات عالية ضمن حدود عملية معينة (</span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Process</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ) فقط وعرفنا أيضًا أن إمكانية تصعييد
+الصلاحيات وإستغلال الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Set-UID Programs</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span
+lang=AR-SA>مُعتمد بشكل كبير على الكود ومايفعله البرنامج في الأساس .. لكن هل هذا
+وحده ما يفتح باب للإختراق في الـ </span></span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>Set-UID Programs</span><span dir=RTL></span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>في الحقيقة لا .. يوجد عوامل أخرى تؤثر على الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Set-UID Programs</span><span
+dir=RTL></span><span lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> وبالامكان إستغلال هذه العوامل بطريقة تسمح
+للمستخدم العادي من تصعييد صلاحياته والحصول على صلاحية الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>root</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الصورة التالية تُلخّص أبواب الإختراق هذه </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img border=0 width=495 height=184 id="Picture 5"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/suid-1_files/image005.jpg"></span></p>
+
+<p class=MsoListParagraph align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:10.0pt;line-height:150%;color:black'>كتاب: </span><span
+dir=LTR style='font-size:10.0pt;line-height:150%;color:black'>Computer
+Security, p: 12</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span>3 –  </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Environment
+Variables </span><span dir=RTL></span><span lang=ku-Arab-IQ style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span> : </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>هذه النقطة
+التي تهمنا في هذه المقالة </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:16.0pt;line-height:
+150%;color:#C00000'>Attacks Through Environment Variables </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>قبل أن نعرف كيف تؤثر الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Environment Variables</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>في الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Set-UID Programs</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span
+lang=ku-Arab-IQ>ماهي الـ </span></span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Environment Variables</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span
+lang=ku-Arab-IQ>في الأساس؟</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>هي متغيرات باسماء معروفه تحمل قيم معينة (</span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>name-value pairs</span><span
+dir=RTL></span><span lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> )، هذه المتغيرات ترتبط بـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Process</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> معينة، بالتالي ستؤثر في طبيعة عمل هذه
+العملية أو البرنامج </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Environment Variables</span><span dir=RTL></span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> في لينكس عدة، ولسنا بصدد سردها هنا ، لكن أحد هذه المتغيرات
+متغير الـ </span><a href="https://man7.org/linux/man-pages/man7/environ.7.html"><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>PATH</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>هذا المتغير يُخزّن المسارات الخاصة بالـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>executable</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ويستخدمه الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>shell interpreter</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> للوصول الى المسار الخاص بالبرنامج بالتالي
+تشغيله </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>حتى نعرف كيف يتم استغلال الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Environment Variables</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>  وتصعييد الـصلاحيات في الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Set-UID Programs</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> لنأخذ هذا المثال </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الكود التالي لبرنامج بسيط الغرض منه عمل </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>ls</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+لكن لأنه يحمل الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Set-UID bit</span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'> </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+سيتم تنفيذ الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>ls </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span> بصلاحية الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>root</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img border=0 width=197 height=216 id="Picture 7"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/suid-1_files/image006.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>نلاحظ أننا قمنا بتنفيذ الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>ls</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+عبر الـ </span><span style='font-size:14.0pt;line-height:150%;color:black'><a
+href="https://linux.die.net/man/3/system"><span dir=LTR>system</span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>وإن قرأنا بتفصيل عن هذه الدالة سنجد أنها في
+الأساس تقوم بتشغيل برنامج الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>sh</span><span dir=RTL></span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> ومن ثم تمرير الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>command</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0in;margin-right:.5in;
+margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>كتبت بتفصيل عن هذه الدالة وكيف تعمل <a
+href="https://0xb1tbyte.github.io/2019-12-16-Injection-Attacks-on-System/">هنا</a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>اذًا الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>ls</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+سيتم تنفيذها عبر الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>sh </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> ونلاحظ
+أننا في الكود لم نستخدم المسار الكامل ( </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>absolute path</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+) انما مررنا فقط اسم البرنامج </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>وهنا تكمن المشكلة .. سنستطيع التأثير على الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>shell interpreter</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> عبر تغيير قيمة الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>PATH</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+واستبدالها بأي برنامج نريده .. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>بالتالي عند تشغيل البرنامج في الكود السابق لن يقوم باستخدام
+الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>ls</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> الافتراضية ، انما سيقرأ قيمة المسار الخاص
+بهذه الأداة من الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>PATH</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black'>سيكون الاستغلال كالتالي </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img border=0 width=300 height=348 id="Picture 18"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/suid-1_files/image007.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الذي يتم تنفيذه بالفعل هو الـ </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>/bin/bash</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>وليس الـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>ls</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> لكن
+أعدنا تسمية البرنامج بـ </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>ls</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+وقمنا بتغيير قيمة الـ </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>PATH</span><span dir=RTL></span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> قبل
+تشغيل البرنامج .. وعند تشغيله نلاحظ أنه بالفعل تم تنفيذ الـ </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span>/bin/bash</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=LTR></span> </span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black'>وحصلنا على الـ </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>root</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>ختامًا، أود الإشارة بأن هذه المقالة تمّت كتابتها
+خلال دراسة هذه المواضيع، فكل ما تم ذكره هنا قد يحتمل الخطأ، لكن بالإمكان العودة
+إلى المراجع التي إستندت عليها هذه المقالة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>وإن أصبت فمن توفيق الله وحده، وإن أخطأت فمن نفسي
+والشيطان</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='color:#404040'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span dir=LTR></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:#404040'><span dir=LTR></span>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000'>المراجع</span></b><span dir=LTR></span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'><span dir=LTR></span>:</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#5B9BD5'>كتب</span></b><span dir=LTR></span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#5B9BD5'><span dir=LTR></span>:</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;line-height:150%;
+background:white'><span style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:14.0pt;line-height:
+150%;color:black'>Computer Security - A hands-on Approach</span></p>
+
+<p class=MsoListParagraphCxSpLast style='text-indent:-.25in;line-height:150%;
+background:white'><span style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:14.0pt;line-height:
+150%;color:black'>Practical Unix Security </span></p>
+
+</div>
+
+</body>
+
+</html>

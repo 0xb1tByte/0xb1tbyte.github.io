@@ -1,0 +1,1554 @@
+---
+layout: post
+title: Server Side Template Injection (SSTI)
+tags:
+  - Web-Pentesting
+  - SSTI
+  - Web-Security
+  - Write-up
+  - Arabic-Article 
+published: true
+date: '2022-09-23'
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+span.link-annotation-unknown-block-id-111024594
+	{mso-style-name:link-annotation-unknown-block-id-111024594;}
+span.link-annotation-unknown-block-id-1199296518
+	{mso-style-name:link-annotation-unknown-block-id-1199296518;}
+span.link-annotation-unknown-block-id--629315521
+	{mso-style-name:link-annotation-unknown-block-id--629315521;}
+span.link-annotation-unknown-block-id-596492844
+	{mso-style-name:link-annotation-unknown-block-id-596492844;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1575;&#1604;&#1587;&#1604;&#1575;&#1605;
+&#1593;&#1604;&#1610;&#1603;&#1605; &#1608;&#1585;&#1581;&#1605;&#1577;
+&#1575;&#1604;&#1604;&#1607; &#1608;&#1576;&#1585;&#1603;&#1575;&#1578;&#1607;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1571;&#1605;&#1608;&#1585;
+&#1610;&#1580;&#1576; &#1593;&#1604;&#1610;&#1603;
+&#1605;&#1593;&#1585;&#1601;&#1578;&#1607;&#1575; &#1602;&#1576;&#1604;
+&#1602;&#1585;&#1575;&#1569;&#1577; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577;</span></b><span dir=LTR></span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=LTR></span>:</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>&#1605;&#1593;&#1585;&#1601;&#1577;
+&#1590;&#1585;&#1608;&#1585;&#1610;&#1577;</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>: &#1579;&#1594;&#1585;&#1577;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>SSTI
+(Server-Side Template Injection)</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1548; &#1571;&#1585;&#1588;&#1581; &#1604;&#1603;</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'> <a
+href="https://3alam.pro/1337r00t/articles/ssti">&#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577;</a> </span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>&#1604;&#1610;&#1587;&#1578;
+&#1590;&#1585;&#1608;&#1585;&#1610;&#1577; &#1604;&#1603;&#1606;
+&#1580;&#1610;&#1583;&#1577;</span></b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>: &#1605;&#1593;&#1585;&#1601;&#1577;
+&#1576;&#1587;&#1610;&#1591;&#1577; &#1601;&#1610; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Docker</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1581;&#1610;&#1579; &#1573;&#1606;
+&#1575;&#1604;&#1605;&#1593;&#1605;&#1604; &#1575;&#1604;&#1584;&#1610;
+&#1587;&#1606;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1604;&#1578;&#1593;&#1575;&#1605;&#1604; &#1605;&#1593;&#1607;
+&#1593;&#1576;&#1575;&#1585;&#1577; &#1593;&#1606; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Docker Container</span><span
+dir=RTL></span><span lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1548; &#1571;&#1585;&#1588;&#1581;
+&#1604;&#1603; &#1608;&#1576;&#1588;&#1583;&#1577;</span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black'> </span><a
+href="https://www.youtube.com/watch?v=DFyPl2cZM2g&amp;list=PLX1bW_GeBRhDkTf_jbdvBbkHs2LCWVeXZ"><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%'>&#1607;&#1584;&#1607;
+&#1575;&#1604;&#1587;&#1604;&#1587;&#1604;&#1577;</span></a><span
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</span></p>
+
+<div style='border:none;border-bottom:solid windowtext 1.0pt;padding:0in 0in 1.0pt 0in'>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed;border:none;padding:0in'><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></b></p>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1601;&#1610; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577; &#1604;&#1606;
+&#1606;&#1578;&#1591;&#1585;&#1602; &#1604;&#1588;&#1585;&#1581;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577;
+&#1606;&#1601;&#1587;&#1607;&#1575;&#1548; &#1573;&#1606;&#1605;&#1575;
+&#1587;&#1606;&#1581;&#1575;&#1608;&#1604;
+&#1575;&#1604;&#1578;&#1585;&#1603;&#1610;&#1586; &#1593;&#1604;&#1609;
+&#1575;&#1604;&#1580;&#1575;&#1606;&#1576;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;&#1610; &#1604;&#1607;&#1584;&#1577;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577;.
+&#1578;&#1581;&#1583;&#1610;&#1583;&#1611;&#1575;
+&#1587;&#1606;&#1602;&#1608;&#1605; &#1576;&#1606;&#1602;&#1575;&#1588;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1606;&#1602;&#1575;&#1591;: </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000;background:white'>&#1578;&#1579;&#1576;&#1610;&#1578;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1575;&#1604;&#1605;&#1615;&#1589;&#1575;&#1576;</span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000;background:white'>&#1573;&#1603;&#1578;&#1588;&#1575;&#1601;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577;
+&#1608;&#1578;&#1581;&#1583;&#1610;&#1583; &#1575;&#1604;&#1600; </span></b><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000;background:white'>parameter</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:#C00000;background:white'><span dir=RTL></span>
+&#1575;&#1604;&#1605;&#1615;&#1589;&#1575;&#1576;</span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000;background:white'>&#1573;&#1603;&#1578;&#1588;&#1575;&#1601;
+&#1606;&#1608;&#1593; &#1575;&#1604;&#1600;</span></b><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:#C00000;background:white'>Template
+Engine </span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000;background:white'><span dir=RTL></span> &#1575;&#1604;&#1605;&#1587;&#1578;&#1582;&#1583;&#1605;
+&#1601;&#1610; &#1578;&#1591;&#1576;&#1610;&#1602;
+&#1575;&#1604;&#1608;&#1610;&#1576;</span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:#C00000'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000;background:white'>&#1573;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1575;&#1604;&#1605;&#1615;&#1589;&#1575;&#1576; &#1575;&#1604;&#1584;&#1610;
+&#1587;&#1610;&#1578;&#1605; &#1575;&#1604;&#1588;&#1585;&#1581;
+&#1593;&#1604;&#1610;&#1607; &#1578;&#1580;&#1583;&#1607;</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'> </span><a href="https://hub.docker.com/r/dockerbucket/ssti_env"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;background:white'>&#1607;&#1606;&#1575;</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1604;&#1606;&#1576;&#1583;&#1571;
+&#1576;&#1587;&#1605; &#1575;&#1604;&#1604;&#1607; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000;background:white'>&#1578;&#1579;&#1576;&#1610;&#1578;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1575;&#1604;&#1605;&#1615;&#1589;&#1575;&#1576;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1578;&#1579;&#1576;&#1610;&#1578; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>Docker</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1601;&#1610; &#1580;&#1607;&#1575;&#1586;&#1603;
+&#1602;&#1605; &#1576;&#1578;&#1606;&#1601;&#1610;&#1584;
+&#1575;&#1604;&#1578;&#1593;&#1604;&#1610;&#1605;&#1577;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577;
+&#1608;&#1575;&#1604;&#1578;&#1610; &#1587;&#1578;&#1602;&#1608;&#1605;
+&#1576;&#1593;&#1605;&#1604; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>fetch</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1604;&#1600;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>docker
+container </span></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Courier New";color:white;background:black'>sudo
+docker pull dockerbucket/ssti_env</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=624 height=94 id="Picture 1"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image001.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1608;&#1575;&#1604;&#1578;&#1593;&#1604;&#1610;&#1605;&#1577;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577;
+&#1587;&#1578;&#1602;&#1608;&#1605; &#1576;&#1578;&#1588;&#1594;&#1610;&#1604;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>Docker container </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1608;&#1576;&#1583;&#1569;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1593;&#1604;&#1609;
+&#1575;&#1604;&#1605;&#1606;&#1601;&#1584; 60</span></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Courier New";color:white;background:black'>sudo
+docker run -p 60:60 dockerbucket/ssti_env python /root/vulncode.py</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=624 height=49 id="Picture 2"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image002.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000;background:white'>&#1573;&#1603;&#1578;&#1588;&#1575;&#1601;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577;
+&#1608;&#1578;&#1581;&#1583;&#1610;&#1583; &#1575;&#1604;&#1600; </span></b><b><span
+dir=LTR style='font-size:16.0pt;line-height:150%;color:#C00000;background:white'>parameter</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:16.0pt;line-height:150%;
+color:#C00000;background:white'><span dir=RTL></span>
+&#1575;&#1604;&#1605;&#1615;&#1589;&#1575;&#1576;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1578;&#1588;&#1594;&#1610;&#1604;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1587;&#1606;&#1580;&#1583;
+&#1571;&#1606; &#1608;&#1575;&#1580;&#1607;&#1577;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1578;&#1581;&#1578;&#1608;&#1610;
+&#1593;&#1604;&#1609; &#1582;&#1575;&#1606;&#1577; &#1576;&#1581;&#1579; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=624 height=350 id="Picture 3"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image003.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1603;&#1605;&#1575; &#1584;&#1603;&#1585; </span><a
+href="https://twitter.com/u0pattern_cs" target="_blank"><span dir=LTR></span><span
+class=link-annotation-unknown-block-id-111024594><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'><span dir=LTR></span>@u0pattern_cs</span></span></a><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1601;&#1610; <a
+href="https://3alam.pro/1337r00t/articles/ssti">&#1605;&#1602;&#1575;&#1604;&#1578;&#1607;</a>
+</span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>&#1576;&#1575;&#1605;&#1603;&#1575;&#1606;&#1606;&#1575;
+&#1575;&#1578;&#1576;&#1575;&#1593;
+&#1575;&#1604;&#1605;&#1606;&#1607;&#1580;&#1610;&#1577;
+&#1575;&#1604;&#1605;&#1584;&#1603;&#1608;&#1585;&#1577; &#1601;&#1610;
+&#1575;&#1604;&#1589;&#1608;&#1585;&#1577;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577;
+&#1604;&#1575;&#1603;&#1578;&#1588;&#1575;&#1601; &#1579;&#1594;&#1585;&#1577;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>SSTI </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=768 height=463 id="Picture 10"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image004.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1587;&#1606;&#1602;&#1608;&#1605;
+&#1583;&#1575;&#1574;&#1605;&#1611;&#1575; &#1576;&#1578;&#1578;&#1576;&#1593;
+&#1575;&#1604;&#1587;&#1607;&#1605;
+&#1575;&#1604;&#1571;&#1582;&#1590;&#1585;&#1548; &#1573;&#1604;&#1575;
+&#1601;&#1610; &#1581;&#1575;&#1604;&#1577; &#1575;&#1604;&#1601;&#1588;&#1604;
+&#1587;&#1606;&#1602;&#1608;&#1605; &#1576;&#1575;&#1578;&#1576;&#1575;&#1593;
+&#1575;&#1604;&#1587;&#1607;&#1605; &#1575;&#1604;&#1571;&#1581;&#1605;&#1585; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1587;&#1606;&#1585;&#1609; &#1571;&#1606;
+&#1571;&#1608;&#1604; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>payload</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1610;&#1601;&#1578;&#1585;&#1590; &#1571;&#1606;
+&#1606;&#1576;&#1583;&#1571; &#1576;&#1607;&#1575; &#1607;&#1610;</span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:white;
+background:black'>${3*2}</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1587;&#1606;&#1581;&#1575;&#1608;&#1604;
+&#1578;&#1605;&#1585;&#1610;&#1585; &#1593;&#1605;&#1604;&#1610;&#1577;
+&#1581;&#1587;&#1575;&#1576;&#1610;&#1577; &#1576;&#1587;&#1610;&#1591;&#1577;
+2 * 3 &#1604;&#1606;&#1582;&#1578;&#1576;&#1585; &#1607;&#1604; &#1587;&#1610;&#1602;&#1608;&#1605;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;</span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>
+&#1576;&#1578;&#1606;&#1601;&#1610;&#1584;&#1607;&#1575;</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'>&#1567;</span><span lang=ku-Arab-IQ style='font-size:14.0pt;line-height:
+150%;color:black;background:white'> &#1601;&#1610; &#1581;&#1575;&#1604;
+&#1603;&#1575;&#1606; &#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1605;&#1615;&#1589;&#1575;&#1576; &#1587;&#1610;&#1602;&#1608;&#1605;
+&#1576;&#1578;&#1606;&#1601;&#1610;&#1584; &#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;.
+</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1575;&#1604;&#1600; </span><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:white;background:black'><span dir=LTR></span>${ }</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>
+</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> </span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&#1607;&#1610;
+&#1604;&#1605;&#1604;&#1575;&#1574;&#1605;&#1577; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Syntax</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1601;&#1602;&#1591;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1602;&#1576;&#1604;
+&#1578;&#1605;&#1585;&#1610;&#1585; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>request</span><span
+dir=RTL></span><span lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1604;&#1604;&#1582;&#1575;&#1583;&#1605; &#1604;&#1608;
+&#1602;&#1605;&#1606;&#1575; &#1576;&#1593;&#1605;&#1604; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>interception
+</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> </span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>&#1587;&#1606;&#1580;&#1583; &#1571;&#1606;&#1606;&#1575;
+&#1606;&#1602;&#1608;&#1605; &#1576;&#1575;&#1604;&#1581;&#1602;&#1606;
+&#1601;&#1610; &#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>username</span></b><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black;
+background:white'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=335 height=494 id="Picture 11" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image005.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=359 height=237 id="Picture 13" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image006.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1575;&#1585;&#1587;&#1575;&#1604; &#1575;&#1604;&#1591;&#1604;&#1576;
+&#1604;&#1604;&#1582;&#1575;&#1583;&#1605; &#1587;&#1606;&#1580;&#1583;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>response </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1575;&#1604;&#1570;&#1578;&#1610; :</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=740
+height=578 id="Picture 12" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image007.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=516
+height=318 id="Picture 14" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image008.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1581;&#1578;&#1609;
+&#1575;&#1604;&#1570;&#1606; &#1610;&#1576;&#1583;&#1608; &#1571;&#1606;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1594;&#1610;&#1585;
+&#1605;&#1615;&#1589;&#1575;&#1576; &#1548; &#1604;&#1571;&#1606;&#1607;
+&#1603;&#1605;&#1575; &#1606;&#1585;&#1609;
+&#1575;&#1604;&#1582;&#1575;&#1583;&#1605; &#1602;&#1575;&#1605;
+&#1576;&#1575;&#1585;&#1580;&#1575;&#1593; &#1606;&#1601;&#1587;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>payload</span><span dir=RTL></span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black;
+background:white'><span dir=RTL></span> &#1576;&#1583;&#1608;&#1606;
+&#1578;&#1606;&#1601;&#1610;&#1584;
+&#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1581;&#1587;&#1575;&#1576;&#1610;&#1577;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1604;&#1606;&#1606;&#1578;&#1602;&#1604;
+&#1604;&#1604;&#1575;&#1582;&#1578;&#1576;&#1575;&#1585;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1548;
+&#1587;&#1606;&#1602;&#1608;&#1605; &#1575;&#1604;&#1570;&#1606;
+&#1576;&#1578;&#1605;&#1585;&#1610;&#1585; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>payload</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577; </span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:white;
+background:black'>{{3*2}}</span></b></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:white;
+background:white'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=489 height=425 id="Picture 7"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image009.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=356 height=245 id="Picture 8"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image010.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1575;&#1585;&#1587;&#1575;&#1604; &#1575;&#1604;&#1591;&#1604;&#1576;
+&#1604;&#1604;&#1582;&#1575;&#1583;&#1605; &#1587;&#1606;&#1580;&#1583;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>response </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1575;&#1604;&#1570;&#1578;&#1610; :</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=506 height=385 id="Picture 6"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image011.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'><img border=0 width=498 height=454 id="Picture 9"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image012.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1605;&#1605;&#1578;&#1575;&#1586;!!
+&#1602;&#1575;&#1605; &#1575;&#1604;&#1582;&#1575;&#1583;&#1605;
+&#1576;&#1575;&#1580;&#1585;&#1575;&#1569;
+&#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1581;&#1587;&#1575;&#1576;&#1610;&#1577; &#1608;&#1604;&#1578;&#1571;&#1603;&#1610;&#1583;
+&#1608;&#1580;&#1608;&#1583; &#1575;&#1604;&#1579;&#1594;&#1585;&#1577;
+&#1604;&#1575; &#1610;&#1586;&#1575;&#1604;
+&#1571;&#1605;&#1575;&#1605;&#1606;&#1575; &#1581;&#1575;&#1604;&#1577;
+&#1575;&#1582;&#1578;&#1576;&#1575;&#1585; &#1575;&#1582;&#1585;&#1609;
+&#1608;&#1607;&#1610; &#1578;&#1605;&#1585;&#1610;&#1585; &#1575;&#1604;&#1600;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>payload</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577; </span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:white;
+background:black'>{{3*’2’}}</span></b></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:white;
+background:white'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=557
+height=249 id="Picture 16" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image013.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1578;&#1605;&#1585;&#1610;&#1585; &#1575;&#1604;&#1591;&#1604;&#1576;
+&#1587;&#1606;&#1580;&#1583; &#1575;&#1604;&#1585;&#1583;
+&#1575;&#1604;&#1570;&#1578;&#1610; &#1605;&#1606;
+&#1575;&#1604;&#1582;&#1575;&#1583;&#1605; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=718
+height=659 id="Picture 17" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image014.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=421 height=322 id="Picture 18" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image015.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1605;&#1606;
+&#1575;&#1604;&#1606;&#1578;&#1610;&#1580;&#1577;
+&#1571;&#1593;&#1604;&#1575;&#1607; &#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1575;&#1604;&#1578;&#1571;&#1603;&#1610;&#1583; &#1571;&#1606;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1605;&#1615;&#1589;&#1575;&#1576; &#1576;&#1579;&#1594;&#1585;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>SSTI</span><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%;color:black;
+background:white'><span dir=RTL></span> </span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&#1581;&#1610;&#1579;
+&#1571;&#1606; &#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1604;&#1575;
+&#1610;&#1586;&#1575;&#1604; &#1610;&#1602;&#1608;&#1605;
+&#1576;&#1578;&#1606;&#1601;&#1610;&#1584;
+&#1575;&#1604;&#1578;&#1593;&#1604;&#1610;&#1605;&#1575;&#1578;
+&#1575;&#1604;&#1578;&#1610; &#1606;&#1602;&#1608;&#1605;
+&#1576;&#1578;&#1605;&#1585;&#1610;&#1585;&#1607;&#1575;  (
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1602;&#1575;&#1605;
+&#1576;&#1591;&#1576;&#1575;&#1593;&#1577; 2
+&#1579;&#1604;&#1575;&#1579;&#1577; &#1605;&#1585;&#1575;&#1578; )</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1608;&#1578;&#1581;&#1583;&#1610;&#1583;&#1611;&#1575;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>parameter </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1575;&#1604;&#1605;&#1615;&#1589;&#1575;&#1576;
+&#1607;&#1608; </span><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>username</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:16.0pt;line-height:
+150%;color:#C00000;background:white'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000;background:white'>&#1573;&#1603;&#1578;&#1588;&#1575;&#1601;
+&#1606;&#1608;&#1593; &#1575;&#1604;&#1600;</span></b><b><span dir=LTR
+style='font-size:16.0pt;line-height:150%;color:#C00000;background:white'>Template
+Engine </span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;color:#C00000;background:white'><span dir=RTL></span> &#1575;&#1604;&#1605;&#1587;&#1578;&#1582;&#1583;&#1605;
+&#1601;&#1610; &#1578;&#1591;&#1576;&#1610;&#1602;
+&#1575;&#1604;&#1608;&#1610;&#1576;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1571;&#1606; &#1578;&#1571;&#1603;&#1583;&#1606;&#1575; &#1571;&#1606;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1605;&#1615;&#1589;&#1575;&#1576;&#1548; &#1606;&#1581;&#1606;
+&#1575;&#1604;&#1570;&#1606; &#1576;&#1589;&#1583;&#1583;
+&#1578;&#1581;&#1583;&#1610;&#1583; &#1606;&#1608;&#1593; &#1575;&#1604;&#1600;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>Template Engine</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1575;&#1604;&#1605;&#1615;&#1587;&#1578;&#1582;&#1583;&#1605;
+&#1601;&#1610; &#1578;&#1591;&#1576;&#1610;&#1602;
+&#1575;&#1604;&#1608;&#1610;&#1576;&#1548; &#1608;&#1606;&#1591;&#1575;&#1602;
+&#1575;&#1604;&#1575;&#1582;&#1578;&#1576;&#1575;&#1585;  </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=LTR></span>( Test Cases)</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1571;&#1589;&#1576;&#1581;
+&#1603;&#1575;&#1604;&#1570;&#1578;&#1610; :</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=345 height=243 id="Picture 19" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image016.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1578;&#1602;&#1578;&#1585;&#1581;
+&#1593;&#1604;&#1610;&#1606;&#1575;
+&#1575;&#1604;&#1605;&#1606;&#1607;&#1580;&#1610;&#1577;
+&#1575;&#1604;&#1578;&#1610; &#1606;&#1578;&#1576;&#1593;&#1607;&#1575;
+&#1571;&#1606; &#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1602;&#1583;
+&#1610;&#1603;&#1608;&#1606;</span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'> </span><a
+href="https://palletsprojects.com/p/jinja/" target="_blank"><span
+class=link-annotation-unknown-block-id-1199296518><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'>Jinja2</span></span></a><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+<span lang=AR-SA style='color:black'>( &#1582;&#1575;&#1589; &#1576;&#1600; </span></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Python</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ) &#1571;&#1608;</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%'> </span><a
+href="https://twig.symfony.com/" target="_blank"><span
+class=link-annotation-unknown-block-id--629315521><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'>Twig</span></span></a><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+<span lang=AR-SA style='color:black'>( &#1582;&#1575;&#1589; &#1576;&#1600; </span></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>PHP</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> )</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1587;&#1606;&#1576;&#1583;&#1571;
+&#1571;&#1608;&#1604;&#1611;&#1575; &#1601;&#1610;
+&#1575;&#1582;&#1578;&#1576;&#1575;&#1585; &#1581;&#1575;&#1604;&#1577;</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'> </span><a
+href="https://palletsprojects.com/p/jinja/" target="_blank"><span
+class=link-annotation-unknown-block-id-1199296518><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'>Jinja2</span></span></a><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+<span lang=AR-SA style='color:black'>&#1608;&#1604;&#1571;&#1606;&#1607;
+&#1605;&#1582;&#1589;&#1589; &#1604;&#1604;&#1594;&#1577;
+&#1576;&#1575;&#1610;&#1579;&#1608;&#1606; &#1587;&#1606;&#1602;&#1608;&#1605;
+&#1576;&#1578;&#1605;&#1585;&#1610;&#1585; &#1575;&#1604;&#1600; </span></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>payload </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577;
+: </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=397 height=50 id="Picture 20" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image017.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1610;&#1576;&#1583;&#1608; &#1571;&#1606;
+&#1575;&#1604;&#1571;&#1605;&#1608;&#1585; &#1576;&#1583;&#1571;&#1578;
+&#1578;&#1578;&#1593;&#1602;&#1583; &#1602;&#1604;&#1610;&#1604;&#1611;&#1575;
+&#1575;&#1604;&#1571;&#1606; &#1548; &#1604;&#1606;&#1578;&#1608;&#1602;&#1601;
+&#1604;&#1576;&#1590;&#1593; &#1583;&#1602;&#1575;&#1574;&#1602;
+&#1608;&#1606;&#1581;&#1575;&#1608;&#1604; &#1606;&#1601;&#1607;&#1605;
+&#1605;&#1575; &#1575;&#1604;&#1584;&#1610; &#1578;&#1602;&#1608;&#1605;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>payload</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>
+&#1576;&#1578;&#1606;&#1601;&#1610;&#1584;&#1607;&#1548; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1608;&#1581;&#1578;&#1609; &#1606;&#1601;&#1607;&#1605;
+&#1607;&#1584;&#1575; &#1606;&#1581;&#1606; &#1576;&#1581;&#1575;&#1580;&#1577;
+&#1604;&#1604;&#1593;&#1608;&#1583;&#1577; &#1575;&#1604;&#1609;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>Python Environment</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1608;&#1575;&#1604;&#1578;&#1593;&#1575;&#1605;&#1604;
+&#1605;&#1593;&#1575;&#1607;&#1575;
+&#1605;&#1576;&#1575;&#1588;&#1585;&#1577;&#1548; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1575;&#1604;&#1589;&#1608;&#1585;&#1577;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577; &#1578;&#1608;&#1590;&#1581;
+&#1571;&#1606;&#1610; &#1602;&#1605;&#1578; &#1576;&#1576;&#1583;&#1569; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>interactive shell</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1605;&#1593; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>docker container</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1575;&#1604;&#1605;&#1579;&#1576;&#1578;
+&#1576;&#1607; &#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;&#1548;
+&#1608;&#1605;&#1606; &#1579;&#1605; &#1602;&#1605;&#1578;
+&#1576;&#1576;&#1583;&#1569; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>python2 console</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=558 height=53 id="Picture 21" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image018.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1575;&#1604;&#1571;&#1606; &#1606;&#1581;&#1606;
+&#1601;&#1610; &#1583;&#1575;&#1582;&#1604; &#1576;&#1610;&#1574;&#1577;
+&#1576;&#1575;&#1610;&#1579;&#1608;&#1606; &#1548;
+&#1604;&#1606;&#1576;&#1583;&#1571; &#1576;&#1578;&#1580;&#1586;&#1574;&#1577; &#1575;&#1604;&#1600;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>payload</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1608;&#1578;&#1606;&#1601;&#1610;&#1584;
+&#1603;&#1604; &#1580;&#1586;&#1569; &#1593;&#1604;&#1609;
+&#1581;&#1583;&#1609;&#1548; &#1581;&#1578;&#1609; &#1606;&#1601;&#1607;&#1605;
+&#1575;&#1604;&#1593;&#1575;&#1574;&#1583; &#1575;&#1604;&#1606;&#1607;&#1575;&#1574;&#1610;
+&#1605;&#1606;&#1607;&#1575; </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span dir=LTR></span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:white;background:black'><span
+dir=LTR></span>‘’</span></b><span dir=LTR style='font-size:14.0pt;line-height:
+150%'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%'><span dir=RTL></span> : <span style='color:black'>&#1593;&#1576;&#1575;&#1585;&#1577;
+&#1593;&#1606; </span></span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>string</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:white;background:black'>__class__</span></b><span
+dir=LTR style='font-size:14.0pt;line-height:150%'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> : &#1575;&#1604;&#1600;
+</span><a
+href="https://docs.python.org/3/library/stdtypes.html?highlight=__class__#instance.__class__"><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%'><span
+dir=LTR></span>__class__</span></a><span dir=RTL></span><span style='font-size:
+14.0pt;line-height:150%'><span dir=RTL></span> <span lang=AR-SA
+style='color:black'>&#1593;&#1576;&#1575;&#1585;&#1577; &#1593;&#1606; </span></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>attribute</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1578;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1593;&#1575;&#1583;&#1577; &#1575;&#1587;&#1605;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>class</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1575;&#1604;&#1584;&#1610; &#1610;&#1606;&#1578;&#1605;&#1610; &#1604;&#1607;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>object</span><span dir=RTL></span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1608;</span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>&#1601;&#1610; &#1581;&#1575;&#1604;&#1578;&#1606;&#1575;
+&#1575;&#1604;&#1593;&#1575;&#1574;&#1583; &#1587;&#1610;&#1603;&#1608;&#1606; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>str class </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1603;&#1605;&#1575; &#1606;&#1585;&#1609; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=211
+height=51 id="Picture 22" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image019.png"></span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span dir=LTR></span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:white;background:black'><span
+dir=LTR></span>__mro__</span></b><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:white;background:white'> </span></b><span dir=RTL></span><b><span
+style='font-size:14.0pt;line-height:150%;color:white;background:white'><span
+dir=RTL></span> </span></b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>: &#1575;&#1604;&#1600;</span><a
+href="https://docs.python.org/release/2.6.4/library/stdtypes.html#class.__mro__"><span
+style='font-size:14.0pt;line-height:150%;background:white'> </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+background:white'><span dir=LTR></span>__mro__</span></a><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1587;&#1578;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1593;&#1575;&#1583;&#1577; &#1602;&#1575;&#1574;&#1605;&#1577;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>inherited classes</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1604;&#1607;&#1584;&#1575; &#1575;&#1604;&#1600;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>object</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1608;&#1601;&#1610;
+&#1581;&#1575;&#1604;&#1578;&#1606;&#1575; &#1606;&#1585;&#1609;
+&#1571;&#1606;&#1606;&#1575; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1578;&#1605;&#1585;&#1610;&#1585; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>index</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1585;&#1602;&#1605; 2
+&#1548; &#1608;&#1575;&#1604;&#1594;&#1585;&#1590; &#1605;&#1606;
+&#1584;&#1604;&#1603; &#1571;&#1606;&#1606;&#1575; &#1606;&#1585;&#1610;&#1583;
+&#1575;&#1587;&#1578;&#1585;&#1580;&#1575;&#1593; &#1593;&#1606;&#1589;&#1585; &#1605;&#1593;&#1610;&#1606;
+&#1605;&#1606; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1602;&#1575;&#1574;&#1605;&#1577; ( &#1608;&#1607;&#1608; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>object
+class</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span> )</span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0
+width=325 height=52 id="Picture 23" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image020.png"></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span dir=LTR></span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:white;background:black'><span
+dir=LTR></span>__subclasses__()</span></b><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:white;background:white'> </span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> : &#1575;&#1604;&#1600;</span><span
+dir=LTR></span><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'><span dir=LTR></span> </span><span dir=LTR><a
+href="https://docs.python.org/release/2.6.4/library/stdtypes.html#class.__subclasses__"><span
+style='font-size:14.0pt;line-height:150%;background:white'>__subclassess__()</span></a></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>
+</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> </span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&#1593;&#1576;&#1575;&#1585;&#1577;
+&#1593;&#1606; </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'>method</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1587;&#1578;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1585;&#1580;&#1575;&#1593; &#1602;&#1575;&#1574;&#1605;&#1577;
+&#1576;&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>classes</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1575;&#1604;&#1578;&#1610; &#1578;&#1605;
+&#1593;&#1605;&#1604; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>loaded</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1604;&#1607;&#1575; &#1601;&#1610;
+&#1576;&#1610;&#1574;&#1577; &#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1575;&#1604;&#1581;&#1575;&#1604;&#1610;&#1577; &#1603;&#1605;&#1575;
+&#1606;&#1585;&#1609; &#1601;&#1610; &#1575;&#1604;&#1589;&#1608;&#1585;&#1577;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;&#1577; </span></p>
+
+<p class=MsoListParagraphCxSpLast align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='color:black'><img border=0 width=954 height=237 id="Picture 24"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image021.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1575;&#1584;&#1611;&#1575; &#1605;&#1575;
+&#1575;&#1604;&#1584;&#1610; &#1578;&#1602;&#1608;&#1605;
+&#1576;&#1601;&#1593;&#1604;&#1607; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>payload</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1603;&#1575;&#1605;&#1604;&#1577;&#1567; &#1576;&#1588;&#1603;&#1604;
+&#1605;&#1615;&#1582;&#1578;&#1589;&#1585; &#1580;&#1583;&#1611;&#1575;
+&#1578;&#1602;&#1608;&#1605; &#1576;&#1593;&#1605;&#1604; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>dump </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1604;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>classes
+names</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span>
+&#1575;&#1604;&#1578;&#1610; &#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1575;&#1604;&#1608;&#1589;&#1608;&#1604; &#1604;&#1607;&#1575;
+&#1590;&#1605;&#1606; &#1576;&#1610;&#1574;&#1577;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1608;&#1604;&#1605;&#1575;&#1584;&#1575;
+&#1573;&#1584;&#1611;&#1575; &#1603;&#1604; &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1578;&#1601;&#1589;&#1610;&#1604;
+&#1608;&#1575;&#1604;&#1578;&#1593;&#1602;&#1610;&#1583; &#1567;
+&#1587;&#1606;&#1585;&#1609; &#1604;&#1575;&#1581;&#1602;&#1611;&#1575;
+&#1571;&#1606; &#1601;&#1607;&#1605; &#1570;&#1604;&#1610;&#1577;
+&#1593;&#1605;&#1604; &#1605;&#1579;&#1604; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>payload</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span>
+&#1587;&#1610;&#1587;&#1575;&#1593;&#1583;&#1606;&#1575; &#1601;&#1610;
+&#1576;&#1606;&#1575;&#1569; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>payloads</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1571;&#1582;&#1585;&#1609;
+&#1605;&#1593;&#1602;&#1583;&#1577; &#1604;&#1581;&#1575;&#1604;&#1575;&#1578;
+&#1605;&#1593;&#1610;&#1606;&#1577;&#1548; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1575;&#1590;&#1575;&#1601;&#1577;
+&#1575;&#1604;&#1609; &#1571;&#1606;&#1607; &#1602;&#1583;
+&#1578;&#1582;&#1578;&#1604;&#1601; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>classes</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1575;&#1604;&#1578;&#1610; &#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1575;&#1604;&#1608;&#1589;&#1608;&#1604; &#1604;&#1607;&#1575; &#1605;&#1606;
+&#1578;&#1591;&#1576;&#1610;&#1602; &#1575;&#1604;&#1609;
+&#1578;&#1591;&#1576;&#1610;&#1602;&#1548;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1601;&#1601;&#1607;&#1605;
+&#1603;&#1610;&#1601; &#1606;&#1578;&#1581;&#1585;&#1603; &#1590;&#1605;&#1606;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>Python Inheritance Hierarchy </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1587;&#1610;&#1587;&#1575;&#1593;&#1583;&#1606;&#1575;
+&#1601;&#1610; &#1575;&#1604;&#1608;&#1589;&#1608;&#1604; &#1575;&#1604;&#1609;
+&#1571;&#1610; </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'>class </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1608;&#1605;&#1606; &#1579;&#1605;
+&#1606;&#1583;&#1575;&#1569; &#1583;&#1608;&#1575;&#1604;&#1607;
+&#1575;&#1604;&#1582;&#1575;&#1589;&#1577;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1602;&#1576;&#1604; &#1571;&#1606;
+&#1606;&#1587;&#1578;&#1603;&#1605;&#1604; &#1571;&#1608;&#1583;
+&#1601;&#1602;&#1591; &#1575;&#1604;&#1575;&#1588;&#1575;&#1585;&#1577;
+&#1576;&#1571;&#1606; &#1607;&#1584;&#1607; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>payload
+</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span> &#1605;&#1582;&#1589;&#1589;&#1577;
+&#1601;&#1602;&#1591; &#1604;&#1600; </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black;background:white'>python2</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1608;&#1601;&#1610;
+&#1581;&#1575;&#1604; &#1571;&#1585;&#1583;&#1578;
+&#1575;&#1587;&#1578;&#1582;&#1585;&#1575;&#1580;
+&#1571;&#1587;&#1605;&#1575;&#1569; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>classes</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1601;&#1610;
+&#1576;&#1610;&#1574;&#1577; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>python3</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1587;&#1606;&#1605;&#1585;&#1585;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>index</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1585;&#1602;&#1605; 1 &#1604;&#1604;&#1600; </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=LTR></span>__mro__</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1603;&#1575;&#1604;&#1570;&#1578;&#1610; : </span></p>
+
+<p class=MsoListParagraph align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='color:black'><img border=0 width=504 height=61 id="Picture 25"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image022.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1601;&#1607;&#1605;&#1606;&#1575; &#1604;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>payload </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1578;&#1605;&#1585;&#1610;&#1585;&#1607;&#1575;
+&#1604;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1603;&#1575;&#1604;&#1570;&#1578;&#1610; &#1548;
+&#1608;&#1606;&#1604;&#1575;&#1581;&#1592; &#1571;&#1606;&#1606;&#1575;
+&#1606;&#1580;&#1581;&#1606;&#1575; &#1601;&#1610; &#1593;&#1605;&#1604; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>dumping</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1604;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>classes
+names</span></p>
+
+<p class=MsoListParagraphCxSpFirst align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0
+width=401 height=514 id="Picture 26" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image023.png"></span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0
+width=274 height=213 id="Picture 27" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image024.png"></span></p>
+
+<p class=MsoListParagraphCxSpLast align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='color:black'><img border=0 width=368 height=627 id="Picture 28"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image025.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1606;&#1604;&#1575;&#1581;&#1592;
+&#1576;&#1593;&#1583;
+&#1575;&#1587;&#1578;&#1582;&#1585;&#1575;&#1580;&#1606;&#1575;
+&#1604;&#1602;&#1575;&#1574;&#1605;&#1577; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>classes</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1571;&#1606;&#1607;
+&#1610;&#1608;&#1580;&#1583; &#1605;&#1606; &#1590;&#1605;&#1606;&#1607;&#1575;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>classes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1582;&#1575;&#1589;&#1577; &#1576;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Jinja2</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> .. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1575;&#1584;&#1611;&#1575; &#1601;&#1610;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1605;&#1585;&#1581;&#1604;&#1577;
+&#1606;&#1587;&#1578;&#1591;&#1610;&#1593; &#1575;&#1604;&#1602;&#1608;&#1604;
+&#1575;&#1604;&#1571;&#1606; &#1571;&#1606; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Template
+Engine</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span>
+&#1575;&#1604;&#1584;&#1610; &#1606;&#1578;&#1593;&#1575;&#1605;&#1604;
+&#1605;&#1593;&#1607; &#1607;&#1608;</span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black;background:white'> </span><a
+href="https://palletsprojects.com/p/jinja/" target="_blank"><span
+class=link-annotation-unknown-block-id-1199296518><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'>Jinja2</span></span></a><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+<span lang=AR-SA style='color:black'>&#1608;&#1604;&#1610;&#1587; </span></span><a
+href="https://twig.symfony.com/" target="_blank"><span
+class=link-annotation-unknown-block-id--629315521><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'>Twig</span></span></a></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0in;margin-right:.5in;
+margin-bottom:8.0pt;margin-left:0in;text-align:right;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1575;&#1604;&#1571;&#1606;
+&#1604;&#1606;&#1587;&#1578;&#1603;&#1605;&#1604; &#1570;&#1582;&#1585;
+&#1580;&#1586;&#1569; &#1601;&#1610; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000;background:white'>&#1573;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#C00000;background:white'>&#1602;&#1585;&#1575;&#1569;&#1577; </span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:#C00000;background:white'><span dir=LTR></span>/etc/passwd</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605; &#1583;&#1575;&#1604;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>read()</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1605;&#1606; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>File class</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1601;&#1610;
+&#1576;&#1575;&#1610;&#1579;&#1608;&#1606; &#1581;&#1578;&#1609;
+&#1606;&#1602;&#1585;&#1571; &#1605;&#1604;&#1601; &#1605;&#1575;&#1548;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>payload </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> &#1575;&#1604;&#1578;&#1610;
+&#1578;&#1602;&#1608;&#1605; &#1576;&#1575;&#1604;&#1608;&#1589;&#1608;&#1604;
+&#1604;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>File class</span><span dir=RTL></span><span style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span lang=AR-SA>&#1603;&#1575;&#1604;&#1570;&#1578;&#1610;
+</span></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=424 height=54 id="Picture 29" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image026.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1604;&#1575;&#1581;&#1592; &#1571;&#1606;&#1606;&#1575;
+&#1605;&#1585;&#1585;&#1606;&#1575; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>index </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1585;&#1602;&#1605; 40</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>&#1604;&#1583;&#1575;&#1604;&#1577;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>subclasses</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> .. &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>index </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> &#1582;&#1575;&#1589;
+&#1576;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>File class</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> (
+&#1604;&#1575; &#1571;&#1593;&#1578;&#1602;&#1583; &#1571;&#1606;&#1607;
+&#1602;&#1583; &#1610;&#1603;&#1608;&#1606; &#1585;&#1602;&#1605;
+&#1579;&#1575;&#1576;&#1578; &#1601;&#1610; &#1580;&#1605;&#1610;&#1593;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;&#1575;&#1578;&#1548;
+&#1604;&#1584;&#1604;&#1603; &#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1587;&#1578;&#1582;&#1585;&#1575;&#1580;
+&#1571;&#1587;&#1605;&#1575;&#1569;
+&#1575;&#1604;&#1603;&#1604;&#1575;&#1587;&#1575;&#1578; &#1605;&#1607;&#1605;&#1577;)</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1603;&#1610;&#1601; &#1581;&#1589;&#1604;&#1606;&#1575;
+&#1593;&#1604;&#1609; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>index </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1567; &#1605;&#1606;
+&#1582;&#1604;&#1575;&#1604; &#1602;&#1575;&#1574;&#1605;&#1577;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>classes</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1575;&#1604;&#1578;&#1610; &#1593;&#1605;&#1604;&#1606;&#1575;
+&#1604;&#1607;&#1575; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>dump </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> ..
+&#1608;&#1576;&#1593;&#1583; &#1584;&#1604;&#1603;
+&#1581;&#1604;&#1604;&#1606;&#1575; &#1575;&#1604;&#1605;&#1582;&#1585;&#1580;
+&#1608;&#1593;&#1585;&#1601;&#1606;&#1575; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>index </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1575;&#1604;&#1582;&#1575;&#1589;
+&#1576;&#1575;&#1604;&#1603;&#1604;&#1575;&#1587; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=447 height=547 id="Picture 30" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image027.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=281 height=218 id="Picture 31" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image028.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=418 height=229 id="Picture 32" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image029.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1608;&#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>payload </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1575;&#1604;&#1578;&#1610;
+&#1578;&#1605;&#1603;&#1606;&#1606;&#1575; &#1605;&#1606;
+&#1602;&#1585;&#1575;&#1569;&#1577; &#1605;&#1604;&#1601; &#1575;&#1604;&#1600;
+</span><span dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span>/etc/passwd </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> &#1603;&#1575;&#1604;&#1570;&#1578;&#1610;
+</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=626 height=57 id="Picture 33" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image030.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1576;&#1593;&#1583; &#1578;&#1605;&#1585;&#1610;&#1585;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>payload </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1604;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1606;&#1580;&#1583; &#1571;&#1606;&#1606;&#1575;
+&#1575;&#1587;&#1578;&#1591;&#1593;&#1606;&#1575;
+&#1602;&#1585;&#1575;&#1569;&#1577; &#1575;&#1604;&#1605;&#1604;&#1601;
+&#1576;&#1606;&#1580;&#1575;&#1581; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=452
+height=451 id="Picture 34" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image031.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=248
+height=266 id="Picture 35" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image032.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=418
+height=432 id="Picture 36" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image033.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#C00000;background:white'>&#1578;&#1606;&#1601;&#1610;&#1584; </span></b><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000;background:white'>ls</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1601;&#1610; &#1576;&#1575;&#1610;&#1579;&#1608;&#1606;
+&#1581;&#1578;&#1609; &#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1578;&#1606;&#1601;&#1610;&#1584; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>bash commands</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1606;&#1587;&#1578;&#1593;&#1610;&#1606;
+&#1576;&#1605;&#1603;&#1578;&#1576;&#1577;</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%'> </span><a
+href="https://docs.python.org/3/library/os.html" target="_blank"><span
+class=link-annotation-unknown-block-id-596492844><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'>os</span></span></a><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+<span lang=AR-SA style='color:black'>&#1578;&#1581;&#1583;&#1610;&#1583;&#1611;&#1575;
+&#1583;&#1575;&#1604;&#1577; </span></span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>popen()</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+(&#1607;&#1584;&#1607; &#1591;&#1585;&#1610;&#1602;&#1577; &#1605;&#1606;
+&#1590;&#1605;&#1606; &#1591;&#1585;&#1602; &#1571;&#1582;&#1585;&#1609;
+&#1605;&#1578;&#1575;&#1581;&#1577;)</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1604;&#1603;&#1606; &#1576;&#1593;&#1583;
+&#1605;&#1585;&#1575;&#1580;&#1593;&#1577; &#1602;&#1575;&#1574;&#1605;&#1577;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>classes </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> &#1575;&#1604;&#1578;&#1610;
+&#1575;&#1587;&#1578;&#1582;&#1585;&#1580;&#1606;&#1575;&#1607;&#1575;
+&#1605;&#1606; &#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1604;&#1605;
+&#1606;&#1580;&#1583; &#1607;&#1584;&#1607; &#1575;&#1604;&#1605;&#1603;&#1578;&#1576;&#1577;
+.. &#1601;&#1603;&#1610;&#1601; &#1587;&#1606;&#1589;&#1604;
+&#1604;&#1607;&#1575; &#1567; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1590;&#1605;&#1606; &#1576;&#1610;&#1574;&#1577;
+&#1576;&#1575;&#1610;&#1579;&#1608;&#1606;
+&#1575;&#1604;&#1591;&#1576;&#1610;&#1593;&#1610;&#1577;
+&#1593;&#1575;&#1583;&#1577;&#1611; &#1606;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>import</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>
+&#1608;&#1606;&#1587;&#1578;&#1583;&#1593;&#1610;
+&#1575;&#1604;&#1605;&#1603;&#1578;&#1576;&#1577; .. &#1601;&#1607;&#1604;
+&#1576;&#1575;&#1604;&#1575;&#1605;&#1603;&#1575;&#1606;
+&#1578;&#1591;&#1576;&#1610;&#1602; &#1606;&#1601;&#1587; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1601;&#1603;&#1585;&#1577; &#1607;&#1615;&#1606;&#1575; &#1567;
+</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1575;&#1604;&#1575;&#1580;&#1575;&#1576;&#1577;
+&#1606;&#1593;&#1605; .. &#1608;&#1576;&#1578;&#1601;&#1589;&#1610;&#1604;
+&#1571;&#1603;&#1579;&#1585; &#1575;&#1591;&#1604;&#1593; &#1593;&#1604;&#1609;</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'> </span><a
+href="https://bowneconsultingcontent.com/pub/EH/proj/ED105.htm"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'>&#1607;&#1584;&#1575;
+&#1575;&#1604;&#1605;&#1588;&#1585;&#1608;&#1593;</span></a><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%'> &#1575;&#1604;&#1584;&#1610;
+&#1602;&#1575;&#1605; &#1576;&#1588;&#1585;&#1581;&#1607; &#1571;&#1581;&#1583;
+&#1575;&#1604;&#1576;&#1575;&#1581;&#1579;&#1610;&#1606;
+&#1604;&#1591;&#1604;&#1575;&#1576;&#1607; (
+&#1575;&#1604;&#1605;&#1588;&#1585;&#1608;&#1593;
+&#1576;&#1575;&#1604;&#1605;&#1606;&#1575;&#1587;&#1576;&#1577;
+&#1610;&#1602;&#1608;&#1605; &#1576;&#1581;&#1604; &#1606;&#1601;&#1587;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1575;&#1604;&#1605;&#1615;&#1589;&#1575;&#1576;)</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1576;&#1588;&#1603;&#1604; &#1605;&#1582;&#1578;&#1589;&#1585;
+&#1580;&#1583;&#1611;&#1575; &#1575;&#1604;&#1601;&#1603;&#1585;&#1577;
+&#1575;&#1604;&#1578;&#1610; &#1575;&#1602;&#1578;&#1585;&#1581;&#1607;&#1575;
+&#1575;&#1604;&#1576;&#1575;&#1581;&#1579; &#1607;&#1610;
+&#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605; &#1583;&#1575;&#1604;&#1577; </span><span
+style='font-size:14.0pt;line-height:150%'><a
+href="https://docs.python.org/3/library/warnings.html"><span dir=LTR>catch_warnings()</span></a></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'> </span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> <span
+lang=AR-SA style='color:black'>&#1581;&#1578;&#1609; &#1606;&#1589;&#1604;
+&#1575;&#1604;&#1609; &#1575;&#1604;&#1600; </span></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>import statement </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1608;&#1605;&#1606; &#1579;&#1605;
+&#1606;&#1587;&#1578;&#1591;&#1610;&#1593; &#1593;&#1605;&#1604; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>import</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1604;&#1605;&#1603;&#1578;&#1576;&#1577;</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'> </span><a
+href="https://docs.python.org/3/library/os.html" target="_blank"><span
+class=link-annotation-unknown-block-id-596492844><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:blue'>os</span></span></a><span
+dir=RTL></span><span style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>payload </span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span
+lang=AR-SA>&#1575;&#1604;&#1578;&#1610; &#1578;&#1604;&#1582;&#1589;
+&#1575;&#1604;&#1582;&#1591;&#1608;&#1575;&#1578; &#1575;&#1604;&#1578;&#1610;
+&#1575;&#1602;&#1578;&#1585;&#1581;&#1607;&#1575;
+&#1575;&#1604;&#1576;&#1575;&#1581;&#1579; &#1603;&#1575;&#1604;&#1570;&#1578;&#1610;
+</span></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=683 height=82 id="Picture 37" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image034.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1608;&#1604;&#1608; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1578;&#1605;&#1585;&#1610;&#1585;&#1607;&#1575;
+&#1587;&#1606;&#1580;&#1583; &#1571;&#1606;&#1606;&#1575;
+&#1575;&#1587;&#1578;&#1591;&#1593;&#1606;&#1575;
+&#1578;&#1606;&#1601;&#1610;&#1584; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>ls</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=636
+height=499 id="Picture 38" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image035.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=254
+height=316 id="Picture 39" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image036.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><img border=0 width=520
+height=269 id="Picture 40" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image037.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:#C00000;background:white'>Reverse Shell</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1576;&#1575;&#1605;&#1603;&#1575;&#1606;&#1606;&#1575;
+&#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605; &#1606;&#1601;&#1587;
+&#1575;&#1604;&#1591;&#1585;&#1610;&#1602;&#1577;
+&#1575;&#1604;&#1587;&#1575;&#1576;&#1602;&#1577; &#1604;&#1603;&#1606; &#1593;&#1608;&#1590;&#1611;&#1575;
+&#1593;&#1606; &#1578;&#1605;&#1585;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>ls</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1604;&#1583;&#1575;&#1604;&#1577; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>popen()</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+&#1587;&#1606;&#1602;&#1608;&#1605; &#1576;&#1578;&#1605;&#1585;&#1610;&#1585;
+&#1607;&#1584;&#1575; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>one-line python script</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=683 height=106 id="Picture 41" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image038.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1608;&#1587;&#1578;&#1603;&#1608;&#1606;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>payload </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> &#1575;&#1604;&#1606;&#1607;&#1575;&#1574;&#1610;&#1577;
+&#1603;&#1575;&#1604;&#1570;&#1578;&#1610; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='color:black'><img
+border=0 width=674 height=143 id="Picture 42" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image039.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&#1608;&#1576;&#1593;&#1583;
+&#1578;&#1605;&#1585;&#1610;&#1585;&#1607;&#1575;
+&#1587;&#1606;&#1581;&#1589;&#1604; &#1593;&#1604;&#1609; &#1575;&#1604;&#1600;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>shell
+session</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR><br>
+<img border=0 width=567 height=336 id="Picture 43"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SSTI/image040.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:22.0pt;
+background:white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:22.0pt;
+background:white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;color:black'>&#1582;&#1578;&#1575;&#1605;&#1611;&#1575;&#1548;
+&#1571;&#1608;&#1583; &#1575;&#1604;&#1573;&#1588;&#1575;&#1585;&#1577;
+&#1576;&#1571;&#1606; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577; &#1578;&#1605;&#1617;&#1578;
+&#1603;&#1578;&#1575;&#1576;&#1578;&#1607;&#1575; &#1582;&#1604;&#1575;&#1604;
+&#1583;&#1585;&#1575;&#1587;&#1577; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1608;&#1575;&#1590;&#1610;&#1593;&#1548;
+&#1601;&#1603;&#1604; &#1605;&#1575; &#1578;&#1605; &#1584;&#1603;&#1585;&#1607;
+&#1607;&#1606;&#1575; &#1602;&#1583; &#1610;&#1581;&#1578;&#1605;&#1604;
+&#1575;&#1604;&#1582;&#1591;&#1571;&#1548; &#1604;&#1603;&#1606;
+&#1576;&#1575;&#1604;&#1573;&#1605;&#1603;&#1575;&#1606;
+&#1575;&#1604;&#1593;&#1608;&#1583;&#1577; &#1573;&#1604;&#1609;
+&#1575;&#1604;&#1605;&#1585;&#1575;&#1580;&#1593; &#1575;&#1604;&#1578;&#1610;
+&#1573;&#1587;&#1578;&#1606;&#1583;&#1578; &#1593;&#1604;&#1610;&#1607;&#1575;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:22.0pt;
+background:white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;color:black'>&#1608;&#1573;&#1606;
+&#1571;&#1589;&#1576;&#1578; &#1601;&#1605;&#1606;
+&#1578;&#1608;&#1601;&#1610;&#1602; &#1575;&#1604;&#1604;&#1607;
+&#1608;&#1581;&#1583;&#1607;&#1548; &#1608;&#1573;&#1606; &#1571;&#1582;&#1591;&#1571;&#1578;
+&#1601;&#1605;&#1606; &#1606;&#1601;&#1587;&#1610;
+&#1608;&#1575;&#1604;&#1588;&#1610;&#1591;&#1575;&#1606;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:22.0pt;
+background:white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA
+style='font-size:16.0pt;color:#C00000'>&#1575;&#1604;&#1605;&#1585;&#1575;&#1580;&#1593;</span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:16.0pt;color:#C00000'><span
+dir=LTR></span>:</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:22.0pt;
+background:white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA
+style='font-size:14.0pt;color:#5B9BD5'>&#1605;&#1602;&#1575;&#1604;&#1575;&#1578;</span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;color:#5B9BD5'><span
+dir=LTR></span>:</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://3alam.pro/1337r00t/articles/ssti"><span style='font-size:14.0pt;
+line-height:150%'>https://3alam.pro/1337r00t/articles/ssti</span></a><span
+style='font-size:14.0pt;line-height:150%'> </span></p>
+
+<p class=MsoListParagraphCxSpLast style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://bowneconsultingcontent.com/pub/EH/proj/ED105.htm"><span
+style='font-size:14.0pt;line-height:150%'>https://bowneconsultingcontent.com/pub/EH/proj/ED105.htm</span></a><span
+style='font-size:14.0pt;line-height:150%'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#5B9BD5;background:white'>&#1583;&#1608;&#1585;&#1575;&#1578;</span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:#5B9BD5;background:white'><span dir=LTR></span>:</span></b></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:14.0pt;line-height:
+150%'>AWAE, Offensive Security </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpLast align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

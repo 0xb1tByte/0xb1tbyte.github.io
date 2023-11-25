@@ -1,0 +1,425 @@
+---
+layout: post
+title: SD3
+tags: 
+- Blue Team
+- Secure Code
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-right:0cm;
+	margin-left:0cm;
+	font-size:24.0pt;
+	font-family:"Times New Roman",serif;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-top:2.0pt;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+	margin-bottom:.0001pt;
+	page-break-after:avoid;
+	font-size:13.0pt;
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;
+	font-weight:normal;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#954F72;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Times New Roman",serif;
+	font-weight:bold;}
+span.annotator-hl
+	{mso-style-name:annotator-hl;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Calibri Light",sans-serif;
+	color:#2F5496;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><b><span lang=EN-GB dir=LTR
+style='font-size:16.0pt;line-height:150%;color:black;background:yellow'>SD<sup>3</sup></span></b><span
+dir=RTL></span><b><sup><span lang=EN-GB style='font-size:16.0pt;line-height:
+150%;color:black;background:yellow'><span dir=RTL></span> </span></sup></b><b><span
+lang=AR-SA style='font-size:16.0pt;line-height:150%;color:black;background:
+yellow'> - منهجية فريق </span></b><b><span dir=LTR style='font-size:16.0pt;
+line-height:150%;color:black;background:yellow'>SWI </span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:16.0pt;line-height:150%;color:black;background:
+yellow'><span dir=RTL></span> في حماية تطبيقات وأنظمة مايكروسوفت</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>ذكر الكاتبين </span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>ميشيل و ديفيد</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'> في كتاب </span><span
+lang=EN-GB style='color:black'><a
+href="https://www.amazon.com/Writing-Secure-Code-Strategies-Applications/dp/B01JXO68G8"><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Writing
+Secure Code</span></b></a></span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'> </span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> <span
+lang=AR-SA>المنهجية التي يتبعها فريق </span></span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Secure Windows Initiative
+team</span></b><span dir=RTL></span><b><span style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>في شركة </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Microsoft </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> لضمان أمان التطبيقات التي تقوم الشركة
+بإنتاجها. </span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>الفريق يتبع منهجية أسماها: </span><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:yellow'>SD<sup>3</sup></span><span
+dir=RTL></span><sup><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>  </span></sup><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>والتي تحمل المعنى الآتي: </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+style='font-size:14.0pt;line-height:150%;color:#0070C0'>Secure by Design, by
+Default, and in Deployment</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>أي منهجية التطبيقات المحمية </span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#0070C0'>خلال مرحلة تصميمها،
+ومحمية في أصلها، وعند نشرها.</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#C00000'>الحماية خلال مرحلة التصميم </span></b><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:#C00000'>Secure by Design</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:#C00000'><span dir=RTL></span>: </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:red'>ملاحظة: </span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>إذا لا تعلم ما المقصود بمرحلة التصميم خذ نظرة على
+</span><span lang=EN-GB><a href="https://www.youtube.com/watch?v=EmY2Mrv8-eg"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:windowtext'>هذا
+المقطع</span></a></span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'> أولًا. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>في هذه المنهجية يعتبر الفريق &quot;الحماية&quot; كأحد <b>أهم
+العناصر خلال عملية بناء النُظم</b>، وليس بعد الانتهاء من بناء النظام. لخّص
+الكاتبين أيضًا بعض من الممارسات أو النصائح التي يمكن إتباعها خلال هذه المرحلة
+مثل: </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>تقديم التدريب المتعلق بمفاهيم الحماية لكل شخص له
+دور في بناء النظام.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>اتباع المعايير العالمية المتعلقة بالحماية خلال
+عملية بناء الأنظمة (تستطيع الاطلاع على</span><span dir=LTR></span><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=LTR></span> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>هذه المعايير في الملاحق المرفقة في آخر الكتاب) </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>التأكد بأن المعايير المُتّبعة ذات فائدة في بناء
+النظام أو التطبيق، على سبيل المثال ليست معايير قديمة لا تتوافق مع التقنيات
+الحديثة، وكما أن الثغرات الأمنية مُتجددة فيجب تطبيق المعايير التي تتناسب مع
+طبيعة النظام وتقنياته. </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>إصلاح جميع الـ </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Bugs </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> (المتعلقة بالحماية تحديدًا) التي تظهر خلال
+عملية التصميم أولًا بأول وعدم مراكمتها حتى الانتهاء من تصميم النظام حيث أنها
+ستصبح مهمة معقدة جدًا حينها بسبب نمو النظام وتفرّع خصائصه و وظائفه.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>كتابة كود بسيط ونظيف :)، فإن كانت الأكواد معقدة
+جدًا ستكون عملية تصحيح الأخطاء أعقد غالبًا (هذه دورة في </span><span
+lang=EN-GB style='color:black'><a
+href="https://www.youtube.com/playlist?list=PLiIOcLCu5zqQnZTx37PlR1NOS3Qc9LYMb"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>كتابة الكود
+النظيف في لغة جافا</span></a></span><span style='font-size:14.0pt;line-height:
+150%;color:black'> <span lang=AR-SA>إذا كنت مهتم في هذا الشأن).</span></span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>آخرًا، بعد الإنتهاء من تصميم النظام وبرمجته بشكل
+كامل، يقترح الكاتب البدء في إجراء إختبارات الإختراق </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Penetration Testing </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#C00000'>جعل النظام محمي بشكل افتراضي </span></b><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:#C00000'>Secure by Default</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:#C00000'><span dir=RTL></span>:</span></b><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:#C00000'> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:red'>ملاحظة متعلقة بترجمة المعنى: </span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>ترجمتي لهذا المعنى أرى
+أنها ركيكة أو مختلفة بعض الشيء عن المعنى الحقيقي المذكور في الكتاب، لكن بعد بحث
+هذا اللي طلع معاي للأسف :)، لذلك إذا كنت تملك تعريف أكثر مُواءَمة فضلًا شاركه
+معي على</span><span lang=EN-GB style='color:black'><a
+href="https://twitter.com/b1tByte"><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'> حسابي</span></a></span><span style='font-size:
+14.0pt;line-height:150%;color:black'> <span lang=AR-SA>حتى أقوم بتحديث المعنى
+في هذه التدوينة (الحقوق محفوظة طبعًا!). </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>المقصود في هذه المنهجية هو بناء نظام محمي بشكل إفتراضي، أو
+بمعنى آخر يكون التطبيق محمي ضد أشهر الهجمات، وبالإمكان إتباع بعض الممارسات
+المساعدة في تحقيق هذا مثل: </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>إذا كان النظام يحتوي على وظائف أو خصائص عدّة،
+فيجب فقط تفعيل الخصائص أو الوظائف التي يقوم باستخدامها مستخدمي النظام، ويجب
+تعطيل جميع الوظائف غير المستخدمة.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>تطبيق مفهوم &quot;الصلاحية الأقل&quot; أو ما يعرف
+بـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Least
+Privilege</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=RTL></span> </span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>في النظام، والمقصود به
+إعطاء كل مستخدم فقط الصلاحيات التي يحتاجها لإتمام مهامه في النظام. </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>توفير الحماية المناسبة للمصادر، والمقصود بالمصادر
+هنا هو البيانات الحساسة الخاصة بالنظام.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#C00000'>حماية النظام عند نشره </span></b><span class=annotator-hl><b><span
+lang=EN-GB dir=LTR style='font-size:14.0pt;line-height:150%;color:#C00000'>Secure
+in Deployment</span></b></span><span dir=RTL></span><span class=annotator-hl><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:#C00000'><span
+dir=RTL></span>:</span></b></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>حماية النظام خلال مرحلة تصميمه، أو بناء نظام محمي ضد أشهر
+الهجمات ليس بكافي، <b>لابد من استكمال عملية حماية النظام حتى بعد نشره</b>،
+لاسيما أن الثغرات الأمنية متجددة بشكل شبه يومي كما ذكرنا سلفًا، اقترح الكاتبين
+بعض الممارسات التي يمكن اتباعها لضمان الحماية خلال نشر النظام مثل : </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>التأكد بأن النظام يوفر وسيلة تُمكّن مُدراء النظام
+من التحكم بخصائص الحماية، على سبيل المثال واجهة يمكن من خلالها إدارة الخصائص
+المرتبطة بالحماية والصلاحيات في النظام </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>التأكد بأن النظام أيضًا يوفر وسيلة لتتبع عمليات
+الـ </span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>patching</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ، أو تتبع عمليات تحديث النظام وإصلاح مشاكله،
+فيستطيع مدير النظام معرفة الإصدار الحالي الخاص بالنظام، وفي حالة وجود ثغرة
+أمنية يكون بإمكان مدير النظام التحقق من هذه التحديثات وتحديد إذا ما كانت هذه
+الثغرة بسبب تحديث أُجري مؤخرًا على النظام.  </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>تقديم المعلومات الكافية لمستخدمي النظام وتثقيفهم
+حول آلية استخدام النظام بطريقة آمنه، وبالإمكان تطبيق هذا المفهوم من خلال توفير
+&quot;المساعدة المباشرة&quot; لمستخدمي النظام أو من خلال توفير </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>documentation</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> أو مصادر يلجأ لها مستخدمي النظام لأجل إتمام
+مهامهم في النظام.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Times New Roman",serif;color:#0070C0'>المرجع: </span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Times New Roman",serif;
+color:black'>كتاب: </span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Times New Roman",serif;color:black'>Writing Secure
+Code</span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Times New Roman",serif;
+color:black'>فصل: </span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Times New Roman",serif;color:black'>Chapter 3.
+Security Principles to Live By</span></b><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Times New Roman",serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Times New Roman",serif;
+color:black'>الموضوع: </span><b><span lang=EN-GB dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Times New Roman",serif;color:black'>SD3: Secure
+by Design, by Default, and in Deployment</span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Times New Roman",serif;
+color:black'>صفحة: </span><span dir=LTR></span><b><span lang=EN-GB dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Times New Roman",serif;
+color:black'><span dir=LTR></span>88</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

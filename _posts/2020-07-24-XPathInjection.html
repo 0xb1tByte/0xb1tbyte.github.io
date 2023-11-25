@@ -1,0 +1,587 @@
+---
+layout: post
+title: XPath Injection
+tags: 
+- Web-Pentesting
+- XML Attacks
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-right:0cm;
+	margin-left:0cm;
+	font-size:24.0pt;
+	font-family:"Times New Roman",serif;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Times New Roman",serif;
+	font-weight:bold;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-GB link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+lang=EN-US style='font-size:18.0pt;line-height:150%;color:black'>XPath Injection</span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>السلام عليكم ورحمة الله وبركاته، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>هذه المقالة استكمال لسلسلة المقالات المتعلّقة بالـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XML</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'> قبل الخوض في تفاصيل ثغرة &nbsp;</span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XPath Injection</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> لنعرف أولًا ما هو الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XPath</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>&nbsp;</span><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>في الأساس؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000'>&nbsp;</span></b><b><span lang=EN-US dir=LTR
+style='font-size:16.0pt;line-height:150%;color:#C00000'>XPath</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:16.0pt;line-height:150%;
+color:#C00000'><span dir=RTL></span> : </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><span lang=AR-SA dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XPath</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> عبارة عن </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Query Language</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> يتم استخدامها لجلب بعض البيانات المخزنة في </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XML
+Document</span></b><span dir=RTL></span><b><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>تعريف مختصر وجميل، لنفصّل فيه الآن أكثر ..</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>في بعض تطبيقات الويب (في الغالب التطبيقات البسيطة) يتم استخدام
+الـ &nbsp;</span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>XML Documents</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+لتخزين بعض البيانات مثل : أسماء المستخدمين وبياناتهم، الصلاحيات، و أي نوع من البيانات
+التي يخدمها التطبيق ، على سبيل المثال تطبيق ويب يعرض قائمة بالكتب، قد يتم تخزين
+قائمة الكتب وتفاصيل كل كتاب ( تاريخ النشر ، الكاتب ، الإصدار .. إلخ ) في ملف
+&nbsp;</span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>XML</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>حتى يستطيع تطبيق الويب معالجة هذه البيانات ( عرضها للمستخدم
+مثلًا ) لابد من وجود آلية تُمكّن تطبيق الويب من جلب البيانات المخزنة في ملفات
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>XML</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>XPath</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+هي اللغة -إن صح التعبير- التي تتيح لنا الوصول وتنفيذ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Query</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> على البيانات المخزنة في ملفات الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XML</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000'>&nbsp;</span></b><b><span lang=EN-US dir=LTR
+style='font-size:16.0pt;line-height:150%;color:#C00000'>XPath Injection</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:16.0pt;line-height:150%;
+color:#C00000'><span dir=RTL></span> : </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>يحدث هذا النوع من الثغرات عندما يقوم تطبيق الويب بمعالجة </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XPath query</span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>يتم بناءها بناءً على مُدخَل ( </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>input</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>) يأتي من المستخدم، وهذا
+المُدخَل لا يتم معالجته بالشكل السليم، بالتالي قد يقوم المخترق بإستغلال هذا الخطأ
+البرمجي والتحكم بالـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>XPath query</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+التي يتم تمريرها للتطبيق، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لنأخذ الكود التالي كمثال على هذه الثغرة: </span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:justify;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>الكود خاص بـ </span><b><span style='font-size:14.0pt;line-height:
+150%;color:black'><a href="https://github.com/webpwnized/mutillidae"><span
+dir=LTR style='color:black'>OWASP Mutillidae II</span></a></span></b><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span></b><span
+dir=RTL></span><b><span style='font-size:14.0pt;line-height:150%;color:black'><span
+dir=RTL></span> </span></b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>، تحديدًا الصفحة التي تعرض بيانات المستخدم، تستطيع إيجادها في
+هذا المسار :<b> /</b></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>mutillidae/user-info-xpath.php</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/1.png"><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black;text-decoration:
+none'><img border=0 width=451 height=41 id="Picture 1"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/1.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>السطر رقم </span></b><span dir=LTR></span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>1
+</span></b><span dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> </span></b><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'> يتم بناء الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>XPath query</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> التي تقوم بالبحث في الـ &nbsp;</span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Node</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> المُسمّاه </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>Employee</span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>وتمرّر لها قيمتين ، إسم المستخدم </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>USERNAME</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> و </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>PASSWORD</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> ، هذه القيمتين يقوم المستخدم بإدخالها، وتُمرّر
+لتطبيق الويب عبر الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>URL Parameters </span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>كالتالي : </span></p>
+
+<p class=MsoNormal align=center style='margin-left:18.0pt;text-align:center;
+line-height:150%'><span lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center style='margin-left:18.0pt;text-align:center;
+line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/2.png"><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black;text-decoration:
+none'><img border=0 width=237 height=177 id="Picture 2"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/2.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>السطر رقم </span></b><span dir=LTR></span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>2
+</span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> وَ </span></b><span
+dir=LTR></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span>3</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+: </span></b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>يتم دمج القيم القادمة من الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>HTTP Request</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span>  مع الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>query</span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000'>* هنا مصدر الخَلل ، لم يتم معالجة
+المدخلات بالشكل السليم!</span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>السطر رقم </span></b><span dir=LTR></span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>4</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> : </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>يقوم هذا السطر بتنفيذ الـ
+</span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>Query</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>لنأخذ مثال آخر، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>ملف الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>XML</span></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> الذي
+سيتم تنفيذ الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>XPath query</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+عليه كالآتي : </span></p>
+
+<p class=MsoNormal align=center style='margin-left:18.0pt;text-align:center;
+line-height:150%'><span lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center style='margin-left:18.0pt;text-align:center;
+line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/3.png"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;text-decoration:
+none'><img border=0 width=267 height=259 id="Picture 3"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/3.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal align=center style='margin-left:18.0pt;text-align:center;
+line-height:150%'><span lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:18.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>تعليمة الـ</span><span
+dir=LTR></span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'><span dir=LTR></span>  <b>XPath</b> </span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>التي تقوم بإسترجاع جميع
+الإيميلات ستبدو كالتالي : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='margin-right:18.0pt;text-align:
+center;line-height:150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/4.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+text-decoration:none'><img border=0 width=165 height=30 id="Picture 4"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/4.png"
+alt="A picture containing table&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:18.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>ولو أردنا عرض البيانات الخاصة
+بالمستخدم </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Dawes</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+ستكون التعليمة كالتالي : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='margin-right:18.0pt;text-align:
+center;line-height:150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/5.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+text-decoration:none'><img border=0 width=228 height=26 id="Picture 5"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/5.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:18.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>الآن لنفترض أن تطبيق
+الويب سيقوم بعرض بيانات الـ</span><span dir=LTR></span><span lang=AR-SA
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>
+</span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black'>credit card</span></b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> بناءً
+على اسم المستخدم </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>username</span></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> وكلمة
+المرور </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>password</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'>، سيتم تمرير
+هذه القيم من قبل المستخدم وستكون الـ &nbsp;</span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>query</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>كالآتي : </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/6.png"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;text-decoration:
+none'><img border=0 width=374 height=37 id="Picture 6"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/6.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:18.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>في حالة لم يقم المبرمج
+بمعالجة هذه المدخلات بالشكل السليم، قد يقوم المخترق بحقن القيمة التالية في حقل
+كلمة المرور : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='margin-right:18.0pt;text-align:
+center;line-height:150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/7.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+text-decoration:none'><img border=0 width=85 height=28 id="Picture 7"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/7.png"
+alt="A close up of a logo&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:18.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>سيؤدي حقن القيمة السابقة
+إلى جعل التعليمة كالآتي : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='margin-right:18.0pt;text-align:
+center;line-height:150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/8.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+text-decoration:none'><img border=0 width=373 height=34 id="Picture 8"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XPath/8.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>والتي ستقوم بعرض قيم الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>credit cards</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> لجميع المستخدمين</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+150%;color:#C00000'>الممارسات الصحيحة لمنع ثغرات الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:16.0pt;line-height:150%;color:#C00000'>XPath
+Injection</span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;color:#C00000'><span dir=RTL></span> : </span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>لا تقم ببناء </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black'>queries</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+تستند على مُدخلات قادمة من المستخدم في المقام الأول</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'>إن كان ولا بد من بناء مثل هذه التعليمات، فتأكد بأنك تقوم بإختبار
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black'>parameters</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span> القادمة
+من المستخدم <b>والتأكد بأنها تحتوي فقط على القيم المسموحة</b>، مثل الأرقام
+والحروف فقط، بمعنى آخر إستخدم منهجية </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>White List</span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>لإختبار المدخلات، ولا تقم بالإعتماد على
+تنقيح المدخلات </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black'>Sanitization</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black'><span dir=RTL></span>
+، حيث أن الطريقة الأخيرة لها طُرق تجاوز عدّة.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#C00000'>المراجع:</span></b></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=AR-SA dir=RTL style='font-size:14.0pt;line-height:150%;color:#0070C0'>كتب:</span></b></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><b><span style='font-size:14.0pt;line-height:
+150%;color:black'>The </span></b><b><span lang=EN-US style='font-size:14.0pt;
+line-height:150%;color:black'>W</span></b><b><span style='font-size:14.0pt;
+line-height:150%;color:black'>eb </span></b><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;color:black'>A</span></b><b><span
+style='font-size:14.0pt;line-height:150%;color:black'>pplication </span></b><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>H</span></b><b><span
+style='font-size:14.0pt;line-height:150%;color:black'>ackers </span></b><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'>H</span></b><b><span
+style='font-size:14.0pt;line-height:150%;color:black'>andbook<span dir=RTL></span><span
+lang=AR-SA dir=RTL><span dir=RTL></span> &nbsp;</span></span></b><span dir=LTR></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;color:black'><span dir=LTR></span>,
+Chapter 9 (Injecting into XPath)</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:#0070C0'>معمل: </span></b></p>
+
+<h1 style='margin-left:36.0pt;text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;font-weight:normal'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><em><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black;font-style:normal'>OWASP
+Mutillidae II : <a href="https://github.com/webpwnized/mutillidae">https://github.com/webpwnized/mutillidae</a>
+</span></em></h1>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:#0070C0'>يوتيوب: </span></b></p>
+
+<h1 style='margin-left:36.0pt;text-indent:-18.0pt;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;font-weight:normal'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Introduction to XPath
+Injection : <a href="https://youtu.be/fV0qsqcScI4">https://youtu.be/fV0qsqcScI4</a>
+</span></h1>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><span style='font-size:14.0pt;
+line-height:150%;color:black'><span dir=RTL></span> </span></p>
+
+</div>
+
+</body>
+
+</html>

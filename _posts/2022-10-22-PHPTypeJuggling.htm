@@ -1,0 +1,1490 @@
+---
+layout: post
+title: PHP Type Juggling Vulnerability
+tags:
+  - Web-Pentesting
+  - TypeJuggling
+  - Web-Security
+  - Write-up
+  - Arabic-Article
+published: true
+date: '2022-10-22'
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72" style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><a name="_Hlk117322556"></a><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&#1575;&#1604;&#1587;&#1604;&#1575;&#1605;
+&#1593;&#1604;&#1610;&#1603;&#1605; &#1608;&#1585;&#1581;&#1605;&#1577;
+&#1575;&#1604;&#1604;&#1607; &#1608;&#1576;&#1585;&#1603;&#1575;&#1578;&#1607;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&#1571;&#1605;&#1608;&#1585;
+&#1610;&#1580;&#1576; &#1593;&#1604;&#1610;&#1603;
+&#1605;&#1593;&#1585;&#1601;&#1578;&#1607;&#1575; &#1602;&#1576;&#1604;
+&#1602;&#1585;&#1575;&#1569;&#1577; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577;</span></b><span dir=LTR></span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=LTR></span>:</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>&#1605;&#1593;&#1585;&#1601;&#1577;
+&#1590;&#1585;&#1608;&#1585;&#1610;&#1577;</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black'>: &#1604;&#1594;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black'>PHP</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span style='font-size:
+14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:black'>&#1604;&#1610;&#1587;&#1578;
+&#1590;&#1585;&#1608;&#1585;&#1610;&#1577; &#1604;&#1603;&#1606;
+&#1580;&#1610;&#1583;&#1577;</span></b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>: &#1605;&#1593;&#1585;&#1601;&#1577;
+&#1576;&#1587;&#1610;&#1591;&#1577; &#1601;&#1610; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Docker</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1581;&#1610;&#1579; &#1573;&#1606;
+&#1575;&#1604;&#1605;&#1593;&#1605;&#1604; &#1575;&#1604;&#1584;&#1610;
+&#1587;&#1606;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1604;&#1578;&#1593;&#1575;&#1605;&#1604; &#1605;&#1593;&#1607;
+&#1593;&#1576;&#1575;&#1585;&#1577; &#1593;&#1606; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black'>Docker Container</span><span
+dir=RTL></span><span lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;
+color:black'><span dir=RTL></span> &#1548; &#1571;&#1585;&#1588;&#1581;
+&#1604;&#1603; &#1608;&#1576;&#1588;&#1583;&#1577;</span><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:black'> </span><a
+href="https://www.youtube.com/watch?v=DFyPl2cZM2g&amp;list=PLX1bW_GeBRhDkTf_jbdvBbkHs2LCWVeXZ"><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%'>&#1607;&#1584;&#1607;
+&#1575;&#1604;&#1587;&#1604;&#1587;&#1604;&#1577;</span></a><span
+style='font-size:14.0pt;line-height:150%;color:black'> </span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%;color:black'>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</span></p>
+
+<div style='border:none;border-bottom:solid windowtext 1.0pt;padding:0in 0in 1.0pt 0in'>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed;border:none;padding:0in'><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></b></p>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1610;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577;
+&#1587;&#1606;&#1578;&#1591;&#1585;&#1602; &#1604;&#1588;&#1585;&#1581;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1606;&#1602;&#1575;&#1591; : </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;background:white;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;color:#C00000'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000;background:white'>&#1605;&#1601;&#1607;&#1608;&#1605;
+&#1575;&#1604;&#1600; </span></b><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:#C00000;background:white'>Type Juggling</span></b><span
+dir=RTL></span><b><span lang=ku-Arab-IQ style='font-size:14.0pt;line-height:
+150%;color:#C00000;background:white'><span dir=RTL></span> &#1601;&#1610;
+&#1604;&#1594;&#1577; </span></b><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:#C00000;background:white'>PHP</span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;background:white;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;color:#C00000'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#C00000;background:white'>&#1579;&#1594;&#1585;&#1577;
+</span></b><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:#C00000;background:white'>PHP Type Juggling</span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;background:white;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;color:#C00000'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=ku-Arab-IQ
+style='font-size:14.0pt;line-height:150%;color:#C00000;background:white'>&#1573;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577; </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;color:#C00000;background:white'>&#1605;&#1601;&#1607;&#1608;&#1605;
+&#1575;&#1604;&#1600; </span></b><b><span dir=LTR style='font-size:16.0pt;
+line-height:150%;color:#C00000;background:white'>Type Juggling</span></b><span
+dir=RTL></span><b><span lang=ku-Arab-IQ style='font-size:16.0pt;line-height:
+150%;color:#C00000;background:white'><span dir=RTL></span> &#1601;&#1610;
+&#1604;&#1594;&#1577; </span></b><b><span dir=LTR style='font-size:16.0pt;
+line-height:150%;color:#C00000;background:white'>PHP</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1604;&#1594;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>PHP
+</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span> &#1578;&#1593;&#1578;&#1576;&#1585;
+</span><span style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><a href="https://en.wikipedia.org/wiki/Dynamic_programming_language"><span
+dir=LTR>Dynamically Typed Language</span></a></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1605;&#1605;&#1575;
+&#1610;&#1593;&#1606;&#1610; &#1578;&#1581;&#1583;&#1610;&#1583;
+&#1608;&#1578;&#1593;&#1585;&#1610;&#1601; &#1606;&#1608;&#1593;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1575;&#1578; ( </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>variables</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> ) &#1594;&#1610;&#1585;
+&#1605;&#1591;&#1604;&#1608;&#1576; &#1608;&#1605;&#1583;&#1593;&#1608;&#1605;
+&#1601;&#1610; &#1607;&#1584;&#1607; &#1575;&#1604;&#1604;&#1594;&#1577;
+&#1571;&#1587;&#1575;&#1587;&#1611;&#1575; &#1548; &#1575;&#1606;&#1605;&#1575;
+&#1610;&#1578;&#1605; &#1578;&#1581;&#1583;&#1610;&#1583; &#1606;&#1608;&#1593;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; &#1576;&#1581;&#1587;&#1576;
+&#1575;&#1604;&#1602;&#1610;&#1605;&#1577; &#1575;&#1604;&#1578;&#1610;
+&#1610;&#1581;&#1605;&#1604;&#1607;&#1575; &#1573;&#1606; &#1589;&#1581;
+&#1575;&#1604;&#1578;&#1593;&#1576;&#1610;&#1585;&#1548;
+&#1571;&#1610;&#1590;&#1611;&#1575;
+&#1576;&#1575;&#1604;&#1575;&#1605;&#1603;&#1575;&#1606;
+&#1578;&#1594;&#1610;&#1610;&#1585; &#1606;&#1608;&#1593; &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; &#1582;&#1604;&#1575;&#1604;
+&#1587;&#1610;&#1585; &#1575;&#1604;&#1576;&#1585;&#1606;&#1575;&#1605;&#1580;
+&#1593;&#1576;&#1585; &#1578;&#1582;&#1586;&#1610;&#1606; &#1602;&#1610;&#1605;&#1577;
+&#1571;&#1582;&#1585;&#1609; &#1605;&#1606; &#1606;&#1608;&#1593;
+&#1570;&#1582;&#1585; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1605;&#1606;
+&#1575;&#1604;&#1605;&#1605;&#1603;&#1606; &#1575;&#1610;&#1590;&#1611;&#1575;
+&#1571;&#1606; &#1610;&#1578;&#1594;&#1610;&#1617;&#1585; &#1606;&#1608;&#1593;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; &#1582;&#1604;&#1575;&#1604; </span><span
+style='color:black'><a
+href="https://www.codecademy.com/article/fwd-js-comparison-logical"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;background:white'>&#1593;&#1605;&#1604;&#1610;&#1575;&#1578;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;</span></a></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'> &#1548; &#1593;&#1604;&#1609; &#1587;&#1576;&#1610;&#1604;
+&#1575;&#1604;&#1605;&#1579;&#1575;&#1604;&#1548; &#1605;&#1575;&#1584;&#1575;
+&#1587;&#1610;&#1581;&#1583;&#1579; &#1573;&#1606; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1585;&#1602;&#1605; </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=LTR></span>(int)</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1605;&#1593; &#1606;&#1589; </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=LTR></span>(string)</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1567;
+&#1604;&#1605;&#1579;&#1604; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1581;&#1575;&#1604;&#1575;&#1578; &#1610;&#1608;&#1580;&#1583;
+&#1601;&#1610; &#1604;&#1594;&#1577; </span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;color:black;background:white'>PHP</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1605;&#1601;&#1607;&#1608;&#1605;
+&#1610;&#1587;&#1605;&#1609; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>Type Juggling</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1578;&#1602;&#1608;&#1605;
+&#1575;&#1604;&#1604;&#1594;&#1577; &#1576;&#1575;&#1578;&#1576;&#1575;&#1593; &#1602;&#1608;&#1575;&#1606;&#1610;&#1606;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'>Type Juggling</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1575;&#1604;&#1582;&#1575;&#1589;&#1577;
+&#1576;&#1607;&#1575; &#1601;&#1610; &#1581;&#1575;&#1604;
+&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1576;&#1610;&#1606;
+&#1605;&#1578;&#1594;&#1610;&#1585;&#1610;&#1606; &#1605;&#1606;
+&#1606;&#1608;&#1593;&#1610;&#1606; &#1605;&#1582;&#1578;&#1604;&#1601;&#1610;&#1606;
+&#1548; &#1608;&#1576;&#1581;&#1587;&#1576;
+&#1575;&#1604;&#1581;&#1575;&#1604;&#1577;&#1548;
+&#1587;&#1578;&#1602;&#1608;&#1605; &#1575;&#1604;&#1604;&#1594;&#1577;
+&#1576;&#1578;&#1581;&#1608;&#1610;&#1604; &#1606;&#1608;&#1593;
+&#1571;&#1581;&#1583;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1575;&#1578;
+&#1575;&#1604;&#1609; &#1575;&#1604;&#1606;&#1608;&#1593;
+&#1575;&#1604;&#1570;&#1582;&#1585; ..</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1575;&#1604;&#1570;&#1606;
+&#1575;&#1604;&#1587;&#1572;&#1575;&#1604; &#1575;&#1604;&#1605;&#1607;&#1605;
+.. &#1607;&#1604; &#1583;&#1575;&#1574;&#1605;&#1611;&#1575;
+&#1587;&#1578;&#1602;&#1608;&#1605; &#1575;&#1604;&#1604;&#1594;&#1577; &#1576;&#1575;&#1604;&#1575;&#1580;&#1578;&#1607;&#1575;&#1583;
+&#1608;&#1605;&#1581;&#1575;&#1608;&#1604;&#1577;
+&#1575;&#1604;&#1605;&#1608;&#1575;&#1586;&#1606;&#1577; &#1576;&#1610;&#1606;
+&#1571;&#1606;&#1608;&#1575;&#1593; &#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1575;&#1578;
+&#1582;&#1604;&#1575;&#1604; &#1593;&#1605;&#1604;&#1610;&#1575;&#1578;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1567;
+&#1575;&#1604;&#1575;&#1580;&#1575;&#1576;&#1577; &#1575;&#1604;&#1605;&#1615;&#1582;&#1578;&#1589;&#1585;&#1577;
+&#1604;&#1575; .. &#1610;&#1608;&#1580;&#1583;
+&#1581;&#1575;&#1604;&#1575;&#1578; &#1605;&#1615;&#1593;&#1610;&#1606;&#1577;
+&#1587;&#1578;&#1602;&#1608;&#1605; &#1604;&#1594;&#1577; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>PHP</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1576;&#1575;&#1604;&#1593;&#1608;&#1583;&#1577;
+&#1604;&#1602;&#1608;&#1575;&#1606;&#1610;&#1606; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Type
+Juggling </span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span> &#1575;&#1604;&#1582;&#1575;&#1589;&#1577;
+&#1576;&#1607;&#1575; &#1608;&#1605;&#1581;&#1575;&#1608;&#1604;&#1577;
+&#1575;&#1604;&#1578;&#1581;&#1608;&#1610;&#1604;
+&#1608;&#1575;&#1604;&#1578;&#1602;&#1585;&#1610;&#1576; &#1576;&#1610;&#1606;
+&#1575;&#1604;&#1575;&#1606;&#1608;&#1575;&#1593; .. &#1608;&#1601;&#1610;
+&#1581;&#1575;&#1604;&#1575;&#1578; &#1571;&#1582;&#1585;&#1609;
+&#1587;&#1578;&#1602;&#1608;&#1605; &#1575;&#1604;&#1604;&#1594;&#1577;
+&#1576;&#1593;&#1605;&#1604;&#1610;&#1575;&#1578;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1601;&#1602;&#1591;
+&#1601;&#1610; &#1581;&#1575;&#1604; &#1603;&#1575;&#1606;&#1578;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1575;&#1578; &#1605;&#1606;
+&#1606;&#1601;&#1587; &#1575;&#1604;&#1606;&#1608;&#1593; ..
+&#1608;&#1607;&#1584;&#1575; &#1610;&#1602;&#1608;&#1583;&#1606;&#1575;
+&#1575;&#1604;&#1609; &#1605;&#1601;&#1607;&#1608;&#1605;&#1610;&#1606;
+&#1570;&#1582;&#1585;&#1610;&#1606; &#1601;&#1610; &#1604;&#1594;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>PHP</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>   </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>Loose Comparison (==) </span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> : </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1607;&#1584;&#1607;
+&#1607;&#1610; &#1575;&#1604;&#1581;&#1575;&#1604;&#1577;
+&#1575;&#1604;&#1571;&#1608;&#1604;&#1609; &#1601;&#1610;
+&#1605;&#1579;&#1575;&#1604;&#1606;&#1575;
+&#1575;&#1604;&#1587;&#1575;&#1576;&#1602;&#1548; &#1601;&#1610; &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1606;&#1608;&#1593; &#1605;&#1606;
+&#1575;&#1606;&#1608;&#1575;&#1593;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1575;&#1578;
+&#1587;&#1578;&#1578;&#1583;&#1582;&#1604; &#1604;&#1594;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>PHP</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1608;&#1578;&#1591;&#1576;&#1617;&#1602;
+&#1602;&#1608;&#1575;&#1606;&#1610;&#1606; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Type
+Juggling</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span>
+&#1575;&#1584;&#1575; &#1575;&#1582;&#1578;&#1604;&#1601;&#1578;
+&#1575;&#1606;&#1608;&#1575;&#1593;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1575;&#1578;
+&#1575;&#1604;&#1578;&#1610; &#1610;&#1578;&#1605;
+&#1605;&#1602;&#1575;&#1585;&#1606;&#1578;&#1607;&#1575; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1610;
+&#1607;&#1584;&#1575; &#1575;&#1604;&#1606;&#1608;&#1593;
+&#1606;&#1587;&#1578;&#1582;&#1583;&#1605;
+&#1575;&#1604;&#1578;&#1593;&#1604;&#1610;&#1605;&#1577; ==
+&#1604;&#1575;&#1582;&#1578;&#1576;&#1575;&#1585; &#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577;
+&#1608;&#1606;&#1587;&#1578;&#1582;&#1583;&#1605; != &#1571;&#1608; </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=LTR></span> &lt;&gt;</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'>&#1604;&#1575;&#1582;&#1578;&#1576;&#1575;&#1585; &#1593;&#1583;&#1605;
+&#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>Strict Comparison (===) </span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> :</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1607;&#1584;&#1575;
+&#1575;&#1604;&#1606;&#1608;&#1593; &#1607;&#1608;
+&#1575;&#1604;&#1581;&#1575;&#1604;&#1577;
+&#1575;&#1604;&#1579;&#1575;&#1606;&#1610;&#1577; &#1605;&#1606;
+&#1575;&#1604;&#1605;&#1579;&#1575;&#1604; &#1575;&#1604;&#1587;&#1575;&#1576;&#1602;
+&#1548; &#1610;&#1578;&#1605; &#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605;
+&#1575;&#1604;&#1578;&#1593;&#1604;&#1610;&#1605;&#1577; ===
+&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;
+&#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577;
+&#1608;&#1575;&#1604;&#1578;&#1593;&#1604;&#1610;&#1605;&#1577; !==
+&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1593;&#1583;&#1605;
+&#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577; ..
+&#1608;&#1604;&#1606; &#1578;&#1578;&#1605;
+&#1593;&#1605;&#1604;&#1610;&#1575;&#1578;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1575;&#1604;&#1575;
+&#1575;&#1584;&#1575; &#1603;&#1575;&#1606; &#1603;&#1616;&#1604;&#1575;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1610;&#1606; &#1605;&#1606;
+&#1606;&#1601;&#1587; &#1575;&#1604;&#1606;&#1608;&#1593; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;color:#C00000;background:white'>&#1579;&#1594;&#1585;&#1577;
+</span></b><b><span dir=LTR style='font-size:16.0pt;line-height:150%;
+color:#C00000;background:white'>PHP Type Juggling</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1575;&#1604;&#1605;&#1602;&#1583;&#1605;&#1577;
+&#1575;&#1604;&#1587;&#1575;&#1576;&#1602;&#1577;&#1548;
+&#1604;&#1606;&#1606;&#1578;&#1602;&#1604; &#1575;&#1604;&#1570;&#1606;
+&#1604;&#1601;&#1607;&#1605; &#1605;&#1578;&#1609; &#1608;&#1571;&#1610;&#1606;
+&#1578;&#1581;&#1583;&#1579; &#1575;&#1604;&#1605;&#1588;&#1603;&#1604;&#1577;
+&#1567; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1571;&#1601;&#1590;&#1604;
+&#1591;&#1585;&#1610;&#1602;&#1577; &#1604;&#1606;&#1601;&#1607;&#1605;
+&#1607;&#1610; &#1571;&#1606; &#1606;&#1582;&#1578;&#1576;&#1585;
+&#1605;&#1575;&#1587;&#1576;&#1602; &#1583;&#1575;&#1582;&#1604; &#1576;&#1610;&#1574;&#1577;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>PHP </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=624 height=40 id="Picture 4"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image001.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1610;
+&#1575;&#1604;&#1603;&#1608;&#1583; &#1571;&#1593;&#1604;&#1575;&#1607;
+&#1602;&#1605;&#1606;&#1575; &#1576;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;
+&#1585;&#1602;&#1605; 3 &#1605;&#1593; &#1575;&#1604;&#1606;&#1589;
+&quot;3&quot; &#1608; &#1606;&#1604;&#1575;&#1581;&#1592; &#1571;&#1606;
+&#1606;&#1575;&#1578;&#1580; &#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1607;&#1610; &#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>equal
+</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1605;&#1575;&#1604;&#1584;&#1610;
+&#1581;&#1583;&#1579; &#1607;&#1606;&#1575; &#1567;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1604;&#1594;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>PHP</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1591;&#1576;&#1617;&#1602;&#1578;
+&#1605;&#1601;&#1607;&#1608;&#1605; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>Type
+Juggling</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span>
+&#1608;&#1602;&#1575;&#1605;&#1578; &#1576;&#1578;&#1581;&#1608;&#1610;&#1604;
+&#1575;&#1604;&#1606;&#1589; &quot;3&quot; &#1575;&#1604;&#1609;
+&#1585;&#1602;&#1605; &#1608;&#1576;&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1587;&#1578;&#1589;&#1576;&#1581; 3 == 3
+&#1608;&#1576;&#1575;&#1604;&#1591;&#1576;&#1593; &#1606;&#1575;&#1578;&#1580;
+&#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1587;&#1610;&#1603;&#1608;&#1606; &#1589;&#1581;&#1610;&#1581; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1604;&#1604;&#1578;&#1571;&#1603;&#1617;&#1583;
+&#1587;&#1606;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1587;&#1578;&#1576;&#1583;&#1575;&#1604;
+&#1575;&#1604;&#1585;&#1602;&#1605; &#1576;&#1585;&#1602;&#1605;
+&#1570;&#1582;&#1585;&#1548; &#1608;&#1604;&#1608; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1578;&#1606;&#1601;&#1610;&#1584; &#1575;&#1604;&#1603;&#1608;&#1583;
+&#1587;&#1606;&#1604;&#1575;&#1581;&#1592; &#1571;&#1606;
+&#1606;&#1575;&#1578;&#1580; &#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1607;&#1608; &#1575;&#1604;&#1604;&#1575;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577;&#1548;
+&#1576;&#1575;&#1604;&#1591;&#1576;&#1593; 3 &#1604;&#1575;
+&#1578;&#1587;&#1575;&#1608;&#1610; 4</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=624 height=44 id="Picture 5"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image002.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1610;
+&#1575;&#1604;&#1605;&#1579;&#1575;&#1604;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1575;&#1590;&#1575;&#1601;&#1577; &#1580;&#1605;&#1604;&#1577;
+&#1606;&#1589;&#1610;&#1577; &#1601;&#1593;&#1604;&#1610;&#1577;
+&#1604;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;
+&#1575;&#1604;&#1571;&#1608;&#1604; &#1604;&#1606;&#1604;&#1575;&#1581;&#1592;
+&#1603;&#1610;&#1601; &#1587;&#1578;&#1578;&#1605;
+&#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577; ..
+&#1601;&#1575;&#1604;&#1570;&#1606; &#1606;&#1581;&#1606;
+&#1606;&#1602;&#1575;&#1585;&#1606;
+&#1605;&#1578;&#1594;&#1610;&#1585;&#1610;&#1606;&#1548;
+&#1575;&#1604;&#1571;&#1608;&#1604; &#1593;&#1576;&#1575;&#1585;&#1577;
+&#1593;&#1606; &#1585;&#1602;&#1605; &#1608;&#1581;&#1585;&#1608;&#1601;
+&#1608;&#1575;&#1604;&#1579;&#1575;&#1606;&#1610;
+&#1593;&#1576;&#1575;&#1585;&#1577; &#1593;&#1606; &#1585;&#1602;&#1605;
+&#1601;&#1602;&#1591; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=623 height=39 id="Picture 15"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image003.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1606;&#1604;&#1575;&#1581;&#1592;
+&#1571;&#1606; &#1606;&#1575;&#1578;&#1580;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1607;&#1608;
+&#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577; ..
+&#1601;&#1605;&#1575;&#1584;&#1575; &#1581;&#1583;&#1579; &#1607;&#1606;&#1575;
+&#1567;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1602;&#1575;&#1605;&#1578; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>PHP
+</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span> &#1576;&#1578;&#1581;&#1608;&#1610;&#1604;
+</span><span dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;color:black;background:white'><span dir=LTR></span>“3test”</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1575;&#1604;&#1609; 3 </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1571;&#1610;
+&#1571;&#1606;&#1607; &#1578;&#1605; &#1575;&#1604;&#1606;&#1592;&#1585;
+&#1575;&#1604;&#1609; &#1575;&#1604;&#1580;&#1586;&#1569;
+&#1575;&#1604;&#1571;&#1608;&#1604; &#1605;&#1606;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=LTR></span>3test</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1608;&#1607;&#1608; &#1585;&#1602;&#1605; 3
+&#1608;&#1578;&#1605; &#1575;&#1604;&#1594;&#1575;&#1569;
+&#1575;&#1604;&#1606;&#1589; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>test</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1576;&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1603;&#1575;&#1606;&#1578; &#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;
+&#1575;&#1604;&#1606;&#1607;&#1575;&#1574;&#1610;&#1577; &#1603;&#1575;&#1604;&#1570;&#1578;&#1610;
+: 3==3 </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1575;&#1604;&#1606;&#1575;&#1578;&#1580;
+&#1576;&#1575;&#1604;&#1591;&#1576;&#1593; &#1587;&#1610;&#1603;&#1608;&#1606;
+&#1589;&#1581;&#1610;&#1581; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1587;&#1606;&#1571;&#1582;&#1584;
+&#1605;&#1579;&#1575;&#1604; &#1570;&#1582;&#1585;
+&#1610;&#1581;&#1578;&#1608;&#1610; &#1593;&#1604;&#1609;
+&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1606;&#1589; &#1601;&#1602;&#1591;
+&#1605;&#1593; &#1585;&#1602;&#1605;</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=623 height=38 id="Picture 44"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image004.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1606;&#1604;&#1575;&#1581;&#1592;
+&#1571;&#1606; &#1575;&#1604;&#1606;&#1575;&#1578;&#1580; &#1607;&#1608;
+&#1575;&#1604;&#1604;&#1575;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1604;&#1606;&#1587;&#1578;&#1603;&#1605;&#1604;
+&#1605;&#1579;&#1575;&#1604; &#1570;&#1582;&#1585; &#1604;&#1603;&#1606;
+&#1587;&#1606;&#1602;&#1608;&#1605; &#1576;&#1578;&#1594;&#1610;&#1610;&#1585;
+&#1575;&#1604;&#1585;&#1602;&#1605; 3 &#1575;&#1604;&#1609; 0 &#1548;
+&#1571;&#1610; &#1587;&#1578;&#1603;&#1608;&#1606;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;
+&#1575;&#1604;&#1585;&#1602;&#1605; 0 &#1605;&#1593; &#1606;&#1589; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=624 height=40 id="Picture 45"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image005.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1593;&#1604;&#1609;
+&#1582;&#1604;&#1575;&#1601; &#1575;&#1604;&#1605;&#1579;&#1575;&#1604;
+&#1575;&#1604;&#1587;&#1575;&#1576;&#1602;
+&#1575;&#1604;&#1606;&#1578;&#1610;&#1580;&#1577; &#1607;&#1606;&#1575;
+&#1603;&#1575;&#1606;&#1578; &#1607;&#1610; &#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577;
+&#1593;&#1604;&#1609; &#1575;&#1604;&#1585;&#1594;&#1605;
+&#1576;&#1571;&#1606;&#1607; &#1601;&#1610; &#1603;&#1604;&#1575;
+&#1575;&#1604;&#1605;&#1579;&#1575;&#1604;&#1610;&#1606; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1585;&#1602;&#1605;
+&#1608;&#1606;&#1589; .. &#1601;&#1603;&#1610;&#1601;
+&#1578;&#1593;&#1575;&#1605;&#1604;&#1578; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>PHP</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1601;&#1610;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1581;&#1575;&#1604;&#1577; &#1567;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1575;&#1604;&#1584;&#1610;
+&#1581;&#1583;&#1579; &#1576;&#1575;&#1582;&#1578;&#1589;&#1575;&#1585;
+&#1575;&#1606;&#1607; &#1593;&#1606;&#1583;&#1605;&#1575;
+&#1578;&#1602;&#1608;&#1605; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>PHP</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1576;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;
+&#1606;&#1589; &#1605;&#1593; &#1585;&#1602;&#1605;&#1548;
+&#1587;&#1578;&#1606;&#1592;&#1585; &#1571;&#1608;&#1604;&#1611;&#1575;
+&#1607;&#1604; &#1610;&#1576;&#1583;&#1571; &#1607;&#1584;&#1575; &#1575;&#1604;&#1606;&#1589;
+&#1576;&#1585;&#1602;&#1605; &#1567; &#1601;&#1610; &#1581;&#1575;&#1604;
+&#1578;&#1581;&#1602;&#1602; &#1607;&#1584;&#1575;
+&#1587;&#1578;&#1602;&#1608;&#1605; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>PHP</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1576;&#1575;&#1582;&#1584; &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1585;&#1602;&#1605; &#1608;&#1575;&#1580;&#1585;&#1575;&#1569;
+&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; ..</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1601;&#1610;
+&#1581;&#1575;&#1604; &#1603;&#1575;&#1606; &#1575;&#1604;&#1606;&#1589;
+&#1604;&#1575; &#1610;&#1581;&#1578;&#1608;&#1610; &#1593;&#1604;&#1609;
+&#1571;&#1610; &#1585;&#1602;&#1605; &#1548; &#1587;&#1578;&#1602;&#1608;&#1605;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>PHP</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1576;&#1578;&#1581;&#1608;&#1610;&#1604;
+&#1603;&#1575;&#1605;&#1604; &#1575;&#1604;&#1606;&#1589; &#1575;&#1604;&#1609;
+&#1575;&#1604;&#1602;&#1610;&#1605;&#1577; &#1589;&#1601;&#1585; &#1548;
+&#1608;&#1578;&#1602;&#1575;&#1585;&#1606;&#1607; &#1605;&#1593;
+&#1575;&#1604;&#1585;&#1602;&#1605;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1576;&#1604;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1576;&#1593;&#1583;
+&#1571;&#1606; &#1601;&#1607;&#1605;&#1606;&#1575; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Type
+Juggling</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span>
+&#1576;&#1588;&#1603;&#1604; &#1593;&#1605;&#1604;&#1610; ..
+&#1605;&#1578;&#1609; &#1575;&#1584;&#1611;&#1575; &#1578;&#1581;&#1583;&#1579;
+&#1575;&#1604;&#1605;&#1588;&#1603;&#1604;&#1577; &#1567; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1578;&#1589;&#1608;&#1617;&#1585;
+&#1605;&#1593;&#1610; &#1575;&#1604;&#1603;&#1608;&#1583;
+&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1604;&#1593;&#1605;&#1604;&#1610;&#1577; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>authentication
+</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=617 height=49 id="Picture 46"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image006.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1610;
+&#1575;&#1604;&#1603;&#1608;&#1583; &#1571;&#1593;&#1604;&#1575;&#1607;
+&#1587;&#1610;&#1578;&#1605; &#1575;&#1587;&#1578;&#1602;&#1576;&#1575;&#1604;
+&#1603;&#1604;&#1605;&#1577; &#1575;&#1604;&#1605;&#1585;&#1608;&#1585;
+&#1605;&#1606; </span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'>POST request</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span>
+&#1608;&#1605;&#1602;&#1575;&#1585;&#1606;&#1578;&#1607;&#1575;
+&#1576;&#1603;&#1604;&#1605;&#1577; &#1575;&#1604;&#1605;&#1585;&#1608;&#1585; </span><span
+dir=LTR></span><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=LTR></span>“Admin_Password”</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1608;&#1606;&#1604;&#1575;&#1581;&#1592; &#1571;&#1606;&#1607; &#1578;&#1605;
+&#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605; == &#1601;&#1610;
+&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1548; &#1571;&#1610;
+&#1571;&#1606;&#1607;&#1575; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>loose comparison </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> &#1608;&#1587;&#1610;&#1578;&#1605;
+&#1578;&#1591;&#1576;&#1610;&#1602; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>Type
+Juggling </span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span> &#1607;&#1606;&#1575;
+</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1604;&#1608;
+&#1602;&#1605;&#1606;&#1575; &#1576;&#1578;&#1605;&#1585;&#1610;&#1585;
+&#1589;&#1601;&#1585; <b>&#1603;&#1585;&#1602;&#1605; </b>&#1587;&#1610;&#1603;&#1608;&#1606;
+&#1606;&#1575;&#1578;&#1580; &#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1589;&#1581;&#1610;&#1581; &#1576;&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1606;&#1587;&#1578;&#1591;&#1610;&#1593; &#1578;&#1587;&#1580;&#1610;&#1604;
+&#1575;&#1604;&#1583;&#1582;&#1608;&#1604; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=311 height=42 id="Picture 50"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image007.png"></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=623 height=34 id="Picture 47"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image008.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1607;&#1584;&#1607;
+&#1575;&#1581;&#1583;&#1609; &#1575;&#1604;&#1581;&#1575;&#1604;&#1575;&#1578;
+&#1575;&#1604;&#1578;&#1610; &#1610;&#1578;&#1605;
+&#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>loose
+comparison</span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span>
+&#1601;&#1610; &#1575;&#1604;&#1605;&#1603;&#1575;&#1606;
+&#1575;&#1604;&#1582;&#1575;&#1591;&#1574;
+&#1576;&#1575;&#1604;&#1578;&#1575;&#1604;&#1610; &#1610;&#1603;&#1608;&#1606;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1605;&#1615;&#1593;&#1585;&#1617;&#1590;
+&#1604;&#1579;&#1594;&#1585;&#1577; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>PHP Type Juggling </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1610;&#1608;&#1580;&#1583;
+&#1581;&#1575;&#1604;&#1577; &#1571;&#1582;&#1585;&#1609; &#1588;&#1610;&#1602;&#1577;
+&#1580;&#1583;&#1611;&#1575;! &#1608;&#1607;&#1610;
+&#1603;&#1575;&#1604;&#1570;&#1578;&#1610;: </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=624 height=29 id="Picture 48"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image009.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1606;&#1604;&#1575;&#1581;&#1592;
+&#1571;&#1606;&#1606;&#1575; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1606;&#1589; &#1605;&#1593;
+&#1575;&#1604;&#1585;&#1602;&#1605; &#1589;&#1601;&#1585; &#1608;&#1575;&#1604;&#1606;&#1578;&#1610;&#1580;&#1577;
+&#1603;&#1575;&#1606;&#1578; &#1605;&#1587;&#1575;&#1608;&#1575;&#1577; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'> &#1604;&#1608;
+&#1602;&#1605;&#1606;&#1575;
+&#1576;&#1575;&#1604;&#1578;&#1583;&#1602;&#1610;&#1602;
+&#1587;&#1606;&#1580;&#1583; &#1571;&#1606; &#1575;&#1604;&#1606;&#1589;
+&#1601;&#1610; &#1589;&#1608;&#1585;&#1577;</span><span dir=LTR></span><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'><span dir=LTR></span> </span><span dir=LTR style='color:black'><a
+href="https://en.wikipedia.org/wiki/Scientific_notation"><span
+style='font-size:14.0pt;line-height:150%;background:white'>exponential notation</span></a></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>
+</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1576;&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1606;&#1575;&#1578;&#1580;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1576;&#1610;&#1606;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1610;&#1606;
+&#1587;&#1610;&#1603;&#1608;&#1606; &#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577;..</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1575;&#1604;&#1580;&#1583;&#1610;&#1585;
+&#1576;&#1575;&#1604;&#1584;&#1603;&#1585; &#1607;&#1606;&#1575;
+&#1571;&#1606;&#1607; &#1610;&#1608;&#1580;&#1583;
+&#1605;&#1575;&#1610;&#1587;&#1605;&#1609; &#1576;&#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Magic
+Hashes</span><span dir=RTL></span><span style='font-size:14.0pt;line-height:
+150%;color:black;background:white'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1608;&#1607;&#1610;
+&#1593;&#1576;&#1575;&#1585;&#1577; &#1593;&#1606; &#1602;&#1610;&#1605; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'>Hashes</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+color:black;background:white'><span dir=RTL></span>
+&#1578;&#1571;&#1582;&#1584; &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1578;&#1605;&#1579;&#1610;&#1604; </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=LTR></span>(Regex)</span><span dir=RTL></span><span style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><span dir=RTL></span> <span
+lang=AR-SA>:</span></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;background:white;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><img
+border=0 width=90 height=41 id="Picture 49"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image010.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1575;&#1584;&#1575;
+&#1603;&#1575;&#1606; &#1604;&#1583;&#1610;&#1606;&#1575; &#1606;&#1589;
+&#1576;&#1593;&#1583; &#1593;&#1605;&#1604;&#1610;&#1577; &#1575;&#1604;&#1600;
+</span><span dir=LTR style='font-size:14.0pt;line-height:150%;color:black;
+background:white'>Hashing</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'><span
+dir=RTL></span> &#1587;&#1610;&#1603;&#1608;&#1606; &#1601;&#1610;
+&#1607;&#1584;&#1575; &#1575;&#1604;&#1588;&#1603;&#1604;
+&#1608;&#1578;&#1605;&#1578; &#1605;&#1602;&#1575;&#1585;&#1606;&#1578;&#1607;
+&#1605;&#1593; &#1575;&#1604;&#1602;&#1610;&#1605;&#1577; &#1589;&#1601;&#1585;
+&#1601;&#1587;&#1610;&#1603;&#1608;&#1606;
+&#1575;&#1604;&#1606;&#1575;&#1578;&#1580; &#1589;&#1581;&#1610;&#1581; .. </span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0in;margin-right:.5in;
+margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;background:white;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1605;&#1604;&#1575;&#1581;&#1592;&#1577;:
+&#1575;&#1589;&#1583;&#1575;&#1585; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>PHP</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;color:black;background:
+white'><span dir=RTL></span> &#1601;&#1610;
+&#1575;&#1604;&#1571;&#1605;&#1579;&#1604;&#1577;
+&#1575;&#1604;&#1587;&#1575;&#1576;&#1602;&#1577; &#1607;&#1608; 5 </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&#1601;&#1610;
+&#1575;&#1604;&#1580;&#1586;&#1569; &#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1605;&#1606; &#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577;
+&#1587;&#1606;&#1585;&#1609; &#1605;&#1579;&#1575;&#1604;
+&#1601;&#1593;&#1604;&#1610; &#1593;&#1604;&#1609; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1581;&#1575;&#1604;&#1577;
+&#1608;&#1591;&#1585;&#1610;&#1602;&#1577;
+&#1575;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;&#1607;&#1575; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span lang=ku-Arab-IQ
+style='font-size:16.0pt;line-height:150%;color:#C00000;background:white'>&#1573;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577; </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1575;&#1604;&#1605;&#1593;&#1605;&#1604;
+&#1575;&#1604;&#1582;&#1575;&#1589; &#1576;&#1607;&#1584;&#1607;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577; &#1607;&#1608;
+&#1578;&#1591;&#1576;&#1610;&#1602; </span><span style='font-size:14.0pt;
+line-height:150%'><a href="https://github.com/atutor/ATutor"><span dir=LTR>ATutor</span></a><span
+dir=RTL></span><span lang=AR-SA><span dir=RTL></span>
+&#1575;&#1604;&#1575;&#1589;&#1583;&#1575;&#1585; <b>2.2.1 </b></span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1602;&#1605;&#1578; &#1587;&#1575;&#1576;&#1602;&#1611;&#1575;
+&#1576;&#1578;&#1579;&#1576;&#1610;&#1578; &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1593;&#1604;&#1609; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>docker image</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'><span
+dir=RTL></span> &#1576;&#1575;&#1604;&#1575;&#1605;&#1603;&#1575;&#1606;
+&#1575;&#1604;&#1608;&#1589;&#1608;&#1604; &#1604;&#1607;&#1575;
+&#1608;&#1575;&#1578;&#1576;&#1575;&#1593;
+&#1578;&#1593;&#1604;&#1610;&#1605;&#1575;&#1578;
+&#1575;&#1604;&#1578;&#1579;&#1576;&#1610;&#1578; &#1605;&#1606; <a
+href="https://b1tbyte.gitbook.io/cheatsheets/oswe/free-labs/atutor-2.2.1-docker-container">&#1607;&#1606;&#1575;</a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1604;&#1606; &#1606;&#1582;&#1608;&#1590; &#1601;&#1610;
+&#1582;&#1591;&#1608;&#1575;&#1578; &#1575;&#1610;&#1580;&#1575;&#1583;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577; &#1575;&#1606;&#1605;&#1575;
+&#1587;&#1606;&#1602;&#1608;&#1605; &#1576;&#1575;&#1604;&#1578;&#1585;&#1603;&#1610;&#1586;
+&#1593;&#1604;&#1609; &#1575;&#1604;&#1579;&#1594;&#1585;&#1577;
+&#1606;&#1601;&#1587;&#1607;&#1575;&#1548;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1601;&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1605;&#1589;&#1575;&#1576; &#1576;&#1579;&#1594;&#1585;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>PHP Type Juggling</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'><span
+dir=RTL></span> &#1608;&#1578;&#1581;&#1583;&#1610;&#1583;&#1611;&#1575;
+&#1601;&#1610; &#1605;&#1604;&#1601; </span><span dir=LTR></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'><span dir=LTR></span>/atutor/</span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>confirm.php </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1604;&#1608; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1575;&#1604;&#1575;&#1591;&#1604;&#1575;&#1593; &#1593;&#1604;&#1609;
+&#1575;&#1604;&#1603;&#1608;&#1583; &#1575;&#1604;&#1582;&#1575;&#1589;
+&#1576;&#1607;&#1584;&#1575; &#1575;&#1604;&#1605;&#1604;&#1601;
+&#1587;&#1606;&#1580;&#1583; &#1575;&#1604;&#1600; </span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'><span dir=LTR></span> loose
+comparison </span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'>&#1601;&#1610;
+&#1575;&#1604;&#1587;&#1591;&#1585; </span><span dir=LTR></span><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%'><span dir=LTR></span> </span><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>36</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=623 height=46 id="Picture 51"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image011.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1576;&#1588;&#1603;&#1604; &#1605;&#1582;&#1578;&#1589;&#1585;
+&#1575;&#1604;&#1603;&#1608;&#1583; &#1571;&#1593;&#1604;&#1575;&#1607;
+&#1610;&#1602;&#1608;&#1605;
+&#1576;&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;
+&#1576;&#1610;&#1606; &#1602;&#1610;&#1605;&#1577;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>code</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1608;&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>m</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1548; &#1601;&#1610; &#1581;&#1575;&#1604;
+&#1578;&#1587;&#1575;&#1608;&#1578;
+&#1575;&#1604;&#1602;&#1610;&#1605;&#1578;&#1610;&#1606;
+&#1587;&#1610;&#1578;&#1605; &#1578;&#1606;&#1601;&#1610;&#1584;
+&#1575;&#1604;&#1603;&#1608;&#1583; &#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1576;&#1583;&#1569;&#1611;&#1575; &#1605;&#1606;
+&#1575;&#1604;&#1587;&#1591;&#1585; &#1585;&#1602;&#1605; 37 &#1548;
+&#1608;&#1575;&#1604;&#1584;&#1610; &#1587;&#1610;&#1602;&#1608;&#1605;
+&#1576;&#1578;&#1581;&#1583;&#1610;&#1579;
+&#1575;&#1604;&#1575;&#1610;&#1605;&#1610;&#1604; &#1601;&#1610;
+&#1602;&#1575;&#1593;&#1583;
+&#1575;&#1604;&#1576;&#1610;&#1575;&#1606;&#1575;&#1578; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%'>&#1607;&#1583;&#1601;&#1606;&#1575;
+&#1575;&#1604;&#1570;&#1606; &#1607;&#1608; &#1578;&#1581;&#1602;&#1617;&#1602;
+&#1575;&#1604;&#1605;&#1587;&#1575;&#1608;&#1575;&#1577; &#1601;&#1610;
+&#1575;&#1604;&#1587;&#1591;&#1585; 36
+&#1576;&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1606;&#1587;&#1578;&#1591;&#1610;&#1593; &#1578;&#1581;&#1583;&#1610;&#1579; &#1575;&#1604;&#1575;&#1610;&#1605;&#1610;&#1604;
+&#1575;&#1604;&#1582;&#1575;&#1589;
+&#1576;&#1575;&#1604;&#1605;&#1587;&#1578;&#1582;&#1583;&#1605; &#1601;&#1610;
+&#1602;&#1575;&#1593;&#1583;&#1577;
+&#1575;&#1604;&#1576;&#1610;&#1575;&#1606;&#1575;&#1578; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%'>&#1608;&#1581;&#1578;&#1609; &#1606;&#1581;&#1602;&#1602;
+&#1607;&#1584;&#1575; &#1575;&#1604;&#1607;&#1583;&#1601; &#1610;&#1580;&#1576;
+&#1593;&#1604;&#1610;&#1606;&#1575; &#1575;&#1604;&#1578;&#1581;&#1603;&#1605;
+&#1601;&#1610; &#1580;&#1605;&#1610;&#1593; &#1575;&#1591;&#1585;&#1575;&#1601;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%'>&#1576;&#1593;&#1583; &#1578;&#1581;&#1604;&#1610;&#1604;
+&#1575;&#1604;&#1603;&#1608;&#1583;
+&#1608;&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;
+&#1608;&#1580;&#1583;&#1606;&#1575; &#1571;&#1606;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>m</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1607;&#1608; &#1605;&#1578;&#1594;&#1610;&#1585; &#1578;&#1581;&#1578;
+&#1578;&#1581;&#1603;&#1617;&#1605;&#1606;&#1575;
+&#1608;&#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1578;&#1605;&#1585;&#1610;&#1585;&#1607;
+&#1604;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1593;&#1576;&#1585; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>GET request</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'><span
+dir=RTL></span> &#1576;&#1610;&#1606;&#1605;&#1575;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>code</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1607;&#1608; &#1605;&#1578;&#1594;&#1610;&#1585; &#1610;&#1578;&#1605;
+&#1575;&#1606;&#1588;&#1575;&#1569; &#1602;&#1610;&#1605;&#1578;&#1607;
+&#1601;&#1610; &#1583;&#1575;&#1582;&#1604;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602;&#1548; &#1578;&#1581;&#1583;&#1610;&#1583;&#1611;&#1575;
+&#1601;&#1610; &#1575;&#1604;&#1587;&#1591;&#1585; &#1585;&#1602;&#1605; 34</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=550 height=41 id="Picture 52"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image012.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%'>&#1606;&#1580;&#1583; &#1571;&#1606;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>code</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1610;&#1578;&#1605; &#1575;&#1606;&#1588;&#1575;&#1569;
+&#1602;&#1610;&#1605;&#1578;&#1607; &#1603;&#1575;&#1604;&#1570;&#1578;&#1610; :</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%'>&#1580;&#1605;&#1593;</span><span dir=LTR></span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'><span dir=LTR></span>
+(concatenation) </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%'><span dir=RTL></span> &#1602;&#1610;&#1605;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1575;&#1578;
+&#1575;&#1604;&#1570;&#1578;&#1610;&#1577; : </span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>Id</span></b><span dir=LTR
+style='font-size:14.0pt;line-height:150%'> &amp; <b>e </b>&amp; <b>creation_date</b></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%'>&#1581;&#1587;&#1575;&#1576; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>Hash</span><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> <span
+lang=AR-SA>&#1593;&#1576;&#1585; &#1578;&#1591;&#1576;&#1610;&#1602;
+&#1583;&#1575;&#1604;&#1577; &#1575;&#1604;&#1600; </span></span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>md5</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1593;&#1604;&#1609; &#1606;&#1575;&#1578;&#1580; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>concatenation</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;text-indent:-.25in;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span style='font-size:14.0pt;
+line-height:150%'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%'>&#1571;&#1582;&#1584; &#1575;&#1604;&#1600; 10
+&#1581;&#1585;&#1608;&#1601; &#1575;&#1604;&#1571;&#1608;&#1604;&#1609;
+&#1605;&#1606; &#1606;&#1575;&#1578;&#1580; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>md5 </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> (
+&#1578;&#1591;&#1576;&#1610;&#1602; &#1583;&#1575;&#1604;&#1577; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>substr</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> ) </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1601;&#1610; &#1575;&#1604;&#1582;&#1591;&#1608;&#1577;
+&#1585;&#1602;&#1605; 1 &#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1575;&#1604;&#1578;&#1581;&#1603;&#1605;
+&#1576;&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>id </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> &#1608;&#1575;&#1604;&#1584;&#1610;
+&#1610;&#1605;&#1579;&#1604; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>id </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> &#1575;&#1604;&#1582;&#1575;&#1589;
+&#1576;&#1575;&#1604;&#1605;&#1587;&#1578;&#1582;&#1583;&#1605;
+&#1575;&#1604;&#1584;&#1610; &#1606;&#1585;&#1610;&#1583;
+&#1578;&#1581;&#1583;&#1610;&#1579;
+&#1575;&#1604;&#1575;&#1610;&#1605;&#1610;&#1604; &#1575;&#1604;&#1582;&#1575;&#1589;
+&#1576;&#1607; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=ku-Arab-IQ style='font-size:14.0pt;
+line-height:150%'>&#1608;&#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1575;&#1610;&#1590;&#1611;&#1575; &#1575;&#1604;&#1578;&#1581;&#1603;&#1605;
+&#1576;&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>e</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1608;&#1575;&#1604;&#1584;&#1610; &#1610;&#1605;&#1579;&#1604;
+&#1602;&#1610;&#1605;&#1577; &#1575;&#1604;&#1575;&#1610;&#1605;&#1610;&#1604;
+&#1575;&#1604;&#1580;&#1583;&#1610;&#1583; .. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1603;&#1604;&#1575;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585;&#1610;&#1606; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>id</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1608; </span><span dir=LTR style='font-size:14.0pt;line-height:150%'>e</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'><span
+dir=RTL></span> &#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1578;&#1605;&#1585;&#1610;&#1585;&#1607;&#1605; &#1593;&#1576;&#1585; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>GET request</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'><span
+dir=RTL></span> &#1605;&#1593;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>m</span><span dir=RTL></span><span
+lang=ku-Arab-IQ style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1548; &#1610;&#1578;&#1576;&#1602;&#1609; &#1604;&#1583;&#1610;&#1606;&#1575;
+&#1601;&#1602;&#1591; &#1605;&#1578;&#1594;&#1610;&#1585;
+&#1608;&#1575;&#1581;&#1583; &#1610;&#1604;&#1593;&#1576; &#1583;&#1608;&#1585;
+&#1601;&#1610; &#1575;&#1606;&#1588;&#1575;&#1569; &#1602;&#1610;&#1605;&#1577;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>code</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1608;&#1607;&#1610; &#1602;&#1610;&#1605;&#1577; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>creation_date</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'><span
+dir=RTL></span> &#1575;&#1604;&#1578;&#1610; &#1610;&#1578;&#1605;
+&#1580;&#1604;&#1576;&#1607;&#1575; &#1605;&#1606;
+&#1602;&#1575;&#1593;&#1583;&#1577;
+&#1575;&#1604;&#1576;&#1610;&#1575;&#1606;&#1575;&#1578;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1601;&#1607;&#1604; &#1607;&#1584;&#1575; &#1610;&#1593;&#1606;&#1610;
+&#1571;&#1606;&#1607; &#1604;&#1575; &#1610;&#1605;&#1603;&#1606;&#1606;&#1575;
+&#1575;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;
+&#1575;&#1604;&#1579;&#1594;&#1585;&#1577; &#1567; &#1575;&#1604;&#1575;&#1580;&#1575;&#1576;&#1577;
+&#1604;&#1575; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1587;&#1606;&#1602;&#1608;&#1605; &#1576;&#1593;&#1605;&#1604; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>Brute-forcing</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%'><span
+dir=RTL></span> &#1581;&#1578;&#1609; &#1606;&#1589;&#1604;
+&#1575;&#1604;&#1609; &#1581;&#1575;&#1604;&#1577; &#1610;&#1589;&#1576;&#1581;
+&#1601;&#1610;&#1607;&#1575; &#1588;&#1585;&#1591;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1589;&#1581;&#1610;&#1581;
+</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1608;&#1607;&#1584;&#1575; &#1607;&#1608;
+&#1575;&#1604;&#1580;&#1586;&#1569;
+&#1575;&#1604;&#1571;&#1587;&#1575;&#1587;&#1610; &#1601;&#1610;
+&#1575;&#1604;&#1575;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1604;&#1606;&#1587;&#1578;&#1585;&#1580;&#1593;
+&#1575;&#1604;&#1581;&#1575;&#1604;&#1577;
+&#1575;&#1604;&#1571;&#1582;&#1610;&#1585;&#1577; &#1575;&#1604;&#1578;&#1610;
+&#1602;&#1605;&#1606;&#1575; &#1601;&#1610; &#1588;&#1585;&#1581;&#1607;&#1575;
+&#1601;&#1610; &#1575;&#1604;&#1580;&#1586;&#1569;
+&#1575;&#1604;&#1587;&#1575;&#1576;&#1602;&#1548; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1593;&#1585;&#1601;&#1606;&#1575; &#1571;&#1606;&#1607;
+&#1610;&#1589;&#1576;&#1581; &#1606;&#1575;&#1578;&#1580;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1589;&#1581;&#1610;&#1581;
+&#1575;&#1584;&#1575; &#1603;&#1575;&#1606; &#1575;&#1604;&#1591;&#1585;&#1601;
+&#1575;&#1604;&#1571;&#1608;&#1604; &#1602;&#1610;&#1605;&#1578;&#1607;
+&#1589;&#1601;&#1585; ( &#1601;&#1610;
+&#1581;&#1575;&#1604;&#1578;&#1606;&#1575; &#1607;&#1584;&#1607;
+&#1587;&#1610;&#1603;&#1608;&#1606;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>m </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> &#1608;&#1575;&#1604;&#1584;&#1610;
+&#1606;&#1587;&#1578;&#1591;&#1610;&#1593;
+&#1575;&#1604;&#1578;&#1581;&#1603;&#1605; &#1576;&#1607;
+&#1576;&#1588;&#1603;&#1604; &#1603;&#1604;&#1610;)
+&#1608;&#1575;&#1604;&#1591;&#1585;&#1601; &#1575;&#1604;&#1579;&#1575;&#1606;&#1610;
+&#1610;&#1581;&#1605;&#1604; &#1602;&#1610;&#1605;&#1577;
+&#1578;&#1605;&#1579;&#1604; &#1607;&#1584;&#1575; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>regex </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%;color:black;background:white'><img border=0 width=90
+height=41 id="Picture 53" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image013.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1575;&#1604;&#1591;&#1585;&#1601;
+&#1575;&#1604;&#1579;&#1575;&#1606;&#1610; &#1601;&#1610;
+&#1575;&#1604;&#1605;&#1593;&#1575;&#1583;&#1604;&#1577;
+&#1587;&#1610;&#1603;&#1608;&#1606;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>code</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1608;&#1575;&#1604;&#1584;&#1610; &#1587;&#1606;&#1602;&#1608;&#1605;
+&#1576;&#1593;&#1605;&#1604; </span><span dir=LTR style='font-size:14.0pt;
+line-height:150%'>brute-force </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> &#1593;&#1604;&#1610;&#1607;
+&#1581;&#1578;&#1609; &#1606;&#1589;&#1604; &#1604;&#1581;&#1575;&#1604;&#1577;
+&#1578;&#1589;&#1576;&#1581; &#1602;&#1610;&#1605;&#1577; &#1607;&#1584;&#1575;
+&#1575;&#1604;&#1605;&#1578;&#1594;&#1610;&#1585; &#1601;&#1610;
+&#1588;&#1603;&#1604; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>regex</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1575;&#1604;&#1584;&#1610; &#1606;&#1585;&#1610;&#1583;
+&#1575;&#1604;&#1608;&#1589;&#1608;&#1604; &#1575;&#1604;&#1610;&#1607; ..</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1608;&#1601;&#1610; &#1581;&#1575;&#1604;
+&#1606;&#1580;&#1581;&#1606;&#1575; &#1601;&#1610;
+&#1593;&#1605;&#1604;&#1610;&#1577; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>brute-forcing</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1587;&#1610;&#1603;&#1608;&#1606; &#1588;&#1585;&#1591;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577;
+&#1589;&#1581;&#1610;&#1581; &#1576;&#1575;&#1604;&#1578;&#1575;&#1604;&#1610;
+&#1587;&#1606;&#1587;&#1578;&#1591;&#1610;&#1593; &#1578;&#1581;&#1583;&#1610;&#1579;
+&#1575;&#1604;&#1575;&#1610;&#1605;&#1610;&#1604; &#1601;&#1610;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1602;&#1605;&#1578; &#1576;&#1603;&#1578;&#1575;&#1576;&#1577; </span><a
+href="https://github.com/0xb1tByte/CVE/blob/main/ATutor%20LMS%20confirm%20%E2%80%98UPDATE%E2%80%99%20Type%20Juggling%20Authentication%20Bypass%20Vulnerability/TypeJuggling.py"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'>&#1587;&#1603;&#1585;&#1576;&#1578;</span></a><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'>
+&#1610;&#1581;&#1575;&#1603;&#1610;
+&#1575;&#1604;&#1593;&#1605;&#1604;&#1610;&#1577; &#1607;&#1584;&#1607;
+&#1603;&#1575;&#1605;&#1604;&#1577; ..
+&#1575;&#1604;&#1583;&#1608;&#1575;&#1604;
+&#1575;&#1604;&#1605;&#1587;&#1572;&#1608;&#1604;&#1577; &#1593;&#1606;
+&#1593;&#1605;&#1604;&#1610;&#1577; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>brute-forcing</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1608;&#1575;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;
+&#1579;&#1594;&#1585;&#1577; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>Type Juggling </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> &#1607;&#1610;
+&#1603;&#1575;&#1604;&#1570;&#1578;&#1610; : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=624 height=467 id="Picture 54"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image014.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1608;&#1576;&#1593;&#1583; &#1578;&#1588;&#1594;&#1610;&#1604;
+&#1575;&#1604;&#1587;&#1603;&#1585;&#1576;&#1578; &#1606;&#1585;&#1609;
+&#1571;&#1606;&#1606;&#1575; &#1608;&#1580;&#1583;&#1606;&#1575;
+&#1575;&#1604;&#1602;&#1610;&#1605;&#1577; &#1575;&#1604;&#1578;&#1610;
+&#1578;&#1581;&#1602;&#1617;&#1602; &#1575;&#1604;&#1588;&#1585;&#1591; </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=476 height=364 id="Picture 55"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image015.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1608;&#1604;&#1608; &#1602;&#1605;&#1606;&#1575;
+&#1576;&#1575;&#1604;&#1583;&#1582;&#1608;&#1604; &#1575;&#1604;&#1609;
+&#1575;&#1604;&#1578;&#1591;&#1576;&#1610;&#1602; &#1587;&#1606;&#1580;&#1583;
+&#1571;&#1606; &#1575;&#1604;&#1575;&#1610;&#1605;&#1610;&#1604;
+&#1576;&#1575;&#1604;&#1601;&#1593;&#1604; &#1578;&#1605;
+&#1578;&#1581;&#1583;&#1610;&#1579; &#1602;&#1610;&#1605;&#1578;&#1607;
+&#1576;&#1575;&#1604;&#1602;&#1610;&#1605;&#1577; &#1575;&#1604;&#1578;&#1610;
+&#1602;&#1605;&#1606;&#1575; &#1576;&#1575;&#1610;&#1580;&#1575;&#1583;&#1607;&#1575;
+&#1593;&#1576;&#1585; &#1575;&#1604;&#1600; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>Brute-forcing </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;
+line-height:150%'><img border=0 width=495 height=226 id="Picture 56"
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PHPTypeJuggling_files/image016.png"></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1605;&#1604;&#1575;&#1581;&#1592;&#1577;
+&#1571;&#1582;&#1610;&#1585;&#1577;: </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&#1571;&#1608;&#1583; &#1575;&#1604;&#1575;&#1588;&#1575;&#1585;&#1577;
+&#1576;&#1575;&#1606;&#1607; &#1601;&#1610;
+&#1575;&#1604;&#1587;&#1603;&#1585;&#1576;&#1578; &#1602;&#1605;&#1578;
+&#1576;&#1575;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604; &#1579;&#1594;&#1585;&#1577;
+&#1575;&#1582;&#1585;&#1609; &#1608;&#1607;&#1610; </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%'>Blind SQLi</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1604;&#1602;&#1585;&#1575;&#1569;&#1577; &#1602;&#1610;&#1605;&#1577;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%'>creation_date</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%'><span dir=RTL></span> &#1548;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1582;&#1591;&#1608;&#1577;
+&#1604;&#1610;&#1587;&#1578; &#1590;&#1585;&#1608;&#1585;&#1610;&#1577;
+&#1608;&#1576;&#1575;&#1604;&#1575;&#1605;&#1603;&#1575;&#1606;
+&#1576;&#1606;&#1575;&#1569; &#1575;&#1587;&#1578;&#1594;&#1604;&#1575;&#1604;
+&#1589;&#1581;&#1610;&#1581; &#1576;&#1583;&#1608;&#1606;&#1607;&#1575;
+&#1581;&#1610;&#1579; &#1571;&#1606; &#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1600; </span><span dir=LTR style='font-size:14.0pt;line-height:
+150%'>calculation</span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%'><span dir=RTL></span> &#1587;&#1578;&#1578;&#1605;
+&#1601;&#1610; &#1591;&#1585;&#1601; &#1575;&#1604;&#1600; </span><span
+dir=LTR style='font-size:14.0pt;line-height:150%'>Server</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%'><span dir=RTL></span>
+&#1548; &#1604;&#1603;&#1606; &#1601;&#1610;
+&#1581;&#1575;&#1604;&#1578;&#1610; &#1602;&#1605;&#1578; &#1601;&#1602;&#1591;
+&#1576;&#1580;&#1604;&#1576; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1602;&#1610;&#1605;&#1577; &#1604;&#1578;&#1603;&#1585;&#1575;&#1585;
+&#1593;&#1605;&#1604;&#1610;&#1577;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1585;&#1606;&#1577; &#1601;&#1610;
+&#1591;&#1585;&#1601;&#1610; &#1608;&#1605;&#1585;&#1575;&#1602;&#1576;&#1577;
+&#1575;&#1604;&#1606;&#1578;&#1575;&#1574;&#1580; </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>&#1582;&#1578;&#1575;&#1605;&#1611;&#1575;&#1548;
+&#1571;&#1608;&#1583; &#1575;&#1604;&#1573;&#1588;&#1575;&#1585;&#1577;
+&#1576;&#1571;&#1606; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577; &#1578;&#1605;&#1617;&#1578;
+&#1603;&#1578;&#1575;&#1576;&#1578;&#1607;&#1575; &#1582;&#1604;&#1575;&#1604;
+&#1583;&#1585;&#1575;&#1587;&#1577; &#1607;&#1584;&#1607;
+&#1575;&#1604;&#1605;&#1608;&#1575;&#1590;&#1610;&#1593;&#1548;
+&#1601;&#1603;&#1604; &#1605;&#1575; &#1578;&#1605; &#1584;&#1603;&#1585;&#1607;
+&#1607;&#1606;&#1575; &#1602;&#1583; &#1610;&#1581;&#1578;&#1605;&#1604;
+&#1575;&#1604;&#1582;&#1591;&#1571;&#1548; &#1604;&#1603;&#1606;
+&#1576;&#1575;&#1604;&#1573;&#1605;&#1603;&#1575;&#1606;
+&#1575;&#1604;&#1593;&#1608;&#1583;&#1577; &#1573;&#1604;&#1609;
+&#1575;&#1604;&#1605;&#1585;&#1575;&#1580;&#1593; &#1575;&#1604;&#1578;&#1610;
+&#1573;&#1587;&#1578;&#1606;&#1583;&#1578; &#1593;&#1604;&#1610;&#1607;&#1575;
+&#1607;&#1584;&#1607; &#1575;&#1604;&#1605;&#1602;&#1575;&#1604;&#1577;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black'>&#1608;&#1573;&#1606;
+&#1571;&#1589;&#1576;&#1578; &#1601;&#1605;&#1606;
+&#1578;&#1608;&#1601;&#1610;&#1602; &#1575;&#1604;&#1604;&#1607;
+&#1608;&#1581;&#1583;&#1607;&#1548; &#1608;&#1573;&#1606;
+&#1571;&#1582;&#1591;&#1571;&#1578; &#1601;&#1605;&#1606; &#1606;&#1601;&#1587;&#1610;
+&#1608;&#1575;&#1604;&#1588;&#1610;&#1591;&#1575;&#1606;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;color:#C00000'>&#1575;&#1604;&#1605;&#1585;&#1575;&#1580;&#1593;</span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:16.0pt;line-height:150%;
+color:#C00000'><span dir=LTR></span>:</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;background:
+white;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;color:#5B9BD5'>&#1605;&#1602;&#1575;&#1604;&#1575;&#1578;</span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:#5B9BD5'><span dir=LTR></span>:</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://www.alertlogic.com/blog/writing-exploits-for-exotic-bug-classes-php-type-juggling-d58/"><span
+style='font-size:14.0pt;line-height:150%'>https://www.alertlogic.com/blog/writing-exploits-for-exotic-bug-classes-php-type-juggling-d58/</span></a><span
+style='font-size:14.0pt;line-height:150%'> </span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://www.php.net/manual/en/language.operators.comparison.php"><span
+style='font-size:14.0pt;line-height:150%'>https://www.php.net/manual/en/language.operators.comparison.php</span></a><span
+style='font-size:14.0pt;line-height:150%'> </span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://medium.com/swlh/php-type-juggling-vulnerabilities-3e28c4ed5c09"><span
+style='font-size:14.0pt;line-height:150%'>https://medium.com/swlh/php-type-juggling-vulnerabilities-3e28c4ed5c09</span></a><span
+style='font-size:14.0pt;line-height:150%'> </span></p>
+
+<p class=MsoListParagraphCxSpLast style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><a
+href="https://raz0r.name/vulnerabilities/simple-machines-forum/"><span
+style='font-size:14.0pt;line-height:150%'>https://raz0r.name/vulnerabilities/simple-machines-forum/</span></a><span
+style='font-size:14.0pt;line-height:150%'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#5B9BD5;background:white'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;color:#5B9BD5;background:white'>&#1583;&#1608;&#1585;&#1575;&#1578;</span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+color:#5B9BD5;background:white'><span dir=LTR></span>:</span></b></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in;line-height:150%'><span
+style='font-size:14.0pt;line-height:150%'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:14.0pt;line-height:
+150%'>AWAE, Offensive Security </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0in;margin-right:
+.5in;margin-bottom:8.0pt;margin-left:0in;text-align:right;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle align=center dir=RTL style='margin-top:
+0in;margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span dir=LTR
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpLast align=center dir=RTL style='margin-top:0in;
+margin-right:.5in;margin-bottom:8.0pt;margin-left:0in;text-align:center;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;color:black;background:white'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

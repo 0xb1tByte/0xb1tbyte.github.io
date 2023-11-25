@@ -1,0 +1,848 @@
+---
+layout: post
+title: The Fundamental Cause of Injection Attacks
+tags: [Injection Attacks]
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#954F72;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+span.css-901oao
+	{mso-style-name:css-901oao;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black;
+background:yellow'>ثغرات الـ </span></b><b><span dir=LTR style='font-size:16.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black;background:yellow'>Injection
+Attack </span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black;
+background:yellow'><span dir=RTL></span> والعوامل المشتركة بين هذا النوع من
+الثغرات</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>أمور يجب عليك معرفتها مُسبقًا قبل
+قراءة هذه المقالة: </span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>ماهو الـ </span></b><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Parser</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>:</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> تجد الإجابة باللغة العربية </span><span style='color:black'><a
+href="https://3alam.pro/ihanan95/articles/syntax-analysis-part-3"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هنا</span></a></span><span style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'> </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>ماهي ثغرات الـ </span></b><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Injection Attack</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>:</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> تجد الإجابة باللغة العربية </span><span style='color:black'><a
+href="https://www.youtube.com/watch?v=BjfCWSFmIFI&amp;list=PLv7cogHXoVhXvHPzIl1dWtBiYUAL8baHj"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هنا </span><span dir=LTR></span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=LTR></span>(SQLi &amp; XSS)</span></a></span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، </span><span style='color:black'><a
+href="https://www.youtube.com/watch?v=yRvuEVgSPBk&amp;list=PL_yseowcuqYIaReP8ttfr0BAxbqZ7tmhq"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>وهنا (</span><span dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Buffer Overflow</span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>)</span></a></span><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> <span lang=AR-SA>، </span></span><span style='color:black'><a
+href="https://www.youtube.com/watch?v=0ZfPukj1SC8"><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>وهنا (</span><span dir=LTR></span><span dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=LTR></span> OS Command Injection </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>)</span></a></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>الزبدة للمستعجلين:</span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Courier New";color:black'>o<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></b><span
+dir=RTL></span><span class=css-901oao><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>إذا لم يقم
+المُبرمج بوضع <b>قيود</b> على </span></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين </span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>لمنعها من أن تأتي على شكل<b> </b></span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#385623'>كود برمجي</span></b></span><span
+dir=LTR></span><span class=css-901oao><b><span lang=AR-SA dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'><span dir=LTR></span> </span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>سيتم الخَلط بين<b> </b></span></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>
+<span style='color:black'>و</span> <b><span style='color:#385623'>الكود البرمجي
+</span></b><span style='color:black'>وسيعبران كـ<b> </b></span><b><span
+style='color:#385623'>جزءًا</span><span style='color:black'> </span><span
+style='color:#C00000'>واحدًا </span></b><span style='color:black'>الى الـ<b> </b></span></span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#0070C0'>Parser</span></b></span><span
+dir=RTL></span><span class=css-901oao><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'><span dir=RTL></span>
+</span></b></span><span class=css-901oao><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>والذي
+سيقوم بدوره بتنفيـذ هذا الجزء أيًا كان.</span></span><span dir=LTR></span><span
+class=css-901oao><b><span lang=AR-SA dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>
+</span></b></span><span class=css-901oao><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>ومن <b>هذه
+النقطة </b>تحديدًا تبدأ تحدث العديد من ثغرات الـ </span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Injection Attack</span></b></span><span
+dir=RTL></span><span class=css-901oao><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>!</span></span></p>
+
+<div style='border:none;border-bottom:solid windowtext 1.0pt;padding:0cm 0cm 1.0pt 0cm'>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed;border:none;padding:0cm'><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>السلام عليكم ورحمة الله
+وبركاته،</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'> ذكر </span><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Wenliang </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> صاحب كتاب: </span><a
+href="https://www.amazon.com/gp/product/1733003932/ref=dbs_a_def_rwt_hsch_vapi_taft_p1_i0"><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>Computer
+Security - A hands-on Approach</span></b></a><span class=css-901oao><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>
+</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>أن خلط </span></span><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> مع</span></span><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'> <b><span
+style='color:#385623'>الكود البرمجي </span></b><span style='color:black'>هي
+السبب في حدوث الكثير من ثغرات الـ </span></span></span><span class=css-901oao><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Injection Attack</span></b></span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ماذا نقصد بثغرات الـ </span></span><span class=css-901oao><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Injection Attack</span></b></span><span dir=RTL></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>؟ نقصد أحد
+هذه الثغرات: </span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>SQL Injection</span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XSS</span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Command Injection</span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Format String Vulnerability</span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Buffer Overflow Vulnerability</span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ماذا نقصد بـ </span></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> ؟ </span></span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هي البيانات التي يقوم المستخدم بتزويد البرنامج بها.</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الرسم الآتي يُلخّص كيف تحدث مختلف هذه الأنواع من الثغرات</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><img width=700 height=553
+src="https://raw.githubusercontent.com/0xb1tByte/0xb1tByte.github.io/master/assets/media/figure1.jpg" align=center hspace=12></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>لنبدأ بتحليل الرسم أعلاه، أولًا سنحاول إيجاد عوامل مشتركة (أسباب
+مشتركة) بين مختلف هذه الأنواع من الثغرات.</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>العامل المشترك الأول (رقم ١ في الرسم):</span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'> <b><span style='background:yellow'>كل
+هذه الثغرات تقوم بخلط نوعين من البيانات</span></b></span></span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>النوع الأول من البيانات هو الـ </span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>Untrusted User Data</span></b></span><span
+dir=RTL></span><span class=css-901oao><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif'><span dir=RTL></span>: </span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>وهي البيانات التي يستقبلها البرنامج من المستخدم ويجري عليها بعض
+العمليات حسب طبيعة البرنامج، نصنّف هذا النّوع من البيانات بـ </span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>بيانات غير موثوقة</span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif'>. </span></span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>النوع الثاني من البيانات هو الـ </span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#385623'>Trusted Code</span></b></span><span
+dir=RTL></span><span class=css-901oao><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif'><span dir=RTL></span>: </span></span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+54.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Courier New";color:black'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>وهو الكود البرمجي الخاص بالبرنامج، وهذا النوع من البيانات <b>موثوق</b>،
+لأنه قادم من المُبرمج نفسه.</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>قبل أن يتم الخَلط (سنعرف لاحقًا ما المقصود بالخلط وأين يحدث
+تحديدًا؟) بين هذين النوعين من البيانات، المُبرمج على دراية <b>بالحدود</b> أو ما
+يُسمى بالـ </span></span><span class=css-901oao><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Boundaries</span></b></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بين هذين النوعين، بعد أن يتم الخَلط بين هذين
+النوعين ستختفي الحدود أو الـ </span></span><span class=css-901oao><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Boundaries</span></b></span><span dir=RTL></span><span
+class=css-901oao><b><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>بينهما. </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>مثال في حالة الـ </span></b></span><span class=css-901oao><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>SQL Injection</span></b></span><span dir=RTL></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>: </span></b></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>قبل الخوض في تفاصيل المثال، دعونا ننسى التصنيف السابق الذي قمنا
+بإعطائه لبيانات المستخدم، ونبدأ بالتحليل حتى نصل لسبب تصنيفها بـ </span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>بيانات غير موثوقة</span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'> </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>نعود للمثال الخاص بثغرات الـ</span></span><span class=css-901oao><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>SQL Injection </span></b></span><span dir=RTL></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>، المُبرمج
+عندما يقوم ببناء التّعليمة التي يتم إرسالها لقاعدة البيانات</span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>SQL Statement </span></b></span><span
+dir=RTL></span><span class=css-901oao><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> يعلم
+أين سيتم إدراج <b>بيانات المستخدم</b> في هذه التعليمة، (بتفصيل أكثر: يعلم المُتغير
+الذي يحمل بيانات المستخدم)، بعدما يستقبل البرنامج <b>بيانات المستخدم</b> سيقوم
+بإدراجها ضمن التعليمة التي ستُرسَل لقاعدة البيانات، ولنتوقف هنا لدقائق ونقوم
+بتحليل هذه العملية: </span></span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الحالة الأولى:</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> بيانات المستخدم جاءت كما يُفترض منها أن تكون (اسم المستخدم، كلمة
+المرور، ... إلخ)</span></span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span dir=RTL></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الحالة الثانية: </span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>بيانات المستخدم تحمل </span></span><span class=css-901oao><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Keywords</span></b></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></span><span dir=RTL></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> خاصة باللغة البرمجية أو</span></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif'> <b><span style='color:#385623'>كود برمجي</span></b><span
+style='color:#385623'> </span></span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>في <b>الحالة الأولى</b>، لا يوجد أي مشاكل ولا زالت الحدود بين </span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>مُدخلات المستخدمين</span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif'> <span style='color:black'>مع </span><b><span
+style='color:#385623'>الكود البرمجي</span><span style='color:black'> </span></b><span
+style='color:black'>سَليمة.</span></span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>في <b>الحالة الثانية</b>، اختفت الحدود بين هذين النوعين من
+البيانات وأصبحت </span></span><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'>جزءً</span></b></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>ا واحدًا</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، <b>وهنا يبدأ يحدث الخَلط </b>(عُد للرسم البياني ولاحظ الرقم ٢ و
+٣ )!</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>لننتقل الآن الى إيجاد عامل مشترك آخر بين هذه الثّغرات، </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0cm;margin-right:18.0pt;
+margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+class=css-901oao><b><span style='font-size:14.0pt;line-height:150%;font-family:
+Symbol;color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b></span><span dir=RTL></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>العامل المشترك الثاني (رقم ٤ في الرسم): </span></b></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000;background:yellow'>مُدخلات
+المستخدمين</span></b></span><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'> و </span></b></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623;background:yellow'>الكود البرمجي </span></b></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black;background:yellow'>(اللذان تم
+خلطهما وأصبحا </span></b></span><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623;background:yellow'>جزءًا</span></b></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'> </span></b></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000;background:yellow'>واحدًا</span></b></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black;background:yellow'>) سيتم إرسالهما
+إلى الـ </span></b></span><span class=css-901oao><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0;background:yellow'>Parser</span></b></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black;background:yellow'> </span></b></span><span
+dir=RTL></span><span class=css-901oao><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black;background:yellow'><span
+dir=RTL></span> <span lang=AR-SA>ليقوم بعمله.</span></span></b></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>نستكمل مثالنا السابق الخاص بالـ </span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>SQL Injection </span></b></span><span
+dir=RTL></span><span class=css-901oao><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>،
+في هذه الحالة الـ </span></span><span class=css-901oao><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'>Parser</span></b></span><span class=css-901oao><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></span><span dir=RTL></span><span class=css-901oao><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> <span lang=AR-SA>هنا هو الـ </span></span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#0070C0'>SQL Parser </span></b></span><span
+dir=RTL></span><span class=css-901oao><span style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>لنبدأ الخوض قليلًا في طريقة عمل الـ </span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#0070C0'>Parser </span></b></span><span
+dir=RTL></span><span class=css-901oao><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'><span dir=RTL></span> </span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>بشكل عام (أيًا كان اللغة التي
+يخدمها)،</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الـ </span></span><span class=css-901oao><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'>Parser </span></b></span><span dir=RTL></span><span
+class=css-901oao><span style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:black'><span dir=RTL></span> <span lang=AR-SA>يستقبل
+في الأساس </span></span></span><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>
+<span style='color:black'>و</span> <b><span style='color:#385623'>الكود البرمجي
+</span><span style='color:black'>، </span><span style='color:#C00000'>مُدخلات
+المستخدمين</span></b><span style='color:black'> مُخزنة داخل متغيرات، سيقوم الـ </span></span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#0070C0'>Parser</span></b></span><span
+dir=RTL></span><span class=css-901oao><span style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> <span
+lang=AR-SA>بالمرور على </span></span></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'>الكود البرمجي</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'> </span></span><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>(الذي يحمل المتغيرات المخزن بها </span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>مُدخلات المستخدمين</span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>)<b> </b>لتنفيذه، في <b>الحالة
+الأولى</b> من المثال، لا يوجد أي مشكلة، في <b>الحالة الثانية</b> من المثال (
+والتي كانت بها </span></span><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>
+<b><span style='color:black'>عبارة عن </span></b></span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Keywords</span></b></span><span
+class=css-901oao><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'> </span></span><span dir=RTL></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> خاصة باللغة
+البرمجية أو</span></span><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'> <b><span
+style='color:#385623'>كود برمجي </span></b><span style='color:black'>) سيقوم
+الـ<b> </b></span></span></span><span class=css-901oao><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'>Parser</span></b></span><span class=css-901oao><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'> </span></b></span><span dir=RTL></span><span class=css-901oao><b><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'><span dir=RTL></span> </span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>بعمل تنفيذ أو </span></span><span class=css-901oao><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>execute</span></b></span><span dir=RTL></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> لـ<b> </b></span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>مُدخلات المستخدمين </span></b></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>، لماذا؟</span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'> لأن الـ<b> </b></span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#0070C0'>Parser </span></b></span><span
+dir=RTL></span><span class=css-901oao><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'><span dir=RTL></span> </span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>يراها كـ </span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#385623'>كود برمجي </span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>ولا يُدرك ماهي<b> الحدود</b> بين </span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>مُدخلات المستخدمين</span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif'> <span style='color:black'>و</span> <b><span
+style='color:#385623'>الكود البرمجي </span></b><span style='color:black'>مثلما
+يُدركها المُبرمج! بتعبير آخر: </span></span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>إذا لم يقم المُبرمج بوضع <b>قيود</b> على </span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>مُدخلات المستخدمين </span></b></span><span
+class=css-901oao><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>لمنعها من أن تأتي على شكل<b> </b></span></span><span
+class=css-901oao><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#385623'>كود برمجي</span></b></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#385623'>سيتم الخَلط بين </span></b></span><span class=css-901oao><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>مُدخلات المستخدمين</span></b></span><span class=css-901oao><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>
+<span style='color:black'>و</span> <b><span style='color:#385623'>الكود البرمجي
+</span></b><span style='color:black'>وسيعبران كـ<b> </b></span><b><span
+style='color:#385623'>جزءًا</span><span style='color:black'> </span><span
+style='color:#C00000'>واحدًا </span></b><span style='color:black'>الى الـ<b> </b></span></span></span><span
+class=css-901oao><b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#0070C0'>Parser</span></b></span><span
+dir=RTL></span><span class=css-901oao><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'><span dir=RTL></span>
+</span></b></span><span class=css-901oao><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>والذي
+سيقوم بدوره بتنفيـذ هذا الجزء <b>أيًا كان</b>.</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ومن <b>هذه النقطة </b>تحديدًا تبدأ تحدث العديد من ثغرات الـ </span></span><span
+class=css-901oao><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Injection Attack</span></span><span
+dir=RTL></span><span class=css-901oao><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+!</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span class=css-901oao><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#0070C0'>المرجع: </span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>كتاب: </span><span style='color:black'><a
+href="https://www.amazon.com/gp/product/1733003932/ref=dbs_a_def_rwt_hsch_vapi_taft_p1_i0"><b><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Computer Security - A hands-on Approach</span></b></a></span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>فصل: </span><b><span dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>SQL Injection Attack</span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الموضوع: </span><b><span dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>The Fundamental
+Cause</span></b><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>صفحة: </span><span dir=LTR></span><b><span dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>194-195</span></b><span dir=RTL></span><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

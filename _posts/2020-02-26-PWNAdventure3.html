@@ -1,0 +1,2063 @@
+---
+layout: post
+title: PWN Adventure 3
+tags: 
+- Games-Hacking
+- Write-up
+- Proxies
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-GB link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+lang=EN-US style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'>PWN Adventure 3</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>السلام عليكم ورحمة الله
+وبركاته </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>على الهامش :{</span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'>هذه المقالة يُفترض أن تكون تكملة لسابقتها،</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'> لكن لكون الموضوع يستدعي الكثير من البحث الذي لا يتّسع له وقتي
+الحالي</span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:white'> أتت هذه المقالة عوضًا عنها! </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>}</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span><a
+href="https://www.pwnadventure.com/"><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:#4472C4'>PWN
+Adventure 3</span></a><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#4472C4'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#4472C4'><span dir=RTL></span> : </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هي لعبة تم نشرها في إحدى
+مسابقات الـ </span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>CTF</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لغرض توعية مُطوري الألعاب بالثغرات المُمكن
+حدوثها نتيجة لبعض الأخطاء التي قد يقوم بها هؤلاء المبرمجين، اللعبة أيضًا موجّهه
+للمُهتمين بتحليل الـ &nbsp;</span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Binaries</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، كما أنها ليست
+محصورة في هذا المجال فقط! توجد ثغرات في مجالات مختلفة أيضًا ( إذا أردت الاستزادة
+اطلع على </span><a href="https://github.com/LiveOverflow/PwnAdventure3"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>هذه الصفحة</span></a><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>).</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في هذه المقالة نحن بصدد : </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>أولًا :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>تحليل بسيط جدًا للعبة </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>ثانيًا :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>إلقاء &quot;<b>القليل</b>&quot;
+من الضوء على بروتوكول الشبكة المُستخدم في اللعبة، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>أخيرًا :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>سنقوم ببناء </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy Server</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يكون حَلقة الوصل بين الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ( برنامج اللعبة الأساسي ) و الـخادم الخاص
+باللعبة </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Game Server</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لكن قبل البدء أود الإشارة
+بأن كل ما سيتم شرحه لاحقًا تم على <b>بيئة إفتراضية ( </b></span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Local Machines</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> ولم يتم تطبيقه على الخادم الحقيقي الخاص باللعبة. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>إذا أردت تثبيت اللعبة على
+بيئتك الإفتراضية اتبع الخطوات التي تم شرحها في</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'> </span><a href="https://github.com/LiveOverflow/PwnAdventure3"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>هذه الصفحة</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بسم الله لنبدأ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>تحليل اللعبة </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد الإنتهاء من تثبيت اللعبة
+سنجد البرنامج الخاص باللعبة في هذا المسار ( في حال لينكس ) : </span></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>PwnAdventure3/PwnAdventure3/Binaries/Linux</span></b></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image001.png"><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=74 height=89
+id="Picture 1" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image001.png"></span></b></a></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>قبل تشغيل اللعبة
+لنقوم بجمع بعض المعلومات عن ملف اللعبة نفسه عن طريق الأداة : </span><a
+href="http://man7.org/linux/man-pages/man1/file.1.html"><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>file</span></b></a></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image002.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=51
+id="Picture 2" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image002.png"
+alt="A close up of a sign&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>نلاحظ هنا أن
+الملف التنفيذي </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>ELF</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> يحمل
+الخاصيّة </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>stripped</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، أي أنه
+ليس بإمكاننا إستخراج بعض المعلومات عن هذا الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>binary</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> من خلال
+عملية الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Debugging</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> بالتالي قد
+تكون عملية التحليل هنا صعبة بعض الشيء! </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>لكن ماذا عن
+المكتبات أو ما يسمى بالـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Dynamic
+Libraries</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> التي
+تستخدمها اللعبة؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>نستطيع معرفة
+المكتبات المستخدمة في اللعبة عن طريق التعليمة :</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'> </span><span dir=LTR></span><span lang=AR-SA dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'><span dir=LTR></span> </span><span dir=LTR><a
+href="http://man7.org/linux/man-pages/man1/ldd.1.html"><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>ldd</span></b></a></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image003.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=131
+id="Picture 3" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image003.png"
+alt="A picture containing building&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>هذه قائمة
+بالمكتبات التي تقوم اللعبة بإستخدامها فور تشغيلها، لعل أهمها هنا هذا الملف : </span></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>libGameLogic.so
+</span></b></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لنقوم بإستخدام نفس تعليمة
+الـ</span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:
+"Calibri",sans-serif;color:#4472C4'> </span><a
+href="http://man7.org/linux/man-pages/man1/file.1.html"><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>file</span></b></a><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>السابقة حتى نتعرّف على هذا الملف أكثر! </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image004.png"><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=31
+id="Picture 4" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image004.png"
+alt="A close up of a sign&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>على عكس ملف اللعبة الأساسي،
+ملف المكتبة لا يملك الخاصية </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>stripped</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>أي
+بإمكاننا إستخراج بعض المعلومات عن اللعبة من خلال هذا الملف .. الآن أترك لك متعة
+الإبحار والإستكشاف هُنا :</span><span dir=LTR></span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>[ </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>  </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>حتى الآن قمنا بجمع بعض
+المعلومات بدون تشغيل اللعبة، لنبدأ بتشغيل اللعبة من لوحة الأوامر كالآتي : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image005.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=42
+id="Picture 5" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image005.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ومن ثم ننظر قليلًا إلى
+العملية </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Process</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الخاصة
+باللعبة عن طريقة التعليمة :&nbsp; </span><b><span dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>pstree
+-aslp</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image006.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=181 height=107
+id="Picture 6" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image006.png"
+alt="A screen shot of a computer&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ماذا عن <b>المساحة</b> التي
+تقوم بإستخدامها اللعبة <b>في الذاكرة</b> وقت تشغيلها ؟ كيف تبدو ؟ وماذا يُكتب
+فيها ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>نستطيع معرفة مثل هذه
+المعلومات عن طريق الدخول لمجلد </span><a href="https://linux.die.net/man/5/proc"><span
+dir=LTR></span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#4472C4'><span dir=LTR></span>/proc</span></a><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ومن ثم
+الدخول للمجلد الخاص بالـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>process
+id</span></b><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+، هنا رقم العملية </span><span dir=LTR></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>3893</span></b><span dir=RTL></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>أي ستكون التعليمة كالآتي : </span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>cd /proc/[pid]</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ومن ثم سنجد في داخل هذا المجلد العديد من المجلدات والملفات التي
+تحمل معلومات عن العملية الخاصة باللعبة، حتى نستطيع معرفة كيف تبدو الذاكرة نقوم
+بقراءة الملف </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>maps</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>كالآتي : </span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>cat </span></b><b><span style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>/proc/[pid]/maps </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>يحتوي هذا الملف على العديد
+من المعلومات التي لسنا بصدد تحليلها هنا لكن لعل أهمها هو <b>عناوين الذاكرة</b>
+و ا<b>لصلاحيات</b> ، على سبيل المثال هذا عنوان الذاكرة للـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Stack</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image007.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=17
+id="Picture 7" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image007.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قبل البدء في الجزء الثاني من
+المقالة، أود الإشارة بأنه توجد العديد من الأدوات التي تسهّل عملية التحليل
+وقراءة المخرجات بطريقة أكثر سهولة من ما تم ذكره سابقًا، مثلًا </span><a
+href="https://github.com/pwndbg/pwndbg"><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#4472C4'>هذه الأداة</span></a><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>، لم أقم بإستخدامها حقيقة
+لكن أعتقد أنها جيدة، فالملخّص لا تعتقد أن الأمر جدًا مُعقّد ومستحيل!، الأمر فقط
+يحتاج القليل من الصّبر والعديد من أكواب القهوة :</span><span dir=LTR></span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>[</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>نظرة على بروتوكول الشبكة
+المُستخدم في اللعبة</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> خلال تحليل البيانات التي تعبر بين الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Server</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>عبر
+الشبكة قمت بإستخدام </span><a
+href="https://github.com/beaujeant/PwnAdventure3/blob/master/Network/pwn3-gs.lua"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>هذه الإضافة</span></a><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> في برنامج الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Wireshark</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>حتى تسهّل
+قراءة الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ومحتوياتها </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الفكرة من </span><a
+href="https://github.com/beaujeant/PwnAdventure3/blob/master/Network/pwn3-gs.lua"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>هذه الإضافة</span></a><span dir=LTR></span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> هو أن مطوّرها قام بتحليل بُنية الـ &nbsp;</span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> المُتبادلة بين الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Server</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وكتب هذا الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>script</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الذي يُترجم
+البيانات المضمّنة في داخل الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> إلى معنى
+مقرُوء و مفهوم بدلًا من أن تظهر في برنامج الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Wireshark</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> كـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Hex</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> أو </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ASCII</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>على سبيل المثال هذه إحدى الـ
+</span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>Packet </span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بدون إستخدام الإضافة : </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image008.png"><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=349 height=50
+id="Picture 8" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image008.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وهذه بعد إضافة الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>script</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> : </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image009.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=228 height=106
+id="Picture 9" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image009.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span>* على الهامش: { </span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:white'>الألوان في
+الصورتين ليس لها علاقة بالإضافة، فقط قمت بعمل </span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'>Screenshot</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'><span dir=RTL></span> من أجهزة مختلفة : </span><span dir=LTR></span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'><span dir=LTR></span>[</span><span dir=RTL></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>}</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد الإستعانة بالأداة
+السابقة وقراءة بعض المقالات في </span><a
+href="https://blog.keyidentity.com/tag/pwnadventure/"><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>هذه السلسلة</span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>تعرفت على أن كل </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet </span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يقوم بإرسالها الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> تحمل </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ID</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، وهذا الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ID</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يتم تخزينه في أول </span><span dir=LTR></span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>2 Byte</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، الهدف من هذا الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ID</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> هو أن يتعرّف الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Server</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>على الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> التي
+إستقبلها بالتالي يستطيع معالجتها والرد عليها بطريقة مُناسبة .. كما أن هذا الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ID</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يُعرِّف الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Server</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بالمحتويات او البيانات التي تحملها هذه الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بداخلها، لن أطيل الشرح هنا سنلقي نظره على
+هذه التفاصيل في الجزء الثالث من هذه المقالة </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لننتقل الآن لبناء الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy Server</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>بناء </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Proxy Server</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> : </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في الوضع الطبيعي ستكون عملية
+التواصل بين الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Client</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> والـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Server</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> كما هو مُمثّل بالرسم الآتي: </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image010.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=225 height=248
+id="Picture 12" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image010.png"
+alt="A close up of a device&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لأجل إتمام عملية تسجيل
+الدخول او الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>authenticate</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> مع خادم
+اللعبة سيتم إستخدام المنفذ : </span><span dir=LTR></span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>3333</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ولبدء اللعبة سيتم إستخدام
+أحد هذه المنافذ </span><span dir=LTR></span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>3000 </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> إلى </span><span dir=LTR></span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>3010</span><span dir=RTL></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد بناء الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy Server</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ستكون عملية الإتصال بين الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Server</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> كالآتي : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image011.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=232 height=216
+id="Picture 21" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image011.png"
+alt="A close up of a logo&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>حتى نستطيع تطبيق السيناريو
+في الرسم أعلاه نحتاج:</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=LTR></span>1</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> - أن يكون الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Proxy </span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> للـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Client&nbsp;</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> بمثابة الـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Server                </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=LTR></span>2</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> - أن يكون الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Proxy</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> للـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Server</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> بمثابة الـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Client</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=LTR></span>3</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> - أن يعمل هذا الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Proxy</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span>  على جميع المنافذ المستخدمه في اللعبة</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لماذا الخطوة رقم </span></b><span
+dir=LTR></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>1</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> و </span></b><span
+dir=LTR></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>2</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>؟ </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بما أن الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> سيكون في المنتصف بين الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> والـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Server</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> فيجب أن يؤدي دور كِلا الطرفين في كل حالة،
+فإذا أردنا التخاطب مع الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Client</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> يجب أن يقوم
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Proxy</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الخاص بنا </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بأداء دور الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Server</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لهذا الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ونفس الشيء في الطرف المقابل،
+لو أردنا التخاطب مع الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Game
+Server</span></b><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+سيكون الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Proxy</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> الخاص بنا هنا عبارة عن </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لهذا الخادم</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>سنرى الآن كيف نقوم ببناء كل
+خطوة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=LTR></span>1</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> - أن يكون الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Proxy </span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> للـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Client&nbsp;</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> بمثابة الـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Server                </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قمت بإستخدام لغة <b>جافا </b>ببناء
+هذا الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Proxy</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لماذا جافا تحديدًا ؟</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لا يوجد سبب بالإمكان استخدام
+أي لغة تتقنها بشكل كافي، وفي حالتي كانت الجافا الخيار الأمثل.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>حتى أحقق هذه الخطوة استخدمت
+مكتبة </span><a
+href="https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html"><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>SocketServer</span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وهذه المتغيرات التي تم
+تعريفها في الكود لكلا الطرفين : </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>و </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Game Client</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image012.png"><b><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=69
+id="Picture 15" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image012.png"
+alt="A screen shot of a computer&#10;&#10;Description automatically generated"></span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بالنسبة للمتغيرين الآتيين : </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:justify;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>fromClient </span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>  : </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هو متغير يحمل قيم البيانات <b>( </b></span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packets</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> التي يقوم برنامج اللعبة بإرسالها للخادم ( في حالتنا هنا الخادم هو
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Proxy </span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>)</span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:justify;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>toClient </span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> : </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> هذا المتغيّر يحمل البيانات <b>( </b></span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packets</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> التي استقبلها الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>من الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Game</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Server</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> ومن ثم سيقوم بتمريرها للـ </span><span dir=LTR></span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> Game Client</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> كما سنرى في الأكواد القادمة. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وهذا الجزء في </span><a
+href="https://github.com/0xb1tByte/PWN/blob/master/PwnAdventure/Proxy/src/proxy/Proxy.java"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>الكود</span></a><span lang=EN-US style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#4472C4'> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>يُمثّل عملية التواصل بين الـ &nbsp;</span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> والـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Client</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image013.png"><b><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=410 height=166
+id="Picture 14" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image013.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=LTR></span>2</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> - أن يكون الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Proxy</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> للـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Server</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> بمثابة الـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Game Client</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>حتى أحقق هذه الخطوة استخدمت
+مكتبة </span><a
+href="https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html"><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>Socket</span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هذه المتغيرات الخاصة بالـ </span><span
+dir=LTR></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span> Game
+Server</span></b><span dir=RTL></span><b><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> </span></b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'> في الكود : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image014.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=47
+id="Picture 19" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image014.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بالنسبة للمتغيرين الآتيين : </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:justify;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>fromGameServer </span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>  : </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هو متغير يحمل قيم البيانات <b>( </b></span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packets</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> التي يقوم خادم اللعبة بإرسالها للـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy </span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، ومن ثم سيقوم الـ </span><span dir=LTR></span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span> Proxy</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>بإعادة توجيهها للـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Client</span></b></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:justify;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>toGameServer </span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> : </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> هي البيانات التي قام الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy </span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>بقراءتها من الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Client</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> ويقوم بإعادة إرسالها للخادم الأساسي للعبة عبر هذا المتغيّر .</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>هذا الجزء من
+الكود يُمثّل عملية التواصل بين الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> والـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Game Server</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image015.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=166
+id="Picture 20" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image015.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لو حاولنا الجمع بين <b>المتغيرات في الكود</b>
+و <b>السيناريو السابق </b>، سيبدو الرسم كالآتي:  </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image016.png"><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=239 height=327
+id="Picture 22" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image016.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></b></a></p>
+
+<p class=MsoNormal style='text-align:justify;line-height:150%'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> </span></b><span dir=LTR></span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=LTR></span>3</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> - أن يعمل هذا الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Proxy</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span>  على جميع المنافذ المستخدمه في اللعبة</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لتحقيق هذه الخطوة قمت بتشغيل
+البرنامج ( الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Proxy</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ) من لوحة
+الأوامر مع تمرير المنفذ الذي سيعمل عليه ، أي بإختصار قمت بتشغيل البرنامج <b>عدة
+مرّات</b> وكل مرّة أمرر منفذ مختلف، بالطبع <b>هذه الطريقة ليست جيدة</b> ويوجد
+طُرق أخرى لتحقيق هذه المهمّة ، لكن لضيق الوقت &quot;</span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'>كالعادة :</span><span dir=LTR></span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:white'><span dir=LTR></span>[</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>&quot; لجئت لهذا الحل السريع.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد أن انتهينا من بناء الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، لنبدأ بمقاطعة سير البيانات بين الطرفين </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لكن قبل هذا يجب عليك 
+عمل <b><u>خطوتين مهمتين جدًا</u></b> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>أولًا :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'> </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>التعديل على ملف الـ </span><span
+dir=LTR></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>/etc/hosts</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ( في حالة
+لينكس ) كالآتي : </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span dir=LTR></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>&lt;ProxyIP&gt;     &lt;GameServerHostname&gt;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الغرض من هذه الخطوة هو إيهام
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Game Client</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> بأن الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Proxy</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>هو خادم اللعبة </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ثانيًا:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> إضافة الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Hostname</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الخاص بالـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>GameServer</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> في الكود في المتغير الآتي : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image017.png"><b><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=12
+id="Picture 24" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image017.png"
+alt="A close up of a logo&#10;&#10;Description automatically generated"></span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن لنبدأ بتشغيل هذا الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ونرى كيف سيتم تبادل البيانات بين الطرفين ! </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بداية ، البرنامج يعمل بهذه
+الطريقة : </span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>java Proxy &lt;portNumber&gt;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ولأن الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Game Client</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> في البداية سيقوم بعملية تسجيل الدخول ، قمت أولًا بتشغيل البرنامج
+على المنفذ : </span><span dir=LTR></span><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>3333 </span><span dir=RTL></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image018.png"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=32
+id="Picture 23" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image018.png"
+alt="A picture containing object&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد ذلك نبدأ بتشغيل اللعبة
+ومن ثم سنلاحظ أن الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Proxy</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>استقبل الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> التي قام الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Client</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> بإرسالها </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image019.png"><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=111
+id="Picture 25" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image019.png"
+alt="A black sign with white text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في الطرف المقابل أيضًا نرى
+أن الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Game Server</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> قام بإرسال بعض البيانات للـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>( إتمام عملية تسجيل الدخول ) </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image020.png"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=451 height=40
+id="Picture 26" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image020.png"
+alt="A black sign with white text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد إكتمال عملية تسجيل
+الدخول ، يجب أن نبدأ تشغيل الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>على بقية المنافذ حتى نستطيع بدء اللعب! </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image021.png"><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=397 height=75
+id="Picture 27" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image021.png"
+alt="A white sign with black text&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=AR-SA dir=RTL
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن لننتقل لمرحلة مختلفة
+وهي تحليل بسيط جدًا للـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>التي يتم تبادلها بين برنامج اللعبة والخادم! </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>عملية تبادل الـبيانات بين
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Client</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>والـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Server</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> يجب أن تتم بطريقة مفهومة لكلا الطرفين </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وفي حالة اللعبة هذه، قام
+مطوروها ببناء بروتوكول التواصل بين كلا الطرفين بحيث يكون لكل </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>بُنية <b>(</b></span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Structure</span></b><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> )</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> معينة ورقم خاص <b>(</b></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ID</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> بهذه الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>على سبيل المثال :</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>عندما يقوم اللاعب في اللعبة <b>بالتحرك</b>
+في الخريطة الخاصة باللعبة يقوم البرنامج الخاص باللعبة بإرسال هذه المعلومات ( إحداثيات
+اللاعب في الخريطة ) إلى خادم اللعبة ، وهذه البيانات يتم إرسالها في </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>معينة تملك </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>ID</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> خاص بها </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>أيضًا لو قام اللاعب <b>بالقفز
+</b>سيتم إرسال </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>أخرى تحمل </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>ID</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>مختلف تخبر خادم اللعبة بأن اللاعب قام بالقفز </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وكل ما يحدث في طرف الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يجب أن يتم إعلام خادم اللعبة به بطريقة معينة
+متفق عليها بين الطرفين ( لو أردت معرفة المزيد أرشح لك الإطلاع على </span><a
+href="https://blog.keyidentity.com/tag/pwnadventure/"><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>هذه السلسلة</span></a><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>)</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن لنختم هذه المقالة
+بإلقاء نظرة على إحدى هذه الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packets</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Location Packet</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هذه الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> تحمل الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>ID</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الآتي : </span><span
+dir=LTR></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>6d76</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قمت بإضافة دالة بسيطة للـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Proxy</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>تتعرّف على هذه الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>في حال قام الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بإرسالها </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image022.png"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=404 height=114
+id="Picture 28" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image022.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الدالة تقوم بمقارنة أول </span><span
+dir=LTR></span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>2 Byte</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> في الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Array</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> التي تحمل
+البيانات التي قام الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Client</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>بإرسالها ، وتعيد القيمة </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>true</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> في حال كانت القيم مساوية للـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ID</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الخاص بهذه الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>نستطيع أن نرى النتائج في
+لوحة الأوامر كالآتي : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image023.png"><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=348 height=45
+id="Picture 29" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image023.png"></span></a></p>
+
+<p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>Jump Packet</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'> نفس الفكرة السابقة تم
+تطبيقها هنا مع إختلاف الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>ID</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الخاص بهذه الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، فالـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>ID</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>الخاص بها هو : </span><span dir=LTR></span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>6a70</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وهذه هي الدالة التي تقوم
+بالتعرّف على هذه الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image024.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=343 height=108
+id="Picture 30" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image024.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وفي لوحة الأوامر نرى هذه
+النتائج : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image025.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=327 height=47
+id="Picture 32" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/PWN.fld/image025.png"
+alt="A close up of a logo&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قبل أن أختم أود ذكر بعض
+الملاحظات التي رُبما قد تكون مُفيدة لمن أراد الخوض في تحليل بروتوكول الشبكة
+الخاص بهذه اللعبة: </span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:#C00000'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'>جرّب أن تقوم
+بعمل</span><span dir=LTR></span><span lang=AR-SA dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'><span dir=LTR></span>
+</span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'>Packet Injection </span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#C00000'>: </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>قمت بكتابة بعض
+الدوال </span><a
+href="https://github.com/0xb1tByte/PWN/blob/master/PwnAdventure/Proxy/src/proxy/Proxy.java"><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>هنا</span></a><span lang=EN-US style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#4472C4'> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>التي تقوم بهذه المهمة، بعضها هذه الدوال يقوم فعلًا بتعديل محتوى
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Packet</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> لكن في
+المقابل لا يوجد تغيير يحدث بعد إرسال هذه الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>للخادم ، <u>على سبيل المثال :</u> في الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Location Packet</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> إستطعت الكتابة فوق قيم الإحداثيات ( </span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>x,y,z</span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ) لكن مكان اللاعب <b>لا يتغيّر</b> ، أتصوّر
+أنه يوجد في طرف الخادم آلية تقوم بالتحقّق بأن الإحداثيات التي يقوم اللاعب
+بإرسالها يجب أن تكون <b>في نطاق معيّن</b> بحسب المكان الذي يتواجد به اللاعب؟ (
+لأن اللعبة عبارة عن خرائط) هذه مجرّد فرضية لم أقم بإختبارها فلا تستند عليها
+بشكل كامل!</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>إذا أردت التأكد
+بأنك قمت بالفعل بالكتابة فوق القيم التي تحملها الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet </span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>إستخدم برنامج الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Wireshark</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وراقب القيم هناك </span></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>خذ بعين الإعتبار
+بأن البيانات التي تعبر عبر الشبكة قد تكون معكوسة، وأقصد هنا هذه المفاهيم:  </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Network Byte order</span></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> والـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Host Byte order</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> والـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Little-endian</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> والـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Big-endian</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> ، فإذا أردت حقن قيم في الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Packet</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>يجب أن تعرف بأي ترتيب ستقوم بحقن هذه الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Bytes</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ختامًا ، إن أصبت فمن توفيق
+الله وحده ..</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وإن أخطأت فمن نفسي والشيطان.</span></p>
+
+<p class=MsoListParagraphCxSpFirst dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+18.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>المراجع : </span></b></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><a
+href="https://github.com/LiveOverflow/PwnAdventure3"><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://github.com/LiveOverflow/PwnAdventure3</span></b></a></p>
+
+<p class=MsoListParagraphCxSpMiddle dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><a
+href="https://github.com/Foxmole/PwnAdventure3"><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://github.com/Foxmole/PwnAdventure3</span></b></a></p>
+
+<p class=MsoListParagraphCxSpLast dir=RTL style='margin-top:0cm;margin-right:
+36.0pt;margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><a
+href="https://github.com/beaujeant/PwnAdventure3"><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://github.com/beaujeant/PwnAdventure3</span></b></a><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#4472C4'>الكود المصدري الخاص بالـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'>Proxy</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#4472C4'><span dir=RTL></span> : </span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-top:0cm;margin-right:36.0pt;
+margin-bottom:0cm;margin-left:0cm;margin-bottom:.0001pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><a
+href="https://github.com/0xb1tByte/PWN/tree/master/PwnAdventure"><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>https://github.com/0xb1tByte/PWN/tree/master/PwnAdventure</span></b></a><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></p>
+
+</div>
+
+</body>
+
+</html>

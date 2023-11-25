@@ -1,0 +1,966 @@
+---
+layout: post
+title: ModSecurity Review
+tags: 
+- Web-Security
+- Blue Team
+- WAF
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-right:0cm;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-GB link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+115%;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>مراجعة: </span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+115%;direction:rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR
+style='font-size:16.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:16.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+style='font-size:14.0pt;line-height:115%;font-family:Symbol;color:black'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>أمور يجب عليك معرفتها مُسبقًا قبل
+قراءة هذه المقالة: </span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:54.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Web Application
+Firewall</span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:54.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>HTTP Request/Response</span></b></p>
+
+<div style='border:none;border-bottom:solid windowtext 1.0pt;padding:0cm 0cm 1.0pt 0cm'>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed;border:none;padding:0cm'><span dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+</div>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>السلام عليكم ورحمة الله
+وبركاته، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>خلال العمل على أحد المشاريع،
+مرَرت بمشروع مفتوح المصدر وقضيت بعض الوقت في دراسته والإطلاع عليه بحكم إرتباط
+فكرته بالمشروع الذي كنت أعمل عليه، وأرى أنه يستحق المراجعة والكتابة عنه.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>المشروع المفتوح المصدر الذي
+سأتحدث عنه في هذه المقالة هو : </span><a href="https://www.modsecurity.org/"><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif'>ModSecurity</span></b></a></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>لا تناقش هذه
+المقالة خطوات تنصيب المشروع وما إلى ذلك، لكن تركّز على طبيعة عمل المشروع
+الداخلي وإلقاء نظرة على بعض المفاهيم المتعلقة به.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>ما هو الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>ModSecurity </span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> ؟ </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>هو مشروع مفتوح المصدر عبارة
+عن </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'>Web Application Firewall</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>ومثل أي </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>WAF</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>، الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>ModSecurity</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> مُعتمد في طبيعة عمله على بناء </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Rules</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>يتم إدراجها في هذا النظام</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>الجدير بالذكر هنا، أن </span><a
+href="https://owasp.org/"><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif'>OWASP</span></b></a><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>لديهم مشروع مفتوح المصدر هو الآخر اسمه: </span></p>
+
+<p class=MsoNormal style='line-height:115%'><a href="https://coreruleset.org/"><b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif'>OWASP
+ModSecurity Core Rule Set (CRS)</span></b></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>والغرض منه هو بناء </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Rules</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> خاصة بالـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ( بالإمكان أيضًا تطبيقها على </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>WAF</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> أخرى</span><span dir=LTR></span><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>( </span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>هدف فريق </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>OWASP</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> من هذا
+المشروع هو بناء قواعد مُتعلّقة بأشهر أنواع الإختراقات، مثل تلك المتضمّنة في
+قوائمهم. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>كيف يعمل الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>ModSecurity </span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> </span></b><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>؟ </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Rules </span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> التي يتم بنائها في الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بالإمكان تطبيقها على مراحل مختلفة:</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>المرحلة الأولى : </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>REQUEST_HEADERS</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>في هذه المرحلة يقوم النظام
+بقراءة الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>HTTP Request
+Headers</span></b><span dir=RTL></span><b><span lang=EN-US style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>وبالإمكان تطبيق قواعد أمنية
+تختبر كل ما هو متضمن في الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Request Headers</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>على سبيل المثال:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> بالإمكان في هذه المرحلة بناء قواعد تختبر إذا ما</span><span
+dir=LTR></span><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>كان أي جزء من أجزاء الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Request Headers</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>يحتوي على </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>injection
+code</span></b><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+ومن ثم حجبه، أو فَلترَته. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>المرحلة الثانية : </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>REQUEST_BODY</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>في هذه المرحلة النظام قادر
+على قراءة محتوى الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>HTTP Request
+Body</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>وتطبيق قواعد مُتعلقة بهذا
+الجزء</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>ملاحظة: </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>لاحظت بأن الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>ModSecurity</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> يحتوى على </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>XML Parser</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>، بالتالي أعتقد أنه بالإمكان بناء قواعد مُتعلّقة ببعض ثغرات الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>XML Parsers</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> مثل الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>XXE</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> من خلال هذه المرحلة</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بعد أن يُعالج الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> المرحلة
+الأولى والثانية، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>سيتم تمرير الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>HTTP Request </span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>كاملًا إلى الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Web Application</span></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> الذي يقع خلف الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>ومن ثُم سيُعالج تطبيق الويب
+الطّلب ويقوم بإرسال الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>HTTP
+Response</span></b><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+، وهنا يأتي دور المرحلة الثالثة والرابعة في الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>المرحلة الثالثة : </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>RESPONSE_HEADERS</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>في هذه المرحلة نستطيع</span><span
+dir=LTR></span><span lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>بناء قواعد تتعامل مع الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>HTTP Response Headers</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>على سبيل المثال:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> نستطيع بناء قاعدة تقوم بالتعديل على الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Response Headers</span></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> بقيم معيّنة.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>المرحلة الرابعة : </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>RESPONSE_BODY</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>في هذه المرحلة بالإمكان
+كتابة قواعد تقوم بعمل </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>inspect/parse</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>للـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Response Body </span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>القادم من تطبيق الويب وقبل أن يتم إرساله للـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Client</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>على سبيل المثال:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> بالإمكان بناء قاعدة تقوم بفحص الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Response Body</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>والتأكد بأنه لم يتم تسريب بعض المعلومات الحساسة ضمن الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Response Body</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، بمعنى آخر بإمكاننا بناء قواعد تخدم ما يعرف
+بمفهوم الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Data Leakage
+Prevention</span></b><span dir=RTL></span><span lang=EN-US style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>يوجد مرحلة أخرى أيضًا وهي ما
+يعرف بـ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span dir=LTR></span><span lang=AR-SA dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif'><span
+dir=LTR></span> </span><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>المرحلة الخامسة : </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>Logging</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>في هذه المرحلة يتيح لنا الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> تسجيل كل الأحداث، لفحصها ومراجعتها لاحقًا،
+وبالإمكان أيضًا بناء قواعد تقوم بعملية التسجيل </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Logging</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> في حالة تحقق شرط ما، قد يكون هذا الشرط مثلًا
+محاولة حقن كود خبيث في الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>Request
+Headers</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>ملخّص المراحل: </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>المرحلة الأولى والثانية: </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>تتيح التّحكم الكامل بالـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>HTTP Request</span></b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> القادم من
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>Client</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>المرحلة الثالثة والرابعة: </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> تتيح التّحكم الكامل بالـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>HTTP Response </span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>القادم من الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>Web
+Application</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>لذلك قبل بناء أي قاعدة، أو
+لصد أي هجوم ( في حدود إمكانيات الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>WAF</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> )، يجب عليك معرفة <b>المرحلة التي يحدث فيها
+الضّرر</b> حتى تستطيع معالجته، الجدول التالي يُلخّص المراحل:</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+115%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/1.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=375 height=171
+id="Picture 1" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/1.png"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>في الجزء الأخير من المقالة
+سنتطرّق لمفهوم جميل جدًا في وجهة نظري ويتيح لنا إمكانيات قويّة إذا ما أُستُخدم
+بطريقة فعّالة وهو : </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:#C00000'>Virtual
+Patching </span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:#C00000'><span
+dir=RTL></span> :</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>حتى نعرف الفائدة الأساسية
+وراء هذا المفهوم لنأخذ هذا المثال: </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>تخيّل معي أنّك مبرمج مسؤول
+عن تطبيق ويب، وتم إكتشاف ثغرة في أحد المكتبات التي قمت باستخدامها في بناء
+التطبيق، لنفترض أن هذه الثغرة يتم إستغلالها عن طريق الحقن في أحد المتغيرات في
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>HTTP Request</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، والفريق
+الذي قام ببناء هذه المكتبة على الأغلب سيأخذ مدة طويلة جدًا لمعالجة هذا الخلل في
+كود المكتبة .. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>فـ ما الحل هُنا ؟ </span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:54.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>عملية التعديل
+على الكود الخاص بتطبيق الويب وإستبدال المكتبة بمكتبة أخرى قد لا تبدو فكرة جيدة
+وقابلة للتطبيق! من جهة أخرى قد يوجد </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>dependencies</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> عدة في الكود الخاص بك مرتبطة بهذه المكتبة،
+فعملية استبدال المكتبة قد تنتهي بك بإعادة برمجة بعض الخواص الأساسية في التطبيق.</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:54.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>عملية الإنتظار
+حتى يُصدِر فريق المطورين الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Fix</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> أيضًا ليست خيار </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>وهنا يأتي دور مفهوم الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Virtual Patching</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، وهو : </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>طالما لدينا نظام <b>يقع في
+المنتصف</b> بين الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Requests</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>القادمة من المستخدم، والـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Responses</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> القادمة من تطبيق الويب، لماذا لا يتم حل
+المشكلة <b>في هذه الطبقة</b>؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:115%'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/2.png"><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=101 height=119
+id="Picture 2" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/2.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal style='line-height:115%'><span lang=EN-US style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:115%'><span lang=EN-US style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>بمعنى آخر :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>إستغلال الثغرة ماهو إلا </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>malicious Request</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> قادم من المستخدم ، ومن إمكانيات الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> هي عمل </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>inspect/parse</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لهذه الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Requests</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، فالفكرة هي بناء </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Patch</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يعمل على هذه الطبقة ويقوم بحجب الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>malicious Request</span></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> قبل أن يصل لتطبيق الويب. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>مثال :</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> الكود التالي يحتوي على ثغرة </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>SQLi</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:Symbol;
+color:black'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>الكود فقط لتوضيح
+الغرض من هذا المفهوم، لكن الآلية التي كُتب بها تعتبر مُمارسة خاطئة جدًا في
+معالجة مدخلات المستخدم</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+115%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/3.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=381 height=207
+id="Picture 3" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/3.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Patch</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الخاص
+بالثغرة السابقة سيتم تطبيقه في الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وسيكون كالآتي: </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+115%;direction:rtl;unicode-bidi:embed'><a
+href="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/4.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=360 height=58
+id="Picture 4" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/ModSecurity/4.png"
+alt="A picture containing knife&#10;&#10;Description automatically generated"></span></a></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>ملاحظات أخيرة حول الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>Virtual Patching </span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> في الـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'>ModSecurity</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:#C00000'><span dir=RTL></span> : </span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:54.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>قبل بناء الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Virtual Patch</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>، يجب أن تقوم ببناء </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Exploit</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> خاص بالثغرة التي تود معالجتها، والغرض من هذه
+الخطوة هو التأكد من أن الثغرة تمت معالجتها عبر الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Virtual Patch</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، حيث أنك ستقوم بمحاولة إستغلال الثغرة
+مجددًا بهذا الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Exploit</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> والتأكد
+بأنه لن ينجح.</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:54.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>بناء </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>Virtual Patch</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يحتاج معرفة كافية <b>بمكان الضرر في التطبيق
+الخاص بك</b>، <b>وبماهية الثغرة التي قد يتم إستغلالها </b>وعلى أساس هذا ستقوم
+ببناء الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Virtual Patch</span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:54.0pt;text-align:right;
+text-indent:-18.0pt;line-height:115%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>خذ بعين الإعتبار
+بأنه بناء بعض الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>Virtual Patches</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> قد تعطّل
+بعض الخدمات </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>services</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> في تطبيق الويب الخاص بك، لذلك تأكد جيدًا من المُهمة التي يقوم
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>Virtual Patch</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> بعملها. </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>ختامًا، إن أصبت فمن توفيق الله
+وحده، وإن أخطأت فمن نفسي والشيطان</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>هذه بعض المصادر التي إستندَت
+عليها هذه المقالة وأرشّح لك الإطلاع عليها في حال أردت الإستزادة حول الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>ModSecurity </span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> : </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#C00000'>المراجع:</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#0070C0'>كتب:</span></b></p>
+
+<p class=MsoListParagraph style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:115%'><span style='font-size:14.0pt;line-height:115%;font-family:
+"Calibri",sans-serif;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><b><span style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>ModSecurity 2.5</span></b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> - Securing your Apache installation and web applications by
+Magnus Mischel </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:#0070C0'>أوراق علمية</span></b><span
+dir=LTR></span><b><span dir=LTR style='font-size:14.0pt;line-height:115%;
+font-family:"Calibri",sans-serif;color:#0070C0'><span dir=LTR></span>: </span></b></p>
+
+<p class=MsoListParagraph style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:115%'><span style='font-size:14.0pt;line-height:115%;font-family:
+"Calibri",sans-serif;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><b><span style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>WAF Virtual Patching
+Challenge: Securing WebGoat with ModSecurity </span></b><span style='font-size:
+14.0pt;line-height:115%;font-family:"Calibri",sans-serif;color:black'>by Ryan
+Barnett : </span><a
+href="https://www.blackhat.com/presentations/bh-dc-09/Barnett/BlackHat-DC-09-Barnett-WAF-Patching-Challenge-Whitepaper.pdf"><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>https://www.blackhat.com/presentations/bh-dc-09/Barnett/BlackHat-DC-09-Barnett-WAF-Patching-Challenge-Whitepaper.pdf</span></a><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoListParagraph style='margin-left:54.0pt;text-indent:-18.0pt;
+line-height:115%'><span style='font-size:14.0pt;line-height:115%;font-family:
+"Calibri",sans-serif;color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><b><span style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>Methods for the Controlled
+Deployment and Operation of a Virtual Patching Program </span></b><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>by<b> </b>William Vink : </span><a
+href="https://www.sans.org/reading-room/whitepapers/threats/paper/38430"><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'>https://www.sans.org/reading-room/whitepapers/threats/paper/38430</span></a><span
+style='font-size:14.0pt;line-height:115%;font-family:"Calibri",sans-serif;
+color:black'> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:115%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+115%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>

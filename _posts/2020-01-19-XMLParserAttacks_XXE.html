@@ -1,0 +1,1063 @@
+---
+layout: post
+title: XML External Entity Injection (XXE)
+tags: 
+- Web-Pentesting
+- Write-up
+- XML Attacks
+- Arabic-Article
+---
+
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+p
+	{margin-right:0cm;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-right:0cm;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+@page WordSection1
+	{size:595.0pt 842.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=en-SA link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:
+16.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black;
+background:yellow'>الثغرات المتعلّقة بالـ </span></b><b><span lang=EN-US
+dir=LTR style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'>XML Parser</span></b><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'><span dir=RTL></span> : </span></b><b><span
+lang=EN-US dir=LTR style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;background:yellow'>XXE</span></b></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR
+style='font-size:16.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قبل البدء في مناقشة مختلف
+أنواع الثغرات المتعلّقة بلغة الترميز </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، لنُلقي نظرة شمولية ( انظر للصورة الآتية)
+على هذه الأنواع ونعرف كل نوع منها ما ا<b>لهدف</b> الذي يُحدث به الضّرر: </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/1.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=404 height=246
+id="Picture 1" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/1.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span dir=RTL></span><b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>* </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>لعرض الصور بحجمها الأصلي اضغط عليها</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:Symbol;
+color:#C00000'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'>الثغرات
+المتعلّقة بالـ </span></b><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#C00000'>XML Parser</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:#C00000'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>تطبيقات الويب التي تعتمد على
+لغة الترميز  </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>XML</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> في بعض
+أجزائها وعملياتها يقوم مطوريها بإستخدام </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Parser </span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> خاص باللغة المستخدمة في تطبيق الويب ، الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Parser</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يساعد في قراءة (</span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Parsing</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>) أكواد الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وجعلها مفهومه لتطبيق الويب حتى يستطيع
+التعامل معها، أي أن الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Parser</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> <b></b> </span><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> أشبه بـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>API</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بين كود الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> والكود
+الخاص بتطبيق الويب. فعوضًا عن أن يتعامل مطوّر الويب مع كود الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> بشكل مباشر ويحاول تفسير كل سطر بنفسه، يقوم
+بإستخدام </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>XML Parser </span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>يؤدي هذه الوظيفة، وبالمناسبة هذه الميزة هي أحد الأسباب التي جعلت
+لغة الـترميز </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>XML</span></b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> واسعة الإنتشار، فالعديد من لغات البرمجة لديها مكتبات خاصة بالـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Parser</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، بالتالي عملية التخاطب بين تطبيقين من لغتين مختلفتين بغرض تبادل
+أو قراءة البيانات ستكون مهمّة سهلة إلى حدٍ ما إذا أوجدنا لغة مشتركة بين هذين
+التطبيقين ، وفي هذه الحالة نقصد لغة الترميز </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> .</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>يوجد العديد من
+الأنواع المختلفة للـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>XML Parser</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ولسنا بصدد
+مناقشتها هنا، لكن هذه قائمة ببعض الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Parser </span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> المفتوحة المصدر لبعض اللغات وأُطر العمل: </span></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'><a
+href="https://docs.oracle.com/cd/B28359_01/appdev.111/b28394/adx_j_parser.htm#ADXDK3000"><span
+dir=LTR>Java</span></a></span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'><a
+href="https://docs.python.org/3/library/xml.html"><span dir=LTR>Python</span></a></span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:justify;
+line-height:150%;direction:rtl;unicode-bidi:embed'><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'><a
+href="https://www.php.net/manual/en/book.xml.php"><span dir=LTR>PHP</span></a></span></b></p>
+
+<p class=MsoNormal dir=RTL style='margin-right:36.0pt;text-align:right;
+direction:rtl;unicode-bidi:embed'><b><span style='font-size:14.0pt;font-family:
+"Calibri",sans-serif'><a
+href="https://docs.microsoft.com/en-us/dotnet/standard/data/xml/"><span
+dir=LTR></span><span dir=LTR><span dir=LTR></span>.NET Framework</span></a></span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد هذه المقدمة حول الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Parser</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>، لننتقل الآن للثغرات التي تحدث بسبب بعض نقاط الضعف في الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Parser</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>أو بسبب جهل مطوّر تطبيق الويب بطبيعة الخصائص التي يقدمها هذا الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Parser</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وحدود إمكانياته.</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>XML External
+Entity Injection (XXE)</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:#0070C0'><span dir=RTL></span> :</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>قبل أن نتعرّف على هذا النوع
+من الثّغرات لنعرف بدايةً ما هو الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Entity</span></b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML Entity</span></b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> نستطيع
+إعتباره <b>متغير </b>يحمل بيانات وهذه البيانات قد تكون في نفس (</span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Internal</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>) ملف الـ </span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> أو في خارجه (</span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>External</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>) .</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>هذا مثال على تعريف </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ENTITY</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>ضمن ملف الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>XML</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> :</span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/2.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=341 height=141
+id="Picture 7" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/2.png"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في المثال أعلاه عرّفنا نوعين
+مختلفين من الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>XML ENTITY</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> وهما : </span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>External ENTITY</span></b></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></b><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Internal ENTITY</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ما يهمنا هنا هو النوع الأول </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>External ENTITY</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وهذا هو الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Syntax</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> الخاص
+بتعريفه : </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/3.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=288 height=28
+id="Picture 9" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/3.png"
+alt="A close up of a logo&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>EntityName</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> :</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> يرمز لأسم هذا المتغيّر</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>SystemLiteral</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> :</span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> ترمز إلى المسار المتواجد به الملف، وهنا بإمكاننا إستخدام أنواع
+مختلفة من الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>URI Scheme</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> مثل الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>HTTP , File</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>الآن بعد أن تعرّفنا على الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML External Entity</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> ، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لنعرف ماهي ثغرة الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML External Entity Injection</span></b><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>؟</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بما أنها ثغرة من نوع </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Injection</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> فلا بد أن يتواجد <b>&quot;مكان&quot;</b>
+تأتي منه البيانات من المستخدم ( أو من تطبيق آخر ) ومن ثم يتم خَلط هذه البيانات
+مع الكود وتُرسل إلى الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Parser</span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>(إطلع على سلسلة </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'>مقالات
+الـ </span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif'><a
+href="https://0xb1tbyte.github.io/2019/11/05/TheFundamentalCause.html"><span
+dir=LTR>Injection Attacks</span></a></span></b><span lang=EN-US dir=LTR
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> لمزيد من التفاصيل حول هذه النقطة) </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>وفي حالتنا هنا تطبيق الويب
+يستقبل قيم من المستخدمين وهذه القيم قد يتم خلطها مع </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Code</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> <b>XML </b></span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>، ولا يقوم
+تطبيق الويب بعمل فَلترة كافية للمدخلات ممّا يتيح للمخترق حقن كود </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> وتحديدًا نقصد هنا حقن </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML External Entity </span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لنتوقف قليلًا عن الشرح ونبدأ
+بالجانب العملي حتى تتضح الصورة أكثر: </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>سنقوم بالتطبيق وحل تحدّي
+بسيط على هذه الـ </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif'> </span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif'><a
+href="https://www.vulnhub.com/series/xxe-lab,174/"><span dir=LTR>Machine</span></a></span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>إعدادات المعمل ستكون كالآتي:</span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>تطبيق الويب
+المصاب بالثغرة:</span></b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'> </span><span lang=EN-US><a
+href="http://172.16.220.134"><span dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>http://172.16.220.134</span></a></span></p>
+
+<p class=MsoListParagraph dir=RTL style='margin-right:36.0pt;text-align:right;
+text-indent:-18.0pt;line-height:150%;direction:rtl;unicode-bidi:embed'><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=RTL></span><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>الـ </span></b><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Machine</span></b><span dir=RTL></span><b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> التي نقوم بالإختبار من خلالها:</span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> </span><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Kali machine </span><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد الدخول على الصفحة الخاصة
+بالتطبيق ( </span><span lang=EN-US><a href="http://172.16.220.134/xxe/"><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>http://172.16.220.134/xxe</span><span dir=RTL></span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span>/</span></a></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'> ) نجد واجهة تسجيل الدخول هذه: </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/4.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=203 height=137
+id="Picture 10" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/4.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>نحاول تسجيل الدخول <b>وإعتراض
+الطلب</b> عن طريق أداة </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>Burp
+Suite</span></b><span dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span>
+قبل أن يتم إرساله إلى تطبيق الويب حتى نفهم ما الآلية التي يعمل بها التطبيق</span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/5.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=355 height=200
+id="Picture 11" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/5.png"
+alt="A screenshot of a social media post&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد إعتراض الطلب، نلاحظ أن
+البيانات الخاصة بالمستخدم يتم تمريرها عبر الـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، نُلقي
+نظرة على الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Source Code</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ونجد الدالة
+</span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'>XMLFunction()</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> والتي تقوم
+ببناء الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>xml document</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>وتمريره إلى تطبيق الويب : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/6.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=421 height=211
+id="Picture 12" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/6.png"
+alt="A screenshot of a cell phone screen with text&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> الجزء الذي يهمُّنا تحديدًا في الكود هو أن المدخلات القادمة من
+المستخدم (اسم المستخدم وكلمة المرور) يتم خلطها مع كود الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ولا يوجد أي
+عملية فلترة مُسبقة لهذه المدخلات، ومن هنا نستطيع الحقن ، كِلا المتغيرين </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>name</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> و </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>password</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> مُصابين ونستطيع الحقن من خلالهما : </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/7.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=384 height=27
+id="Picture 13" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/7.png"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد تحليل الكود ، لنعود الآن
+إلى الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Repeater</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> في الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Burp Suite</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/8.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=259 height=220
+id="Picture 14" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/8.png"
+alt="A screenshot of a social media post&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>نبدأ الإختبار عن طريق تمرير
+أحد قيم الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Meta-character</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> في الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> مثل : </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/9.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=280 height=230
+id="Picture 15" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/9.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>في حالة كان تطبيق الويب لا
+يقوم بعمل الفلترة للمدخلات فحقن أحد هذه القيم في المدخلات سيعمل على إحداث خطأ
+في البنية السليمة لملف الـ </span><b><span lang=EN-US dir=LTR style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>XML</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، مما يجعل
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Parser</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> يُظهر لنا
+رسالة خطأ في الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Response</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، في الخطوة
+الآتية مرّرنا القيمة <b>&amp; </b>ضمن اسم المستخدم أولًا حتى نتأكد أنه مصاب ،
+ومن ثم أعدنا المحاولة على المتغير الخاص بكلمة المرور .</span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/10.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=369 height=180
+id="Picture 16" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/10.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/11.png"><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=324 height=161
+id="Picture 17" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/11.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>نلاحظ أن رسالة الخطأ التي
+توقعناها من الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>Parser</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> لم تظهر ضمن
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>Response</span></b><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ، لنبدأ
+الآن بحقن شيء آخر ، على سبيل المثال لنحاول الحقن بـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>XML External Entity</span></b><span dir=RTL></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>كالآتي: </span></p>
+
+<p class=MsoNormal style='line-height:150%'><span dir=LTR></span><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>&lt;!DOCTYPE Doc [</span></p>
+
+<p class=MsoNormal style='line-height:150%'><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>&lt;!ENTITY ex SYSTEM &quot;file:///etc/passwd&quot;&gt;</span></b></p>
+
+<p class=MsoNormal style='line-height:150%'><span lang=EN-US style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>]&gt;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ومن ثم نستدعي هذا الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Entity</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> ضمن أحد قيم
+المدخلات </span></p>
+
+<p class=MsoNormal align=right dir=RTL style='text-align:left;line-height:150%;
+direction:rtl;unicode-bidi:embed'><span dir=LTR></span><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>&lt;name&gt;<b>&amp;ex;</b>&lt;/name&gt;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ونرسل الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Request</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'>:</span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/12.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=414 height=226
+id="Picture 40" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/12.png"
+alt="A screenshot of a social media post&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>جميل!! ما الذي حصل هنا ؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>إستطعنا قراءة ملف الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>passwd</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> عن طريق تعريف </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>External Entity</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> يحمل المسار الخاص بهذا الملف ، ومن ثم حقنا
+هذا الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>External Entity</span></b><span
+dir=RTL></span><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>في أحد قيم المدخلات</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لننتقل لمستوى آخر من الحقن، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد قراءة محتوى ملف الـ </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>robots.txt</span></b><span dir=RTL></span><b><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></b><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>وجدنا صفحة تسجيل فرعية خاصة بالـ </span><b><span lang=EN-US
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>admin</span></b><span dir=RTL></span><span lang=EN-US
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/13.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=305 height=171
+id="Picture 19" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/13.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد محاولات عدّة لإختبار
+صفحة الدخول لنفس الثغرة وتحليل الكود لم نتوصّل لشيء، </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لكن ماذا عن قراءة محتوى ملف
+الـ </span><b><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>admin.php</span></b><span
+dir=RTL></span><b><span lang=EN-US style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> </span></b><span
+lang=AR-SA style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>عن طريق الثغرة في صفحة تسجيل الدخول الأولى؟ </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لنُلقي نظرة! </span></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/14.png"><span
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=394 height=226
+id="Picture 20" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/14.png"
+alt="A screenshot of a social media post&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>إستطعنا قراءة محتوى الملف
+أيضًا! </span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>لاحظ أننا قمنا بعمل </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Encoding</span></b><span dir=RTL></span><span lang=AR-SA
+style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=RTL></span> لمحتوى الملف كالآتي (لمعرفة السبب وراء هذه
+الخطوة إطلع على </span><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif'><a
+href="https://github.com/0xb1tByte/eWPTXv1-Journey/blob/master/XML%20Attacks/XML%20Attacks%20Notes.pdf">هذا
+الشرح</a><span style='color:black'>): </span></span></p>
+
+<p class=MsoNormal style='line-height:150%'><span dir=LTR></span><b><span
+lang=EN-US style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'><span dir=LTR></span>&lt;!ENTITY ex SYSTEM
+“php://filter/read=convert.base64-encode/resource=admin.php”&gt;</span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>بعد عمل </span><b><span
+lang=EN-US dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black'>Decoding</span></b><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'> </span><span
+dir=RTL></span><span lang=AR-SA style='font-size:14.0pt;line-height:150%;
+font-family:"Calibri",sans-serif;color:black'><span dir=RTL></span> لمحتوى
+الملف ، وجدنا هذه البيانات ضمن الصفحة </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/15.png"><span
+dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=414 height=151
+id="Picture 21" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/15.png"
+alt="A screenshot of a social media post&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span dir=RTL></span><span lang=AR-SA style='font-size:
+14.0pt;line-height:150%;font-family:"Calibri",sans-serif;color:black'><span
+dir=RTL></span> نقوم بتسجيل الدخول بإستخدام هذه البيانات : </span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/16.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=236 height=158
+id="Picture 22" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/16.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>ومن ثم نحصل على العَلَم :</span><span
+dir=LTR></span><span lang=EN-US dir=LTR style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'><span dir=LTR></span>[</span></p>
+
+<p class=MsoNormal align=center dir=RTL style='text-align:center;line-height:
+150%;direction:rtl;unicode-bidi:embed'><span lang=EN-US><a
+href="https://github.com/0xb1tByte/0xb1tbyte.github.io/blob/master/assets/media/XMLAttacks/17.png"><span
+lang=AR-SA dir=LTR style='font-size:14.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+color:black;text-decoration:none'><img border=0 width=233 height=170
+id="Picture 23" src="https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/XMLAttacks/17.png"
+alt="A screenshot of a cell phone&#10;&#10;Description automatically generated"></span></a></span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:#C00000'>المراجع:</span></b></p>
+
+<p class=MsoNormal align=right style='text-align:right'><b><span lang=AR-SA
+dir=RTL style='font-size:14.0pt;font-family:"Calibri",sans-serif;color:#0070C0'>كتب:</span></b></p>
+
+<p class=MsoListParagraph style='margin-left:36.0pt;text-indent:-18.0pt'><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><b><span style='font-size:14.0pt;font-family:"Calibri",sans-serif'>WEB
+TECHNOLOGIES</span></b><b><span style='font-size:14.0pt;font-family:"Calibri",sans-serif'>
+</span></b><b><span style='font-size:14.0pt;font-family:"Calibri",sans-serif'>A
+Computer Science Perspective</span></b><span style='font-size:14.0pt;
+font-family:"Calibri",sans-serif'> </span><span lang=EN-US style='font-size:
+14.0pt;font-family:"Calibri",sans-serif'>, Chapter 7 (XML) &amp; Chapter 9 (
+Web Services ) </span></p>
+
+<p class=MsoListParagraph style='margin-left:36.0pt;text-indent:-18.0pt'><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><b><span style='font-size:14.0pt;font-family:"Calibri",sans-serif'>The
+</span></b><b><span lang=EN-US style='font-size:14.0pt;font-family:"Calibri",sans-serif'>W</span></b><b><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>eb </span></b><b><span
+lang=EN-US style='font-size:14.0pt;font-family:"Calibri",sans-serif'>A</span></b><b><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>pplication </span></b><b><span
+lang=EN-US style='font-size:14.0pt;font-family:"Calibri",sans-serif'>H</span></b><b><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>ackers </span></b><b><span
+lang=EN-US style='font-size:14.0pt;font-family:"Calibri",sans-serif'>H</span></b><b><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>andbook<span dir=RTL></span><span
+dir=RTL><span dir=RTL></span> </span></span></b><span dir=LTR></span><b><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'><span dir=LTR></span> </span></b><span
+lang=EN-US style='font-size:14.0pt;font-family:"Calibri",sans-serif'>, Chapter
+10 (Injecting into XML Interpreters)</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>أوراق علمية: </span></b></p>
+
+<p style='margin-left:36.0pt;text-indent:-18.0pt'><span style='font-size:14.0pt;
+font-family:"Calibri",sans-serif'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><b><span style='font-size:14.0pt;font-family:
+"Calibri",sans-serif'>Automated and Effective Security Testing for XML-based
+Vulnerabilities</span></b><span lang=EN-US style='font-size:14.0pt;font-family:
+"Calibri",sans-serif'>, By : </span><span style='font-size:14.0pt;font-family:
+"Calibri",sans-serif'>Sadeeq Jan </span></p>
+
+<p class=MsoListParagraph style='margin-left:36.0pt;text-indent:-18.0pt'><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><b><span lang=EN-US style='font-size:14.0pt;font-family:"Calibri",sans-serif'>XXE
+Explanation and Exploitation</span></b><span lang=EN-US style='font-size:14.0pt;
+font-family:"Calibri",sans-serif'>, By : Haboob Team</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:justify;line-height:150%;
+direction:rtl;unicode-bidi:embed'><b><span lang=AR-SA style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:#0070C0'>يوتيوب: </span></b></p>
+
+<p class=MsoListParagraph style='margin-left:36.0pt;text-indent:-18.0pt'><span
+style='font-size:14.0pt;font-family:"Calibri",sans-serif'>-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+dir=LTR></span><b><span style='font-size:14.0pt;font-family:"Calibri",sans-serif'><a
+href="https://www.youtube.com/watch?v=mKjvKPlb1rA&amp;list=PLqq-6Pq4lTTZTYpk_1DOowOGWJMIH5T39&amp;index=1">SOAP
+Web Services 01 - Introduction To Web Services</a><span dir=RTL></span><span
+dir=RTL><span dir=RTL></span> </span></span></b></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=AR-SA style='font-size:14.0pt;line-height:
+150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal dir=RTL style='text-align:right;line-height:150%;direction:
+rtl;unicode-bidi:embed'><span lang=EN-US dir=LTR style='font-size:14.0pt;
+line-height:150%;font-family:"Calibri",sans-serif;color:black'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+</div>
+
+</body>
+
+</html>
