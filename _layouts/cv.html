@@ -1,10 +1,8 @@
 ---
 layout: compress
 ---
-
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
-
+<html lang="{{ page.lang | default: site.lang | default: " en " }}">
 {% include header.html %}
 
 <body data-theme="{{ site.mode }}" class="notransition">
@@ -29,18 +27,11 @@ layout: compress
   </script>
 
   {% include navbar.html %}
-
-  <meta charset=utf-8 />
-  <title> {% if page.title %} {{ page.title }} | {% endif %} CV</title>
-  <link href="media/{{ site.style }}-screen.css" type="text/css" rel="stylesheet" media="screen">
-  <link href="media/{{ site.style }}-print.css" type="text/css" rel="stylesheet" media="print">
-</head>
-<body>
-  <div id="main">
-    <div id="content">
-    {{ content }}
-    </div>
-   {% include footer.html %}
+  <div class="wrapper">
+    <main aria-label="Content">
+      {{ content }}
+    </main>
+    {% include footer.html %}
   </div>
 </body>
 </html>
