@@ -6,6 +6,8 @@ excerpt:
 comments: false
 ---
 
+> I like `Java` and `C` , understand `Assembly`, `PHP`, and `JavaScript` , and I use `Python` when I have to.
+
 ## **Red Teaming Related Projects/Scripts :**
 - **[`ADEnum.ps1`](https://github.com/0xb1tByte/CRTE-Journey/tree/main/Scripts)**
   - **Description** : A simple script to automate some of manual AD enumeration commands.
