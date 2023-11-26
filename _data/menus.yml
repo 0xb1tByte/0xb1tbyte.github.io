@@ -14,9 +14,8 @@
   url: /calendar/
   external: false # set true if you using external link, see below
 
-
-- title: CV
-  url: /cv/
+- title: Projects
+  url: /projects/
   external: false # set true if you using external link, see below
 
 # Example:
