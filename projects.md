@@ -11,7 +11,7 @@ comments: false
   - **Description** : A simple script to automate some of manual AD enumeration commands.
   - **Programming / Scripting language** : `Powershell` 
   - **Status** : Done
-- **[`ProcessInjection.py`](https://github.com/0xb1tByte/OSEP-Journey/blob/main/Scripts/ProcessInjection/ProcessInjection.py)**
+- **[`ProcessInjection.py`](https://github.com/0xb1tByte/OSEP-Journey/tree/main/Scripts/ProcessInjection)**
   - **Description** : A PoC script for **Process Injection** through `Python`. 
   - **Programming / Scripting language** : `Python`
   - **Status** : Done
