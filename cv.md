@@ -1,5 +1,5 @@
 ---
-layout: cv
+layout: default
 title: Isaac Newtons's CV
 permalink: /cv/
 ---
