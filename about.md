@@ -43,21 +43,28 @@ check the [#English-Article](https://0xb1tbyte.github.io/tags/#English-Article) 
 
 **مجالات إهتمامي وبحثي الحالية** :
   
-- Processes and Access Controls in Operating Systems (Linux & Windows) 
-- Malware Development
+
+Processes and Access Controls in Operating Systems (Linux & Windows) 
+
+Malware Development
 
 **<mark> المقالات العربية </mark>** : 
-- أكتب بالعربية في هذا الوسم [#Arabic-Article](https://0xb1tbyte.github.io/tags/#Arabic-Article) 
+
+أكتب بالعربية في هذا الوسم [#Arabic-Article](https://0xb1tbyte.github.io/tags/#Arabic-Article) 
 
 
-**ملاحظة** :
-- أحاول التأكد من وجود مصدر يدعم المعلومة التي أشاركها هنا قبل نشرها، لكن بالطبع عزيزي القارئ توقّع وجود الأخطاء في هذه المقالات، فكل ما يُنشر هنا يُنشر خلال دراسة هذه المواضيع والبحث حولها
-- جميع ما يُنشر في هذه المدونة لأغراض تعليمية فقط، العلم و المعرفة آمانة ، فأحسن استخدامها
+**ملاحظة** 
+
+أحاول التأكد من وجود مصدر يدعم المعلومة التي أشاركها هنا قبل نشرها، لكن بالطبع عزيزي القارئ توقّع وجود الأخطاء في هذه المقالات، فكل ما يُنشر هنا يُنشر خلال دراسة هذه المواضيع والبحث حولها
+
+جميع ما يُنشر في هذه المدونة لأغراض تعليمية فقط، العلم و المعرفة آمانة ، فأحسن استخدامها
 
 
 **تجدني أيضًا على** : 
-- [Github](https://github.com/0xb1tByte) 
-- [Linkedin](https://www.linkedin.com/in/alaa-althubyani/) 
+
+[Github](https://github.com/0xb1tByte) 
+
+[Linkedin](https://www.linkedin.com/in/alaa-althubyani/) 
 
 أرجو أن تجد النفع والفائدة
     
