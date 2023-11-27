@@ -3,6 +3,7 @@ layout: post
 published: true
 title: Creating Custom Auditd Rules for Username-Path Dependent Files 
 date: '2023-09-17'
+comments : true
 tags:
 - auditd
 - Blue Team
