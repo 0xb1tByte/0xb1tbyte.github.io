@@ -44,25 +44,25 @@ tags:
 حتى نستوعب الجزء النظري، لنأخذ هذا البرنامج البسيط 
 </div>
 
-```C
-int x = 100;  // In Data segment
-int main()
-{
-	int a = 2;  // In Stack 
-	float b 2.5; // In Stack 
-	static int y; // In BSS
-
-	// Allocate memory on Heap
-	int *ptr = (int *) malloc (2*sizeof(int));
-
-	// values 5 and 6 stored on heap 
-	ptr[O] 5; // In Heap
-	ptr [1] = 6; // In Heap
-
-	free(ptr); 
-	return 1;
-
-}
+```c
+	int x = 100;  // In Data segment
+	int main()
+	{
+		int a = 2;  // In Stack 
+		float b 2.5; // In Stack 
+		static int y; // In BSS
+	
+		// Allocate memory on Heap
+		int *ptr = (int *) malloc (2*sizeof(int));
+	
+		// values 5 and 6 stored on heap 
+		ptr[O] 5; // In Heap
+		ptr [1] = 6; // In Heap
+	
+		free(ptr); 
+		return 1;
+	
+	}
 ```
 <div dir="rtl" markdown="1">
 
