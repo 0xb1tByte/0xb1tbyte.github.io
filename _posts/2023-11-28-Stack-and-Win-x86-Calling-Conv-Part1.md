@@ -37,9 +37,33 @@ tags:
 بالنظر للصورة أعلاه نلاحظ أن الذاكرة الخاصة بالعملية تتكوّن من الآتي : 
 * `Text Segment` : هذه المساحة من الذاكرة مخصّصة لتخزين الـ `executable code` الخاص بالبرنامج
 * `Data Segment` : هذا المساحة مخصّصة لتخزين المتغيّرات التي يتم تعريفها كـ `static/global` ويتم إعطاءها قيَم ( `initialized` )
-* `BSS Segment` : هذه المساحة مخصّصة لتخزين المتغيّرات التي يتم تعريفها كـ `static/global` لكم لم يتم تعريف القيَم الخاصة بهذه المتغيّرات ( `uninitialized`)
+* `BSS Segment` : هذه المساحة مخصّصة لتخزين المتغيّرات التي يتم تعريفها كـ `static/global` لكن لم يتم تعريف القيَم الخاصة بهذه المتغيّرات ( `uninitialized`)
 * `HEAP` :  مساحة من الذاكرة ديناميكية متاحة للمُبرمج لاستخدامها، وتتم ادارتها بأحد هذه الدوال `malloc`, `calloc`, `realloc` , `free` وغيرها
 * `Stack` : محور حديثنا في هذه المقالة، وبشكل مختصر جدًا جدًا هي مساحة من الذاكرة مخصّصة للدوال الخاصة بالبرنامج
 
+حتى نستوعب الجزء النظري، لنأخذ هذا البرنامج البسيط 
+</div>
+
+```C
+int x = 100;  // In Data segment
+int main()
+{
+	int a = 2;  // In Stack 
+	float b 2.5; // In Stack 
+	static int y; // In BSS
+
+	// Allocate memory on Heap
+	int *ptr = (int *) malloc (2*sizeof(int));
+
+	// values 5 and 6 stored on heap 
+	ptr[O] 5; // In Heap
+	ptr [1] = 6; // In Heap
+
+	free(ptr); 
+	return 1;
+
+}
+```
+<div dir="rtl" markdown="1">
 
 </div>
