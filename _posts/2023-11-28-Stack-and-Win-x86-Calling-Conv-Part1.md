@@ -17,9 +17,9 @@ tags:
 
 هذه المقالة والمقالة القادمة -بمشيئة الله- سلسلة بسيطة لتلخيص قراءات متفرّقة حول الـ `Win x86 Calling Conventions & the Stack` في الكتب التالية : 
 
-* [Computer Security: A Hands-On Approach](https://a.co/d/8n1K5hR)
-* [Practical Binary Analysis](https://a.co/d/bHER3zs)
-* [Practical Malware Analysis](https://a.co/d/6vgWg0v)
+*    [Computer Security: A Hands-On Approach](https://a.co/d/8n1K5hR)
+*    [Practical Binary Analysis](https://a.co/d/bHER3zs)
+*    [Practical Malware Analysis](https://a.co/d/6vgWg0v)
 
 لنبدأ بسم الله
 
