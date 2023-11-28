@@ -15,7 +15,7 @@ tags:
 
 السلام عليكم ورحمة الله وبركاته
 
-هذه المقالة والمقالة القادمة -بمشيئة الله- سلسلة بسيطة لتلخيص قراءات متفرّقة حول الـ ` Win x86 Calling Conventions & the Stack` في الكتب التالية : 
+هذه المقالة والمقالة القادمة -بمشيئة الله- سلسلة بسيطة لتلخيص قراءات متفرّقة حول الـ `Win x86 Calling Conventions & the Stack` في الكتب التالية : 
 
 [Computer Security: A Hands-On Approach](https://a.co/d/8n1K5hR)
 
