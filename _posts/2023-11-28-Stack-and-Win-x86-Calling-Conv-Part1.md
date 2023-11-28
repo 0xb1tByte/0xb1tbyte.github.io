@@ -80,4 +80,43 @@ tags:
 * `12` : نلاحظ أننا أعطينا قيمة `5` للعنصر الأول في الـ `array` ( `ptr[0]` )  ، وسيتم تخزين الـ `ptr[0]` في الـ `Heap`  ( سيتم التخزين في الـ `Heap` لأن الـ `ptr` الذي قمنا بتعريفه في السطر رقم `9` يشير لمساحة في الـ `Heap` )
 * `13` : هذا السطر مثل السطر السابق، لكننا قمنا بتعريف قيمة للعنصر الثاني في الـ `array` (`ptr[1]` ) وسيتم التخزين في الـ `Heap` كذلك 
 
+
+بعد المقدمة البسيطة، لننتقل الآن للحديث عن الـ `Stack` 
+
+# ماهو الـ `Stack` ؟ 
+
+كالعادة سنبدأ بالجانب النظري أولًا ثم سننتقل لاحقًا للجانب العملي - الكود 
+
+في كتاب `Practical Binary Analysis` نجد التعريف الآتي للـ `Stack`
+
+> The stack is a memory region reserved for storing data related to function calls, such as return addresses, function arguments, and local variables. On most operating systems, each thread has its own stack. The stack gets its name from the way it’s accessed. Rather than writing values at random places in the stack, you do so in a last-in-first-out (LIFO) order. That is, you can write values by pushing them to the top of the stack and remove values by popping them from the top.
+
+وفي كتاب `Computer Security` نجد الآتي :
+> Stack is used for storing data used in function invocations. A program executes as a series of function calls. Whenever a function is called, some space is allocated for it on the stack for the execution of the function.
+
+وفي الكتاب الرائع `Practical Malware Analysis` نجد تعريف مُختصر وشامل جدًا وهو : 
+> Memory for functions.
+
+لنبدأ من التعريف الأخير كونه الأبسط ونتشعّب في بقية الأفكار 
+
+يخبرنا كتاب `Practical Malware Analysis` أن الـ `Stack` ماهو إلا مساحة في الذاكرة مخصصة للدوال ( `Functions` ) 
+
+جميل ، طيب ماذا نعني بمساحة خاصة بالدوال ؟ 
+
+نعرف أن البرنامج ماهو إلا سلسلة من تنفيذ مجموعة من الأوامر، وهذه الأوامر يتم تنظيمها وتعريفها في الدوال 
+
+فبحسب التعريف، نستطيع التخيّل أن الـ `Stack` مساحة من الذاكرة وكل دالة في البرنامج تستخدم الجزء الخاص بها من الـ `Stack` (وهذا الجزء الخاص بكل دالة يسمى الـ `Stack frame` ، سنناقشه لاحقًا )
+
+نعرف أيضًا أنه عند نداء أي دالة قد يتم تمرير مجموعة من الـ `Arguments` لها ، وهذه الـ `Arguments` أيضًا سيتم تخزينها في الـ `Stack` ، لأن كما ذكرنا سلفًا ، الـ `Stack` ماهو إلا مساحة في الذاكرة مُخصّصة للدوال وكل ما يرتبط بها 
+
+كذلك في الدوال لدينا ما يُعرف بالـ `Local Variables` وهي المتغيرات التي يتم تعريفها في داخل الدالة ، هذه المتغيرات سنجدها كذلك في الـ `Stack`
+
+نعرف كذلك أن الدالة بعد انتهاء عملها ستنفّذ التعليمة الأخيرة وهي الـ `return` والتي ستعيدنا لمكان النداء وبعد ذلك يستكمل البرنامج عمله في تنفيذ **السطر التالي** ، العنوان الخاص بالسطر التالي الذي يتبع نداء الدالة سيتم تخزينه كذلك في الـ `Stack` 
+
+للتلخيص نستطيع القول أن الـ `Stack` يُخزّن القيَم التالية الخاصة بالدالة ( هذه ليست كل الأشياء التي يتم تخزينها في الـ `Stack` -كما سنعرف لاحقًا-، لكننا هنا نتحدث فقط عن الأمور المرتبطة بالدوال ) 
+* `Arguments` : القيَم التي يتم تمريرها للدالة
+* `Return Address` : العنوان الخاص بالسطر الذي يتبع نداء الدالة
+* `Local Variables` : المتغيرات التي يتم تعريفها داخل الدالة
+
+
 </div>
