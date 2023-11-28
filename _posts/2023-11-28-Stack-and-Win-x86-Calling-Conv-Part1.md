@@ -45,24 +45,24 @@ tags:
 </div>
 
 ```c
-	int x = 100;  // In Data segment
-	int main()
-	{
-		int a = 2;  // In Stack 
-		float b 2.5; // In Stack 
-		static int y; // In BSS
-	
-		// Allocate memory on Heap
-		int *ptr = (int *) malloc (2*sizeof(int));
-	
-		// values 5 and 6 stored on heap 
-		ptr[O] 5; // In Heap
-		ptr [1] = 6; // In Heap
-	
-		free(ptr); 
-		return 1;
-	
-	}
+1.	int x = 100;  // In Data segment
+2.	int main()
+3.	{
+4.		int a = 2;  // In Stack 
+5.		float b 2.5; // In Stack 
+6.		static int y; // In BSS
+7.	
+8.		// Allocate memory on Heap
+9.		int *ptr = (int *) malloc (2*sizeof(int));
+10.	
+11.		// values 5 and 6 stored on heap 
+12.		ptr[O] 5; // In Heap
+13.		ptr [1] = 6; // In Heap
+14.	
+15.		free(ptr); 
+16.		return 1;
+17.	
+18.	}
 ```
 <div dir="rtl" markdown="1">
 
