@@ -34,5 +34,12 @@ tags:
 
 [Computer Security: page 58 ](https://a.co/d/8n1K5hR)
 
+بالنظر للصورة أعلاه نلاحظ أن الذاكرة الخاصة بالعملية تتكوّن من الآتي : 
+* `Text Segment` :
+* `Data Segment` :
+* `BSS Segment` :
+* `HEAP` :
+* `Stack` :
+
 
 </div>
