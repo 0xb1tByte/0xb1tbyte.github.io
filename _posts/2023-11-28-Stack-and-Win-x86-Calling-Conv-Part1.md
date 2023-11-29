@@ -164,7 +164,7 @@ tags:
 
 </div>
 
-```csharp
+```php
 |           | <- High address
 |    ...    |
 |-----------| <- ESP before PUSH EAX
@@ -184,7 +184,7 @@ tags:
 </div>
 
 
-```javascript
+```php
 |           | <- High address
 |    ...    |
 |-----------| <- ESP after POP EBX
@@ -199,7 +199,7 @@ tags:
 
 </div>
 
-```java
+```php
 |           | <- High address
 |    ...    |
 |-----------| <- ESP before CALL FOO
