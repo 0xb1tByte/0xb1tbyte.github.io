@@ -164,7 +164,7 @@ tags:
 
 </div>
 
-```python
+```csharp
 |           | <- High address
 |    ...    |
 |-----------| <- ESP before PUSH EAX
@@ -184,7 +184,7 @@ tags:
 </div>
 
 
-```python
+```javascript
 |           | <- High address
 |    ...    |
 |-----------| <- ESP after POP EBX
@@ -199,7 +199,7 @@ tags:
 
 </div>
 
-```python
+```java
 |           | <- High address
 |    ...    |
 |-----------| <- ESP before CALL FOO
@@ -214,7 +214,7 @@ tags:
 
 </div>
 
-```python
+```php
 |           | <- High address
 |    ...    |
 |-----------| <- ESP after RET
