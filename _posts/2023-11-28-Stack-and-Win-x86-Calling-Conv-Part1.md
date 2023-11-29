@@ -118,5 +118,13 @@ tags:
 * `Return Address` : العنوان الخاص بالسطر الذي يتبع نداء الدالة
 * `Local Variables` : المتغيرات التي يتم تعريفها داخل الدالة
 
+عرفنا الآن تقريبًا ما يتم تخزينه في الـ `Stack` ويكون مرتبط بالدوال ، لنعرف الآن كيف يعمل الـ `Stack`
+
+## Stack Layout :
+بشكل عام، الـ `Stack` هو أحد الـ `Data Structures` في الحاسب، أي عبارة عن خوارزمية يتم اتباعها لتنظيم وتخزين البيانات في الذاكرة ، لننظر للصورة التالية التي تلخّص لنا شكل الـ `Stack` 
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/2.png)
+
+[Practical Malware Analysis : page 78](https://a.co/d/6vgWg0v)
 
 </div>
