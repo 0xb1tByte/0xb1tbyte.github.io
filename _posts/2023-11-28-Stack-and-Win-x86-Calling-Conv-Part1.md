@@ -144,18 +144,86 @@ tags:
 
 ١ - الـ `Base Pointer` ويشير الى بداية الـ `Stack Frame` الخاص بالدالة
 
-٢ - يكون الـ `EBP` ثابت خلال الـ `Stack Frame` الحالي
+٢ - يكون الـ `EBP` **ثابت** خلال الـ `Stack Frame` الحالي
 
-٣ - بما أن الـ `EBP` يكون ثابت خلال الـ `Stack Frame` الحالي فيتم استخدام الـ `EBP` لأجل الوصول للقيم الأخرى ضمن الـ `Stack Frame` 
+٣ - بما أن الـ `EBP` يكون ثابت خلال الـ `Stack Frame` الحالي فيتم استخدام الـ `EBP` لأجل **الوصول للقيم الأخرى** (`anchor` ) ضمن الـ `Stack Frame` 
 
 كذلك الـ `Stack` يكبر بشكل **عكسي** ( في أغلب أنظمة التشغيل هذه هي الخوارزمية الشائعة، لكن بالامكان أن يتم تنفيذ الـ `Stack` بالشكل الآخر - تنمو العناوين بشكل تصاعدي ) أي بمعنى أنه كلما تم إضافة عنصر للـ `Stack` فسيحمل هذا العنصر عنوان في الذاكرة **أصغر** من العنصر الذي يسبقه
 
 وبما أننا أتينا بذكر العمليات على الـ `Stack` لننتقل لمناقشة العمليات التي يتم إجراءها على الـ `Stack` و تؤثر في بنيته 
 
 ## Stack Instructions: 
-### `PUSH`
+نتحدّث هنا بالطبع عن عمليات `Assembly` تؤثر على الـ `Stack` وبنيته 
+### `PUSH` 
+
+هذه العملية تسمح لنا **إضافة** عنصر في الـ `Stack` وكما عرفنا سابقًا، سيتم إضافة هذا العنصر في الـ `Stack Top`
+
+الرسم البسيط التالي يوضّح لنا كيف تؤثر هذا العملية على الـ `ESP` ، وكما ذكرنا سابقًا **مع كل إضافة أو حذف** ستتغيّر قيمة الـ `ESP` 
+
+في حالة الـ `PUSH` سيُشير الـ `ESP` الى عنوان **أصغر** ، لأنه كما عرفنا سابقًا الـ `Stack` ينمو بشكل **عكسي**
+
+
+```c
+|           | <- High address
+|    ...    |
+|-----------| <- ESP before PUSH EAX
+|    EAX    | <- Value of EAX register pushed onto the stack
+|-----------| <- ESP after PUSH EAX
+|    ...    |
+|-----------| <- Low address
+```
+
+<div dir="rtl" markdown="1">
 ### `POP`
+  
+هذه العملية تسمح لنا **حذف** عنصر من الـ `Stack` ، ويتم حذف **آخر عنصر تمّت إضافته** والذي يكون موجود في الـ `Stack Top`
+
+تؤثر هذه العملية أيضًا على قيمة الـ `ESP` و سيُشير الـ `ESP` الى عنوان **أكبر** من العنوان المخزّن سابقًا في الـ `ESP`
+
+</div>
+
+
+```c
+|           | <- High address
+|    ...    |
+|-----------| <- ESP after POP EBX
+|    EBX    | <- Value of EBX register popped from the stack
+|-----------| <- ESP before POP EBX
+|    ...    |
+|-----------| <- Low address
+```
+
+<div dir="rtl" markdown="1">
 ### `CALL`
+
+</div>
+
+```c
+|           | <- High address
+|    ...    |
+|-----------| <- ESP before CALL FOO
+| ret addr  | <- Return address pushed onto the stack
+|-----------| <- ESP after CALL FOO
+|    ...    |
+|-----------| <- Low address
+```
+
+<div dir="rtl" markdown="1">
 ### `RET`
 
+</div>
+
+```c
+|           | <- High address
+|    ...    |
+|-----------| <- ESP after RET
+| ret addr  | <- Return address popped from the stack
+|-----------| <- ESP brfore RET
+|    ...    |
+|-----------| <- Low address
+```
+
+
+<div dir="rtl" markdown="1">
+  
 </div>
