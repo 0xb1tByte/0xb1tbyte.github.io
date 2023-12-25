@@ -30,8 +30,6 @@ check the [#English-Article](https://0xb1tbyte.github.io/tags/#English-Article) 
 
 **You can find me on :**
 - [Github](https://github.com/0xb1tByte) 
-- [Linkedin](https://www.linkedin.com/in/alaa-althubyani/) 
-
 ----
 
 
@@ -63,9 +61,6 @@ Malware Development
 **تجدني أيضًا على** : 
 
 [Github](https://github.com/0xb1tByte) 
-
-[Linkedin](https://www.linkedin.com/in/alaa-althubyani/) 
-
 أرجو أن تجد النفع والفائدة
     
 </div>
