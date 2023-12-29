@@ -120,14 +120,19 @@ tags:
 </div>
 
 ```nasm
-; The function prologue
-push ebp ; Save the old base pointer
-mov ebp, esp ; Set the new base pointer
-sub esp, 0CCH ; Allocate 192 bytes for the local variable
+1  ; The function prologue
+2  push ebp ; Save the old base pointer
+3  mov ebp, esp ; Set the new base pointer
+4  sub esp, 0CCH ; Allocate 192 bytes for the local variable
 ```
 
 <div dir="rtl" markdown="1">
 
+لنبدأ بالحديث عن الـ `Prologue` بالتفصيل الآن : 
+
+* `2` :
+* `3` :
+* `4` :
   
 </div>
 
