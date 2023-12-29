@@ -120,7 +120,7 @@ tags:
 </div>
 
 ```nasm
-// The function prologue
+; The function prologue
 push ebp ; Save the old base pointer
 mov ebp, esp ; Set the new base pointer
 sub esp, 0CCH ; Allocate 192 bytes for the local variable
