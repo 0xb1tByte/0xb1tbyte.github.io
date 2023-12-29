@@ -44,7 +44,7 @@ tags:
 1  #include <stdio.h>
 2  
 3  // define a function named MyFunction
-4  void MyFunction(int a, int b) // add two parameters to the function
+4  void MyFunction(int a, int b) 
 5  {
 6      int sum; // declare one integer variable
 7      sum = a + b; // add a and b and store the result in sum
@@ -53,7 +53,7 @@ tags:
 10 
 11 int main()
 12 {
-13     MyFunction(10, 5); // pass the arguments of MyFunction through the main function
+13     MyFunction(10, 5); 
 14     return 0; // end the program
 15 }
 ```
