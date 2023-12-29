@@ -92,15 +92,52 @@ tags:
 
 ولو تعمقنا في كود الأسمبلي الخاص بأي دالة، سنجد أن كود الأسمبلي الخاص بالدالة يحمل الشكل الآتي 
 
-
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/3.png)
 
 
-وف
-
-
+نلاحظ أن بداية الدالة يكون الجزء المسمى `Prologue` ونهايتها يكون الـ `Epilogue` ، فماذا نقصد بهذين المفهومين ؟ 
 
 ## Function's `Prologue` 
+
+في نفس كتابنا الرائع `Practical Malware Analysis` نجد التعريف التالي للـ `Prologue` 
+
+
+</div>
+
+> prologue—a few lines of code at the start of the function. The prologue prepares the stack and registers for use within the function
+
+<div dir="rtl" markdown="1">
+فالــ `Prologue` هو مجموعة من تعليمات الـ Assembly والغرض الأساسي منها هو تهيئة الـ Stack والـ registers قبل أن يتم تنفيذ الـ Body الخاص بالدالة
+
+في الصورة التالية نجد مثال على الـ `Prologue` الخاص بالدالة `MyFunction` 
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/5.png)
+
+نلاحظ أن الـ `Prologue` عبارة عن هذه التعليمات 
+
+
+
+</div>
+
+```assembly
+// The function prologue
+push ebp ; Save the old base pointer
+mov ebp, esp ; Set the new base pointer
+sub esp, 0CCH ; Allocate 192 bytes for the local variable
+```
+
+<div dir="rtl" markdown="1">
+
+  
+</div>
+
+
+
+
+
+
+<div dir="rtl" markdown="1">
+
 ## Function's `Epilogue` 
 
 
