@@ -43,19 +43,21 @@ tags:
 ```c
 1  #include <stdio.h>
 2  
-3  // define a function named MyFunction
-4  void MyFunction(int a, int b) 
+3  // define a function named MyFunction that returns the sum value
+4  int MyFunction(int a, int b)
 5  {
-6      int sum; // declare one integer variable
+6      int sum; 
 7      sum = a + b; // add a and b and store the result in sum
-8      printf("The sum is: %d\n", sum); // print the result
+8      return sum; // return the result
 9  }
 10 
 11 int main()
 12 {
-13     MyFunction(10, 5); 
-14     return 0; // end the program
-15 }
+13     int result;
+14     result = MyFunction(10, 5); // call MyFunction and store the returned value in result
+15     printf("The sum is: %d\n", result); // print the result
+16     return 0; // end the program
+17 }
 ```
 
 <div dir="rtl" markdown="1">
@@ -78,6 +80,28 @@ tags:
 جميع هذه الأسئلة التي طرحناها يُجيب عنها الـ `Calling Conventions` 
 
 فالـ `Calling Conventions` بشكل مختصر أشبه بالقوانين التي **تحكم** كيف سيتم نداء الدوال وكيف سيتم تمرير المتغيرات للدالة المُستدعاة ( `Callee` ) ، كذلك أين و كيف سيتم تخزين هذه المتغيرات التي تم تمريرها، وأيضًا من سيتولى عملية تنظيف الـ `Stack` وإعادته لوضعه الأولي بعد أن تُكمل الدالة المُستدعاة ( `Callee` ) عملها
+
+# Layout of a Function in Assembly
+تطرقنا في المقالة السابقة للتعليمة `CALL` وعرفنا أن هذه التعليمة في لغة أسمبلي تمكّننا من نداء دالة 
+
+ولو عدنا للكود الخاص بنفس البرنامج سنجد السطر الآتي الذي يوضح لنا نداء الدالة `MyFunction` 
+
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/4.png)
+
+
+ولو تعمقنا في كود الأسمبلي الخاص بأي دالة، سنجد أن كود الأسمبلي الخاص بالدالة يحمل الشكل الآتي 
+
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/3.png)
+
+
+وف
+
+
+
+## Function's `Prologue` 
+## Function's `Epilogue` 
 
 
 </div>
