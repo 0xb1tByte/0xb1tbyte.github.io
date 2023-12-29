@@ -119,7 +119,7 @@ tags:
 
 </div>
 
-```assembly
+```nasm
 // The function prologue
 push ebp ; Save the old base pointer
 mov ebp, esp ; Set the new base pointer
