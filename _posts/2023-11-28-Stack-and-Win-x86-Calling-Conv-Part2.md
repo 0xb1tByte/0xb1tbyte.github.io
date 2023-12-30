@@ -192,7 +192,7 @@ tags:
 
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/10.png)  
 
-* `3` : في هذه التعليمة قمنا بعمل `POP` للقيمة الأخيرة في الـ Stack وتخزينها في الـ `EBP` ، والقيمة الأخيرة هي الـ `EBP` السابق ( انظر للسطر `2` ، الـ `ESP` يشير الى هذه القيمة ) ، وللتلخيص الغرض من هذه الخطوة هو إسترجاع الـ `EBP` الخاص بالدالة السابقة  ( `Callert` ) ، الرسم التالي يوضح هذه الخطوة
+* `3` : في هذه التعليمة قمنا بعمل `POP` للقيمة الأخيرة في الـ Stack وتخزينها في الـ `EBP` ، والقيمة الأخيرة هي الـ `EBP` السابق ( انظر للسطر `2` ، الـ `ESP` يشير الى هذه القيمة ) ، وللتلخيص الغرض من هذه الخطوة هو إسترجاع الـ `EBP` الخاص بالدالة السابقة  ( `Caller` ) ، الرسم التالي يوضح هذه الخطوة
 
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/11.png)  
 
