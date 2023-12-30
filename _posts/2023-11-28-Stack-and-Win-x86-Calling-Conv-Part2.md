@@ -178,10 +178,15 @@ tags:
 * `4` :
 
 
-نكتفي بهذا القدر في هذه المقالة، وسنكمل الحديث عن بقية المواضيع في مقالات لاحقة بمشيئة الله 
+نكتفي بهذا القدر في هذه المقالة، وسنكمل الحديث عن بقية المواضيع في مقالات لاحقة بمشيئة الله ، وإن أصبت فمن توفيق الله وحده.
+
+ولمن أراد الاستزادة حول هذه المواضيع أرشّح وبشدة الاطلاع على سلسلة هذه المقالات : 
+
+
 </div>
 
-
+- [Cracking Assembly](https://medium.com/@sruthk/cracking-assembly-function-prolog-and-epilog-in-x86-cb3c3461bcd3)
+- [x86 Assembly and Call Stack ](https://textbook.cs161.org/memory-safety/x86.html)
 
 
 
