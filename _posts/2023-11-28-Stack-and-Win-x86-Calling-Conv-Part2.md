@@ -20,7 +20,6 @@ tags:
 أهدف في هذه المقالة لشرح النقاط الآتية : 
 * Calling Conventions 
 * Function's `Prologue` and `Epilogue` 
-* Function's Stack Frame
 
 لنبدأ بسم الله 
 
@@ -144,6 +143,50 @@ tags:
 <div dir="rtl" markdown="1">
 
 ## Function's `Epilogue` 
+عرّف كتاب `Practical Malware Analysis` الـ `Epilogue` كالآتي :
 
 
+</div>
+
+> an epilogue at the end of a function restores the stack and registers to their state before the function was called.
+
+
+<div dir="rtl" markdown="1">
+
+ولو أردنا رؤية الـ `Epilogue` في الكود الخاص بالدالة `MyFunction` سنجد الآتي :
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/6.png)
+
+إذًا فالـ `Epilogue` مكوّن من العمليات الآتية : 
+
+
+</div>
+
+```nasm
+1  ; The function epilogue
+2  mov esp, ebp ; Restore the stack pointer
+3  pop ebp ; Restore the base pointer
+4  ret ; Return to the caller
+```
+
+<div dir="rtl" markdown="1">
+لنبدأ بالتفصيل الآن : 
+
+
+* `2` :
+* `3` :
+* `4` :
+
+
+نكتفي بهذا القدر في هذه المقالة، وسنكمل الحديث عن بقية المواضيع في مقالات لاحقة بمشيئة الله 
+</div>
+
+
+
+
+
+<div dir="rtl" markdown="1">
+
+> ℹ️ [ملاحظة]
+> هذه المقالة تمّت كتابتها خلال دراسة هذه المواضيع، فكل ما تم ذكره هنا قد يحتمل الخطأ، لكن بالإمكان العودة إلى المراجع التي إستندت عليها هذه المقالة 
 </div>
