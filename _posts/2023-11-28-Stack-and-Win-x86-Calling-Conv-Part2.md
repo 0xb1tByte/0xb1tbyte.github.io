@@ -196,7 +196,7 @@ tags:
 
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/11.png)  
 
-* `4` : تطرقنا في المقالة الى التعليمة `RET` وعرفنا أنها تقوم بحذف القيمة الأخيرة في الـ Stack وتخزّنها في الـ `EIP register` ، وفي هذه المرحلة ، القيمة الحالية في الـ Stack هو العنوان التالي لنداء الدالة `MyFunction` ، بتعبير آخر ، هذه التعليمة تُعيد التحكم للدالة `main` حتى يستكمل البرنامج عمله ، الرسم التالي لعله يلخص هذه العملية 
+* `4` : تطرقنا في المقالة السابقة الى التعليمة `RET` وعرفنا أنها تقوم بحذف القيمة الأخيرة في الـ Stack وتخزّنها في الـ `EIP register` ، وفي هذه المرحلة ، القيمة الحالية في الـ Stack هو العنوان التالي لنداء الدالة `MyFunction` ، بتعبير آخر ، هذه التعليمة تُعيد التحكم للدالة `main` حتى يستكمل البرنامج عمله ، الرسم التالي لعله يلخص هذه العملية 
 
 
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/x86CallsAndStack/12.png)  
