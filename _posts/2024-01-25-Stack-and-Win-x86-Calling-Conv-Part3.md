@@ -21,7 +21,7 @@ tags:
 * Standard Call (`__stdcall`) Calling Convention
 * Fast Call (`__fastcall`) Calling Convention
 
-المراجع في هذه المقالة بشكل أساسي هي الكتاب الرائع `Practical Malware Analysis` والمرجع الرسمي من مايكروسوفت ، كوننا نتحدث هنا عن الـ Calling Convention في أنظمة مايكروسوفت 
+المراجع في هذه المقالة بشكل أساسي هي الكتاب الرائع `Practical Malware Analysis` والمرجع الرسمي من [مايكروسوفت](https://learn.microsoft.com/en-us/cpp/cpp/argument-passing-and-naming-conventions?view=msvc-170)  كوننا نتحدث هنا عن الـ Calling Convention في أنظمة مايكروسوفت 
 
 لنبدأ بسم الله ،
 
