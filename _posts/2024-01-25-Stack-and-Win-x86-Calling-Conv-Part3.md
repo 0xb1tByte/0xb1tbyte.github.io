@@ -89,7 +89,7 @@ tags:
 
 </div>
 
-```asm
+```nasm
  1 | push c
  2 | push b
  3 | push a
