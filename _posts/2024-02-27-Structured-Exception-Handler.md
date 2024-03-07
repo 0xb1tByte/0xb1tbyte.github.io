@@ -20,11 +20,16 @@ tags:
 
 المقالة تلخيص لقراءات متفرقة من عدّة مصادر، كتب ومقالات، بالنسبة للكتب فهذه هي القائمة : 
 
+</div> 
+
 - [Buffer. Overflow. Attacks. DETECT, EXPLOIT, PREVENT](https://a.co/d/fTPXdb6)
-  - Chapter 8 : Window Buffer Overflows
+  - Chapter 8 : Windows Buffer Overflows
 - [Windows System Programming](https://a.co/d/7loSby9)
   - Chapter 4 : Exception Handling
 - [Practical Malware Analysis](https://a.co/d/aeXQFn7)
   - Chapter 15 : Anti-Disassembly   
 
+
+<div dir="rtl" markdown="1">
+بسم الله ، لنبدأ 
 </div>
