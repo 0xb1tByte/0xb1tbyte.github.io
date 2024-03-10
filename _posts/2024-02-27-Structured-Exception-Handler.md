@@ -62,3 +62,9 @@ tags:
 > Without some form of exception handling, an unintended program exception, such as dereferencing a pointer or division by zero, will terminate a program immediately without performing normal termination processing, such as deleting temporary files. SEH allows specification of a code block, or exception handler, which can delete the temporary files, perform other termination operations, and analyze and log the exception. In general, exception handlers can perform any required cleanup operations before leaving the code block.
 
 <div dir="rtl" markdown="1">
+
+إذًا وجود الـ `Exception Handlers` في البرنامج يمكّننا من إجراء عمليات إضافية في حال حدوث أي أخطاء ( `Exceptions` ) ، على سبيل المثال لا الحصر : في حال حدوث أي `Exception` خلال سير عمل البرنامج، يقوم البرنامج بحذف الملفات المؤقتة التي تم إنشاءها على النظام ( `cleanup operations` ) ، أو حتى قد يقوم البرنامج بكتابة تفاصيل هذا الخطأ في السجلات الخاصة بالبرنامج ( `logs files` ) ليعود لها المبرمج لاحقًا
+
+إذًا فالـ `Exception Handlers` بكل بساطة هو جزء من البرنامج مسؤول عن العمليات اللازم إجراءها في حال حدوث أي `Exception`
+
+</div>
