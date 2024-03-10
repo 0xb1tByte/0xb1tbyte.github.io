@@ -1,7 +1,7 @@
 ---
 layout: post
 published: true
-title: Structured Exception Handler (SEH)
+title: Structured Exception Handler (SEH) Part 1 
 date: '2024-02-27'
 tags:
 - Windows
@@ -108,8 +108,19 @@ tags:
 
 لكن سيتيح نظام التشغيل ويندوز للمبرمج الفرصة لتصحيح هذا الوضع عن طريق نداء دالة مسؤولة عن التعامل مع هذا الخطأ، هذه الدالة هي ما قمنا بذكره سابقًا ، وهي الـ `Exception Handlers` أو الـ `callback function` كما هو مذكور في المثال أعلاه
 
-قبل أن نختم هذا الجزء من تعريف الـ `SEH` ، هذا تعريف آخر جميل أيضًا وجدته في هذه [المقالة](https://limbioliong.wordpress.com/2022/01/09/understanding-windows-structured-exception-handling-part-1/) ولعله يلخّص العديد من النقاط المهمة التي ذكرناها حول الـ `SEH` 
+قبل أن نختم هذه المقالة ، هذا تعريف آخر جميل أيضًا وجدته في هذه [المقالة](https://limbioliong.wordpress.com/2022/01/09/understanding-windows-structured-exception-handling-part-1/) ولعله يلخّص العديد من النقاط المهمة التي ذكرناها حول الـ `SEH` 
 
 </div>
 
 > SEH can be described as a generalized error handling mechanism supported by the Windows OS. It is an Operating System feature and not tied to any programming language. It forms part of the Windows Application Binary Interface (ABI) so it’s a contract between an application and the Windows OS.
+
+
+<div dir="rtl" markdown="1">  
+
+نكتفي بهذا القدر من المعلومات، ونكمل بقية المواضيع حول الـ `SEH` في جزء آخر باذن الله
+
+</div>
+
+> ℹ️ [ملاحظة]
+> هذه المقالة تمّت كتابتها خلال دراسة هذه المواضيع، فكل ما تم ذكره هنا قد يحتمل الخطأ، لكن بالإمكان العودة إلى المراجع التي إستندت عليها هذه المقالة 
+
