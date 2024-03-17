@@ -44,27 +44,65 @@ tags:
 إذن ، في حال حدث خطأ ( `Exception` ) في أحد الـ `Threads` ، سيقوم نظام التشغيل بالرجوع لسلسة الـ `SEH` الخاصة بهذا الـ `Thread` ويبحث في هذه السلسلة عن الدالة المسؤولة عن التعامل مع هذا الـ `Exception` 
 
 التفصيل أعلاه يقودنا لسؤالين مهمّين ، هما : 
-* الأول : كيف يصل نظام التشغيل للـ `Thread` ( نقصد الوصول للمعلومات الخاصة بالـ `Thread` ) ؟
-* الثاني : كيف نجد تفاصيل الـ `SEH Chain` ضمن الـ `Thread` ؟
+
+الأول : كيف يصل نظام التشغيل للـ `Thread` ( نقصد الوصول للمعلومات الخاصة بالـ `Thread` ) ؟
+
+الثاني : كيف نجد تفاصيل الـ `SEH Chain` ضمن الـ `Thread` ؟
 
 
 لنبدأ بالاجابة على **السؤال الأول** ، 
 
 في أنظمة ويندوز يوجد `Structure` اسمه [`Thread Environment Block (TEB)`](https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-teb)
 
-الـ `TEB` بشكل مُختصر يحمل معلومات عن الـ `Thread` ، لسنا في هذه المقالة بصدد مناقشة بنية الـ `TEB`  وشكله، لكن سنتطرّق للجزء الذي يهمنا من هذا الـ `structure` وهو الـ `SEH` 
+الـ `TEB` بشكل مُختصر يحمل معلومات عن الـ `Thread` ، وفي أنظمة الـ `32bit` نستطيع الوصول للـ `TEB` عن طريق الـ `FS register` 
+
+لسنا في هذه المقالة بصدد مناقشة بنية الـ `TEB`  وشكله، لكن سنتطرّق للجزء الذي يهمنا من هذا الـ `Structure` وهو الـ `SEH` 
 </div> 
 
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/2.png)
-*  Windows Internals](https://a.co/d/ejV363j)  - page : 201
+*  [Windows Internals](https://a.co/d/ejV363j)  - page : 201
 
 <div dir="rtl" markdown="1">
 
-في الصورة أعلاه، نجد أهم المعلومات التي يحملها الـ `TEB`  ، ونجد أن أول العناصر هو الـ ` Thread Information Block (TIB)` 
+في الصورة أعلاه، نجد أهم المعلومات التي يحملها الـ `TEB`  ، ونجد أن أول العناصر هو الـ `Thread Information Block (TIB)` 
 
-الـ `TIB` ماهو إلا `Structure` آخر ، في داخل الـ `TIB` نجد الـ `Exception List` أو الـ `SEH Chain` ( إجابة **السؤال الثاني** ) 
+الـ `TIB` ماهو إلا `Structure` آخر ، وفي داخل الـ `TIB` نجد الـ `Exception List` أو الـ `SEH Chain` ( إجابة **السؤال الثاني** ) 
 
-للتلخيص، في حال حدوث `Exception` في أحد 
+هذا هو الـ `structure definition` الخاص بالـ `TIB` ( المرجع هذه [المقالة](https://limbioliong.wordpress.com/2022/01/09/understanding-windows-structured-exception-handling-part-1/) وملف الـ `winnt.h` ) 
+
+
+
+</div> 
+
+```c
+typedef struct _NT_TIB {
+    struct _EXCEPTION_REGISTRATION_RECORD *ExceptionList;
+    PVOID StackBase;
+    PVOID StackLimit;
+    PVOID SubSystemTib;
+#if defined(_MSC_EXTENSIONS)
+    union {
+        PVOID FiberData;
+        DWORD Version;
+    };
+#else
+    PVOID FiberData;
+#endif
+    PVOID ArbitraryUserPointer;
+    struct _NT_TIB *Self;
+} NT_TIB;
+typedef NT_TIB *PNT_TIB;
+```
+
+<div dir="rtl" markdown="1">
+
+نلاحظ أن أول العناصر في الـ `TIB` عبارة عن `pointer` يُشير الى الـ `_EXCEPTION_REGISTRATION_RECORD` ( الـ `Exception List` ) 
+
+للتلخيص : 
+
+في حال حدوث `Exception` في أحد الـ `Threads` سيقوم نظام التشغيل بالرجوع للـ `SEH Chain` والمرور عليها والبحث عن الدالة المسؤولة عن التعامل مع هذا الـ `Exception` 
+
+الـ `SEH Chain` نجدها داخل الـ `TIB` ، والـ `TIB` أحد العناصر داخل الـ `TEB` ، وبالامكان الوصول للـ `TEB` عن طريق الـ `FS register` 
 
 
 
