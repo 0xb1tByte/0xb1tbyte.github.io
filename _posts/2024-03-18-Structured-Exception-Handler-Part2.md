@@ -2,7 +2,7 @@
 layout: post
 published: true
 title: Structured Exception Handler (SEH) Part 2
-date: '2024-03-19'
+date: '2024-03-18'
 tags:
 - Windows
 - Windows Internals
