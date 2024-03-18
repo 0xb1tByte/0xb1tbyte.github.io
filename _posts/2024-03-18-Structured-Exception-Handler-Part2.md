@@ -96,14 +96,24 @@ typedef NT_TIB *PNT_TIB;
 
 <div dir="rtl" markdown="1">
 
-نلاحظ أن أول العناصر في الـ `TIB` عبارة عن `pointer` يُشير الى الـ `_EXCEPTION_REGISTRATION_RECORD` ( الـ `Exception List` ) 
+نلاحظ أن أول العناصر في الـ `TIB` عبارة عن `pointer` 
 
-للتلخيص : 
+يُشير هذا الـ `pointer` الى أول عنصر من `Linked List` ، هذه الـ `Linked List` ماهي إلا الـ `Exceptions List` ( الـ `SEH Chain` ) 
 
-في حال حدوث `Exception` في أحد الـ `Threads` سيقوم نظام التشغيل بالرجوع للـ `SEH Chain` والمرور عليها والبحث عن الدالة المسؤولة عن التعامل مع هذا الـ `Exception` 
+لنناقش الآن بتفصيل الـ `SEH Chain`
 
-الـ `SEH Chain` نجدها داخل الـ `TIB` ، والـ `TIB` أحد العناصر داخل الـ `TEB` ، وبالامكان الوصول للـ `TEB` عن طريق الـ `FS register` 
 
+# `SEH Chain` ( `Exceptions List` ) 
+
+عرفنا حتى الآن كيف يستطيع نظام التشغيل الوصول للـ `SEH Chain` ، وهذه العملية تتم كالآتي :
+
+في حال حدوث `Exception` في أحد الـ `Threads` سيقوم نظام التشغيل بالرجوع للـ `TEB` ( لأن الـ `TEB` هو المكان الذي سيجد فيه نظام التشغيل التفاصيل عن الـ `Thread` )
+
+ويستطيع نظام التشغيل الوصول للـ `TEB` عن طريق الـ `FS register` ( في أنظمة الـ `32bit` ) 
+
+بعد ذلك سيقوم نظام التشغيل بالوصول للـ `TIB` ، وفي الـ `TIB` سيجد نظام التشغيل الـ `pointer` الذي يُشير لأول عنصر في الـ `SEH Chain` 
+
+الآن ، كيف تبدو هذه الـ `SEH Chain` ؟ 
 
 
 
