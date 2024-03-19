@@ -167,7 +167,7 @@ struct _EXCEPTION_REGISTRATION {
 };
 ```
 
-نلاحظ أن الـ `EXCEPTION_REGISTRATION` يتكوّن من عنصرين : 
+نلاحظ أن الـ `EXCEPTION_REGISTRATION` يتكوّن من عنصرين  ( كل عنصر سِعته `4` بايت ) : 
 <div dir="rtl" markdown="1">
 
 **الأول** : `prev` ، عبارة عن `pointer` ويُشير الى العنصر السابق في الـ `Linked List` ( A pointer to the next `EXCEPTION_REGISTRATION_RECORD` in the chain)
@@ -175,6 +175,25 @@ struct _EXCEPTION_REGISTRATION {
 **الثاني** : `handler` عبارة عن `pointer` ويُشير الى الدالة المسؤولة عن التعامل مع الـ `Exception` ( `Exception Handler` )
 
 الصورة التالية من كتاب [Practical Malware Analysis](https://a.co/d/aeXQFn7) لعلّها توضّح الصورة وتختصر الكثير من الأفكار 
+
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/4.png)
 
+واحده من التفاصيل المهمة التي تم ذكرها في كتاب المعلومة الآتية :
+
 </div>
+
+> This linked list operates conceptually as a stack. The first record to be called is the last record to be added to the list. The SEH chain grows and shrinks as layers of exception handlers in a program change due to subrou- tine calls and nested exception handler blocks. For this reason, SEH records are always built on the stack.
+
+
+<div dir="rtl" markdown="1">
+
+نعرف من النص السابق أن الـ `SEH Chain` يتم تخزينها في الـ `Stack` 
+
+كذلك آخر عنصر يُضاف للـ `SEH Chain` هو أول عنصر سيقوم نظام التشغيل بالمرور عليه في حال حصول أي `Exception` 
+
+الصورة التالية تُعطينا لمحة عن كيف يبدو شكل الـ `SEH Chain` في الـ `Stack` 
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/5.png)
+
+</div>
+
