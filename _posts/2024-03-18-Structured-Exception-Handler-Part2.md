@@ -178,7 +178,7 @@ struct _EXCEPTION_REGISTRATION {
 
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/4.png)
 
-واحده من التفاصيل المهمة التي تم ذكرها في كتاب المعلومة الآتية :
+واحده من التفاصيل المهمة التي تم ذكرها في كتاب  [Practical Malware Analysis](https://a.co/d/aeXQFn7) المعلومة الآتية :
 
 </div>
 
