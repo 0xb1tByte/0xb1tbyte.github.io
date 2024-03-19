@@ -128,7 +128,9 @@ typedef NT_TIB *PNT_TIB;
 
 في حال حصول أي `Exception` سيقوم نظام التشغيل بالمرور على هذه القائمة ، ويرى أي دالة ستكون المسؤولة عن التعامل مع هذا الـ `Exception` 
 
-في حال لم يجد نظام التشغيل أي دالة تتكفّل بالتعامل مع هذا الخطأ ، فسيتم نداء الدالة الخاصة بنظام التشغيل ( العنصر، وهذه الدالة هي العنصر الأخير في الـ `Linked List` ، عادةً هذه الدالة تقوم بانهاء العملية واظهار رسالة خطأ للمستخدم 
+في حال لم يجد نظام التشغيل أي دالة تتكفّل بالتعامل مع هذا الخطأ ، فسيتم نداء الدالة الخاصة بنظام التشغيل ( وهذه الدالة هي العنصر الأخير في الـ `Linked List` /  `SEH Chain` ) 
+
+وعادةً هذه الدالة تقوم بانهاء العملية واظهار رسالة خطأ للمستخدم 
 
 نجد كذلك المعلومة الآتية في كتاب [Practical Malware Analysis](https://a.co/d/aeXQFn7) : 
 
@@ -172,9 +174,15 @@ struct _EXCEPTION_REGISTRATION {
 
 نلاحظ أن الـ `EXCEPTION_REGISTRATION` يتكوّن من عنصرين  ( كل عنصر سِعته `4` بايت ) : 
 
-**الأول** : `prev` ، عبارة عن `pointer` ويُشير الى العنصر السابق في الـ `Linked List` ( A pointer to the next `EXCEPTION_REGISTRATION_RECORD` in the chain)
+**الأول** : `prev` ، عبارة عن `pointer` ويُشير الى العنصر السابق في الـ `Linked List`
 
-**الثاني** : `handler` عبارة عن `pointer` ويُشير الى الدالة المسؤولة عن التعامل مع الـ `Exception` ( `Exception Handler` )
+</div>
+
+> A pointer to the next `EXCEPTION_REGISTRATION_RECORD` in the chain
+
+ <div dir="rtl" markdown="1">
+
+**الثاني** : `handler` . عبارة عن `pointer` ويُشير الى الدالة المسؤولة عن التعامل مع الـ `Exception`
 
 الصورة التالية من كتاب [Practical Malware Analysis](https://a.co/d/aeXQFn7) لعلّها توضّح الصورة وتختصر الكثير من الأفكار 
 
@@ -184,7 +192,7 @@ struct _EXCEPTION_REGISTRATION {
 
 </div>
 
-> This linked list operates conceptually as a stack. The first record to be called is the last record to be added to the list. The SEH chain grows and shrinks as layers of exception handlers in a program change due to subrou- tine calls and nested exception handler blocks. For this reason, SEH records are always built on the stack.
+> This linked list operates conceptually as a stack. The first record to be called is the last record to be added to the list. The SEH chain grows and shrinks as layers of exception handlers in a program change due to subroutine calls and nested exception handler blocks. For this reason, SEH records are always built on the stack.
 
 
 <div dir="rtl" markdown="1">
