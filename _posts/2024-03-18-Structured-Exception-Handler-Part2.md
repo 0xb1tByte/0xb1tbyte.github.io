@@ -167,8 +167,10 @@ struct _EXCEPTION_REGISTRATION {
 };
 ```
 
-نلاحظ أن الـ `EXCEPTION_REGISTRATION` يتكوّن من عنصرين  ( كل عنصر سِعته `4` بايت ) : 
 <div dir="rtl" markdown="1">
+
+
+نلاحظ أن الـ `EXCEPTION_REGISTRATION` يتكوّن من عنصرين  ( كل عنصر سِعته `4` بايت ) : 
 
 **الأول** : `prev` ، عبارة عن `pointer` ويُشير الى العنصر السابق في الـ `Linked List` ( A pointer to the next `EXCEPTION_REGISTRATION_RECORD` in the chain)
 
