@@ -18,7 +18,7 @@ tags:
 
 في المقالات السابقة ناقشنا الـ `SEH` من جوانب نظرية بتفصيل 
 
-في هذه المقالة سنرى الـ `SEH` من الجانب العملي ، سنعتمد بشكل أساسي على الـ (`windbg`)[http://www.windbg.org/] 
+في هذه المقالة سنرى الـ `SEH` من الجانب العملي ، سنعتمد بشكل أساسي على الـ [`windbg`](http://www.windbg.org/)
 
 بسم الله لنبدأ 
 
@@ -28,9 +28,9 @@ tags:
 
 سنرى الآن كيف بإمكاننا النظر بتفصيل للتعريف ( Definition ) الخاص بكل `Structures` عبر الـ `windbg` 
 
-سنستخدم الـ (`dt`)[https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/dt--display-type-] Command 
+سنستخدم الـ [`dt`](https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/dt--display-type-) Command 
 
-مثل المذكور في المرجع الخاص بالـ Command ، الـ (`dt`)[https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/dt--display-type-] تتيح لنا الاستعلام عن المتغيرات أو الـ `Data Types` والـ `Structures` وغيرها 
+مثل المذكور في المرجع الخاص بالـ Command ، الـ [`dt`](https://learn.microsoft.com/en-us/windows-hardware/drivers/debuggercmds/dt--display-type-) تتيح لنا الاستعلام عن المتغيرات أو الـ `Data Types` والـ `Structures` وغيرها 
 
 </div> 
 
