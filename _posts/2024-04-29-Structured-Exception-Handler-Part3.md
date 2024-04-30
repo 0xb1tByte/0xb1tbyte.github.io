@@ -62,10 +62,12 @@ dt nt!_TEB
 dt _NT_TIB
 ```
 
-![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/7.png)
 
 
 <div dir="rtl" markdown="1">
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/7.png)
+
 
 نرى في الصورة أعلاه أن الـ `ExceptionList` هي أول العناصر في الـ `TIB` وهي عبارة عن `Pointer` مثل ما ناقشنا في المقالات السابقة 
 
@@ -78,9 +80,11 @@ dt _NT_TIB
 dt _EXCEPTION_REGISTRATION_RECORD
 ```
 
-![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/8.png)
 
 <div dir="rtl" markdown="1">
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/8.png)
+
 
 مثل ما ذكرنا سابقًا ، الـ `ExceptionList` أو الـ `_EXCEPTION_REGISTRATION_RECORD` مكوّنة من عنصرين 
 
@@ -88,6 +92,7 @@ dt _EXCEPTION_REGISTRATION_RECORD
 
 للمراجعة ، الصورة التالية تمثّل ما رأيناه بعد استعراض الـ `_EXCEPTION_REGISTRATION_RECORD Structure`
 
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/4.png)
+
 </div> 
 
-![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/4.png)
