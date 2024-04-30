@@ -94,5 +94,84 @@ dt _EXCEPTION_REGISTRATION_RECORD
 
 ![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/4.png)
 
+# تتبُّع الـ `SEH Chain`
+
+سنرى الآن كيف بإمكاننا عمل `trace` للـ `SEH Chain`
+
+كما ذكرنا سابقًا، نستطيع الوصول الى الـ `Exception List` عن طريق الـ `TEB` ، فأول خطوة سنقوم بها هي الاستعلام عن محتوى الـ `TEB` ( في الجزء الأول استعلمنا عن بُنيته ، الآن نستعلم عن محتواه ) 
+
+وسنقوم تحديدًا بمعرفة العنوان ( address ) الخاص بالـ `Exception List` ، نستطيع الاستعلام عن الـ `TEB` باستخدام الـ Command الآتية : 
+
 </div> 
+
+```bat
+!teb
+```
+
+<div dir="rtl" markdown="1">
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/9.png)
+
+نلاحظ أن الـ `Exception List` موجودة في العنوان : `01aeff70` 
+
+الآن، باستخدام هذا العنوان بإمكاننا الوصول لأول عنصر في الـ `Exception List`  
+
+ومن العنصر الأول سنستطيع الوصول للعنصر الثاني ( لأن الـ `_EXCEPTION_REGISTRATION_RECORD` كما ذكرنا من قبل مكوّن من عنصرين، أحدهما الـ `Next` ، والذي يُشير للعنصر التالي في الـ `List` ) 
+
+ومن العنصر الثاني سنستطيع الوصول للعنصر الثالث، وهكذا حتى نصل لآخر عنصر في الـ `Exception List`
+
+بعد معرفة عنوان الـ `Exception List` بإمكاننا الاستعلام عن أول العناصر باستخدام الـ Command التالية : 
+
+
+</div> 
+
+```bat
+dt _EXCEPTION_REGISTRATION_RECORD 01aeff70
+```
+
+<div dir="rtl" markdown="1">
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/10.png)
+
+نلاحظ أن العنصر التالي من الـ `List` موجود في العنوان `0x01aeffcc` 
+
+وبإمكاننا الوصول للعنصر الثاني من الـ `List` باستخدام نفس الـ Command السابقة، مع تغيير العنوان للعنصر الذي نود الإستعلام عنه ، وفي حالتنا ستكون الـ Command كالآتي : 
+
+</div> 
+
+```bat
+dt _EXCEPTION_REGISTRATION_RECORD 0x01aeffcc
+```
+
+<div dir="rtl" markdown="1">
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/11.png)
+
+نرى من الصورة السابقة أن العنوان الخاص بالعنصر الثالث هو : `0x01aeffe4`
+
+ونستطيع الاستعلام عنه كالآتي : 
+
+</div> 
+
+```bat
+dt _EXCEPTION_REGISTRATION_RECORD 0x01aeffe4
+```
+
+<div dir="rtl" markdown="1">
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/SEH/12.png)
+
+نلاحظ من الصورة أعلاه، أننا وصلنا الى آخر الـ `SEH Chain` ، لأن الـ `Next` يُشير الى العنوان `0xffffffff`
+
+ومثل ما عرفنا في المقالات السابقة، آخر عنصر في الـ `SEH Chain` عبارة عن الدالة الخاصة بالنظام، والتي سيتم تنفيذها في حال لم يجد نظام التشغيل دالة تقوم بمعالجة الـ `Exception`
+
+والى هنا نكتفي، 
+
+بتوفيق الله انتهت سلسلة مقالات الـ `SEH` ، أو ربما نُكمل -إن شاء الله- في مقالات لاحقة في حال وجدنا ما يستحق الذكر 
+
+</div> 
+
+
+> ℹ️ [ملاحظة]
+> هذه المقالة تمّت كتابتها خلال دراسة هذه المواضيع، فكل ما تم ذكره هنا قد يحتمل الخطأ، لكن بالإمكان العودة إلى المراجع التي إستندت عليها هذه المقالة
 
