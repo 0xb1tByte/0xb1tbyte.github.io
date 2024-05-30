@@ -14,16 +14,16 @@ tags:
 
 السلام عليكم ورحمة الله وبركاته 
 
-اجتزت بفضل الله هذا الشهر إختبار `GXPN` ، وفي هذه المقالة إن شاء الله سأتحدث قليلًا عن : 
+اجتزت بفضل الله هذا الشهر إختبار  [`GXPN`](https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/) ، وفي هذه المقالة إن شاء الله سأتحدث قليلًا عن : 
 
-* منهج الشهادة ( `SEC660` )
-* اختبار `GXPN`
-* مصادر / أدوات مُساعدة للتحضير لإختبار الـ `GXPN`
+* منهج الشهادة ( [`SEC660`](https://www.sans.org/cyber-security-courses/advanced-penetration-testing-exploits-ethical-hacking/) )
+* اختبار [`GXPN`](https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/)
+* مصادر / أدوات مُساعدة للتحضير لإختبار الـ [`GXPN`](https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/)
 
 
-# منهج الشهادة ( `SEC660` )
+# منهج الشهادة ( [`SEC660`](https://www.sans.org/cyber-security-courses/advanced-penetration-testing-exploits-ethical-hacking/) )
 
-# إختبار `GXPN`
+# إختبار [`GXPN`](https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/)
 
-# مصادر / أدوات مُساعدة للتحضير لإختبار الـ `GXPN`
+# مصادر / أدوات مُساعدة للتحضير لإختبار الـ [`GXPN`](https://www.giac.org/certifications/exploit-researcher-advanced-penetration-tester-gxpn/)
 </div> 
