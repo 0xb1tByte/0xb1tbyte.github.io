@@ -43,6 +43,24 @@ tags:
 هذه كانت لمحة سريعة عن مواضيع هذا الفصل ، لمن أراد الاستزادة ، الـ [Syllabus](https://www.sans.org/cyber-security-courses/advanced-penetration-testing-exploits-ethical-hacking/) بها تفصيل أكثر ، وكذلك المعامل الخاصة بكل فصل 
 
 ## Crypto and Post-Exploitation
+هذا الفصل يعرض أولًا بروتوكولات التشفير ومن ثم يناقش عملية مابعد الاختراق لأنظمة ويندوز و لينكس 
+
+في الجزء الأول ( التشفير ) يعرض الفصل إختراقات حول ضعف في تنفيذ ( Implementation ) بروتوكولات التشفير ، ولا يناقش الفصل إختراق البروتوكول / الألقوريثم نفسه 
+
+يعرض كذلك الفصل بعض الثغرات التي تم اكتشافها في أنظمة لم تُطبّق بروتوكولات التشفير بطريقة صحيحة ، أمثلة على هذه الاختراقات : 
+
+Oracle Padding Attack 
+
+POODLE Attack
+
+KRACK Attack 
+
+وفي الجزء الثاني من الفصل ( ما بعد الاختراق ) ، يعرض الفصل بعض الطرق لتجاوز الـ System Restrictions 
+
+في أنظمة ويندوز تحدّث الفصل عن الـ `WDAC` والـ `SRPs` والـ `KIOSK Mode` والـ `AMSI` والـ `UAC` وفي أنظمة لينكس تحدّث الفصل عن الـ `Grsecurity` والـ `PaX` والـ `SELinux` وغيرها
+
+وفي آخر الفصل، عرض لمشروع الـ [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)  وأدواته الفرعية 
+
 
 ## Python, Scapy, and Fuzzing
 
