@@ -63,6 +63,17 @@ KRACK Attack
 
 
 ## Python, Scapy, and Fuzzing
+هذا الفصل يبدأ بشرح لغة بايثون وبعض مكتباتها أو الـ  Modules مثل : sys , os , ctypes , pefile
+
+بعد ذلك يعرض الفصل [Scapy](https://scapy.net/) وهي مكتبة في بايثون تُمكّننا من التعديل والتلاعب في الـ `Packet` لمجموعة من البروتوكولات ( فهم Scapy مهم جدًا في الاختبار )
+
+والجزء الأخير من الفصل يتحدّث عن الـ Fuzzing ويعرض كذلك بعض أدوات الـ Fuzzing ومن الأدوات التي تم ذكرها في الفصل : 
+
+أداة [Sulley](https://github.com/OpenRCE/sulley) وهي عبارة عن Fuzzing Engine ( فهم Sulley مهم في الاختبار ) 
+
+أداة [BooFuzz](https://github.com/jtpereyda/boofuzz) وهي تطوير لأداة Sulley  ( بحسب تجربتي في الاختبارات التجريبية والاختبار الفعلي للمنهج لم يصادفني أي سؤال حول هذه الأداة ) 
+
+أداة [DynamoRIO](https://github.com/DynamoRIO/dynamorio) وهي runtime code manipulation framework ( مهمة هذه الأداة في الاختبار كذلك ) 
 
 ## Exploiting Linux for Penetration Testers
 
