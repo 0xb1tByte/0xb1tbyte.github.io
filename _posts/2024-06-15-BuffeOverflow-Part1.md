@@ -60,7 +60,7 @@ tags:
 </div>
 
 
-```C
+```c
 1 #include <stdio.h>
 2 #include <string.h>
 3 
