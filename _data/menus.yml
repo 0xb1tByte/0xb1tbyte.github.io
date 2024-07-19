@@ -18,6 +18,6 @@
   url: /projects/
   external: false # set true if you using external link, see below
 
-- title: CV
-  url: https://0xb1tbyte.github.io/markdown-cv/
-  external: true
+#- title: CV
+#  url: https://0xb1tbyte.github.io/markdown-cv/
+#  external: true
