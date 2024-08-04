@@ -50,6 +50,24 @@ tags:
 
 فالكود أعلاه بكل بساطة يقوم بالكتابة خارج نطاق الـ `array` ( الـ `buffer` ) 
 
+طيّب، لنقم الآن بعمل `Compile` للكود ونرى ما سيحدث 
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/BufferOverflow//3.png)
+
+مثل المرّة السابقة، نلاحظ أن الـ `Compiler` لم يقم بطباعة أي خطأ ، لننتقل الآن لتنفيذ البرنامج 
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/BufferOverflow//4.png)
+
+في هذا المثال نلاحظ أننا حصلنا على رسالة الخطأ `Segmentation fault` ( في مثال **القراءة** خارج نطاق الـ `Buffer` من المقالة السابقة لم نواجه مشكلة في تنفيذ البرنامج ) 
+
+وهي رسالة خطأ عامة تحتمل أسباب كثيرة ، أحد الأسباب الشائعة لهذه الرسالة هو عندما يحاول البرنامج الوصول لعنوان في الذاكرة **غير مسموح** الوصول له 
+
+أو عندما يحاول البرنامج الوصول لعنوان ذاكرة خاطئ في الأساس ، وأحد أسباب هذه الرسالة كذلك عندما يقوم البرنامج بالإشارة ( Dereferencing ) لـ `pointer` يحمل قيمة `NULL` 
+
+طيّب لنعود لبرنامجنا ونحاول البحث أكثر حول سبب هذا الخطأ ، سنستخدم [gdb](https://www.sourceware.org/gdb/) لهذه المُهمة
+
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/BufferOverflow//5.png)
+
 
 
 
