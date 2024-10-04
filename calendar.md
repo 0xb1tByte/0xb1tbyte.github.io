@@ -13,3 +13,15 @@ comments: false
 <div class="calendly-inline-widget" data-url="https://calendly.com/ala2-calendar/30min?hide_event_type_details=1&hide_gdpr_banner=1&primary_color=751209" style="min-width:320px;height:700px;"></div>
 <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
 <!-- Calendly inline widget end -->
+
+<div dir="rtl" markdown="1">
+
+حتى يتم تأكيد الموعد، فضلًا تأكّد من الآتي :
+
+* خدمة الاستشارات موجهة **فقط للطلاب وحديثي التخرّج**
+
+* تأكد من مُشاركة سؤالك / أسئلتك في خانة الاستفسار وقت حجز الموعد ، حتى أستطيع تحضير المصادر النافعة ومشاركتها معك خلال اللقاء
+
+* فضلًا تأكد من كتابة اسمك الأول 
+
+</div>
