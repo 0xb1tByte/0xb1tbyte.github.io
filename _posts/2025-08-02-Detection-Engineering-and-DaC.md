@@ -39,7 +39,7 @@ tags:
 
 </div>
 
-> Detection engineering definition
+> Detection engineering definition:
 > Detection engineering can be defined as a set of processes that enable potential threats to be detected within an environment. These processes encompass the end-to-end
 > life cycle, from collecting detection requirements, aggregating system telemetry, and implementing and maintaining detection logic to validating program effectiveness.
 
