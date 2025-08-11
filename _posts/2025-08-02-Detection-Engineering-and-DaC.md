@@ -47,4 +47,29 @@ tags:
   
 الدمج بين التعريفين يوضح أن الـ ``Detection Engineering`` ليست مجرد خطوة واحدة، بل عملية تبدأ من **فهم التهديد وتحويله إلى قاعدة كشف (`Detection Rule`)**، ثم تطويرها وصيانتها بشكل مستمر لتبقى فعالة ضد التطور المستمر لأساليب المهاجمين (TTPs).
 
+# Detection Life Cycle
+
+تُعتبر الـ `Detection Life Cycle` إطارًا منهجيًا يصف المراحل التي تمر بها أي `Detection Rule` أو `Use Case` من الفكرة وحتى إيقاف الـ `Detection Rule` أو تعديلها.
+
+بحسب كتابي [Practical Threat Detection Engineering](https://amzn.eu/d/dEUdSvt)  و [Automating Security Detection Engineering](https://amzn.eu/d/beqUiqx) ، يمكن تلخيص هذه الدورة في المراحل الآتية :
+
+## Establish Requirements / Discovery
+في هذه المرحلة الأولية، تبدأ فرق الـ `Detection Engineering` بجمع متطلبات الكشف (`Detection Requirements`).
+
+هنا يتم تحديد:
+
+- ما هو الـ `Scope` للبرنامج؟ على سبيل المثال، بناء `Detection Rules` موجّهه لأنظمة لينكس 
+- ماهي الـ `Detection Rules` التي تعتبر مفيدة ويجب تطويرها ؟
+- هل لدينا بيانات وأدوات داخل البيئة تمكننا من بناء هذه الـ `Detection Rules` ؟
+
+إضافةً لذلك، يتم وضع أولويات التنفيذ (`Implementation Priorities`)، بمعنى ماهي الـ `Detection Rules` التي يجب تنفيذها أولًا  
+
+## Development / Design 
+بعد تحديد المتطلبات، تبدأ مرحلة تصميم وتطوير الـ `Detection Rules`
+
+يتم هنا بناء الـ `Detection Logic` الخاص بالـ `Detection Rules` ، وبناء هذا الـ `logic` يعتمد بشكل كبير على مصادر البيانات المتاحة (`Logs, EDR Data, Network Traffic`)
+
+## Testing
+بعد بناء الـ `Detection Logic`، تأتي مرحلة الاختبارات:
+
 </div>
