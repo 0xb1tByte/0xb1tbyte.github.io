@@ -53,6 +53,13 @@ tags:
 
 بحسب كتابي [Practical Threat Detection Engineering](https://amzn.eu/d/dEUdSvt)  و [Automating Security Detection Engineering](https://amzn.eu/d/beqUiqx) ، يمكن تلخيص هذه الدورة في المراحل الآتية :
 
+![1](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/DaC/1.png)
+* [Automating Security Detection Engineering](https://amzn.eu/d/beqUiqx)
+
+![2](https://raw.githubusercontent.com/0xb1tByte/0xb1tbyte.github.io/master/assets/media/DaC/2.png)
+* [Practical Threat Detection Engineering](https://amzn.eu/d/dEUdSvt)
+
+
 ## Establish Requirements / Discovery
 في هذه المرحلة الأولية، تبدأ فرق الـ `Detection Engineering` بجمع متطلبات الكشف (`Detection Requirements`).
 
@@ -64,12 +71,17 @@ tags:
 
 إضافةً لذلك، يتم وضع أولويات التنفيذ (`Implementation Priorities`)، بمعنى ماهي الـ `Detection Rules` التي يجب تنفيذها أولًا  
 
-## Development / Design 
+## Development 
 بعد تحديد المتطلبات، تبدأ مرحلة تصميم وتطوير الـ `Detection Rules`
 
 يتم هنا بناء الـ `Detection Logic` الخاص بالـ `Detection Rules` ، وبناء هذا الـ `logic` يعتمد بشكل كبير على مصادر البيانات المتاحة (`Logs, EDR Data, Network Traffic`)
 
 ## Testing
 بعد بناء الـ `Detection Logic`، تأتي مرحلة الاختبارات:
+هناك نوعان أساسيان من الاختبارات في هذا المجال: `Unit Tests` و `Integration Tests`.
+
+الـ `Unit Tests` يهدف إلى التحقق من صحة الـ `syntax` الخاص بالـ `Detection Rule` لضمان عدم وجود أخطاء تمنع تنفيذه. بعد ذلك، يتم تشغيل القاعدة على `log samples` معروفة، حيث يتم تمرير عينات من الـ `logs` التي يُفترض أن تقوم القاعدة بعمل `trigger` لها، وأخرى سليمة للتأكد من عدم إطلاق تنبيه خاطئ (تقليل الـ `false positives`). هذه الطريقة تساعد على اكتشاف الأخطاء في المنطق أو في الصياغة مبكرًا وعادةً ما تُستخدم سكربتات وأدوات لأتمتة هذه الاختبارات بحيث تُنفذ تلقائيًا عند إضافة أو تعديل أي قاعدة.
+
+أما الـ `Integration Tests` فيتضمن اختبار الـ `Detection` في بيئة `Staging` أو بيئة اختبار للـ `SIEM/EDR` تشبه بيئة الإنتاج الحقيقية، للتأكد من أن القاعدة تعمل على المنصة المستهدفة بدون أخطاء، وقياس تأثيرها على الأداء.
 
 </div>
