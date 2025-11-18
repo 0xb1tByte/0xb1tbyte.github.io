@@ -2,13 +2,12 @@
 layout: post
 published: true
 title: LLMs in Detection Engineering
-date: '2025-08-02'
+date: '2025-11-18'
 tags:
 - Arabic-Article
 - Blue Team
 - Detection Engineering
-- Detection as Code
----
+- LLMS
 
 <div dir="rtl" markdown="1">
 
