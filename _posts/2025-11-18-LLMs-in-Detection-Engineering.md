@@ -1,7 +1,7 @@
 ---
 layout: post
 published: true
-title: Detection Engineering and Detection as Code
+title: LLMs in Detection Engineering
 date: '2025-08-02'
 tags:
 - Arabic-Article
